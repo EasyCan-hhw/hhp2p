@@ -1170,23 +1170,32 @@ $(".daka_edit").click(function(){
 			tosubmit=false
 			alert("请输入打卡日期");
 		}
-		if ($.trim($("#start_time"+id).val()).length == 0) {
+		if ($.trim($("#start_time1"+id).val())>=24 || $.trim($("#start_time1"+id).val())<0) {
+
 			tosubmit=false
-			alert("时间不能为空");
+			alert("时间输入错误！")
 		}
-		if ($.trim($("#end_time"+id).val()).length == 0) {
+		if ($.trim($("#start_time2"+id).val())>=60 || $.trim($("#start_time2"+id).val())<0) {
 			tosubmit=false
-			alert("时间不能为空");
+			alert("时间输入错误！")
+		}
+		if ($.trim($("#end_time1"+id).val())>=24 || $.trim($("#end_time1"+id).val())<0) {
+			tosubmit=false
+			alert("时间输入错误！")
+		}
+		if ($.trim($("#end_time2"+id).val())>=60 || $.trim($("#end_time2"+id).val())<0) {
+			tosubmit=false
+			alert("时间输入错误！")
 		}
 		if (tosubmit) {
 			
 			var query = new Object();
-			query.id=id;
+			query.work_id=id;
 			query.job_number=escape($("#job_number"+id).val());
 			query.username=escape($("#username"+id).val());
 			query.work_date=escape($("#work_date"+id).val());
-			query.start_time=escape($("#start_time"+id).val());
-			query.end_time=escape($("#end_time"+id).val());
+			query.start_time=escape($("#start_time1"+id).val()*60+parseInt($("#start_time2"+id).val()));
+			query.end_time=escape($("#end_time1"+id).val()*60+parseInt($("#end_time2"+id).val()));
 			query.action="edit";
 			$.ajax({
 				url: "save_daka.asp",
@@ -1201,12 +1210,7 @@ $(".daka_edit").click(function(){
 				  {
 				  		alert(data.split("|")[2]);
 						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
-						$("#insert_daka_submit").attr("disabled",false);
-				   }
-				   else if(parseInt(data.split("|")[0])==3)
-				   {
-						alert(data.split("|")[1]);
-						$("#insert_daka_submit").attr("disabled",false);
+						//$("#insert_daka_submit").attr("disabled",false);
 				   }
 				   else if(parseInt(data.split("|")[0])==2)
 				   {
@@ -1215,15 +1219,53 @@ $(".daka_edit").click(function(){
 				   }
 				   else if(parseInt(data.split("|")[0])==0)
 				   {
-						alert("添加成功！");
+						alert("修改成功！");
 						window.location.href="manage_daka.asp";
 				   }
 				}
 			});
-
 		}
 
 	});
+
+
+$(".daka_del").click(function(){
+
+			if(confirm('是否确定删除？')){
+		 		var id=this.id.split("_")[2];
+				var query = new Object();
+				query.work_id=id;
+				query.action="del";
+				$.ajax({
+					url: "save_daka.asp",
+					type:"post",
+					data:query,
+					async:false,
+					cache:false,
+					dataType:"text",
+					success:function(data)
+					{
+					  if(parseInt(data.split("|")[0])==1)
+					  {
+							alert(data.split("|")[2]);
+					   }
+					   else if(parseInt(data.split("|")[0])==2)
+					   {
+							alert("登录超时！");
+							window.location.href="login.asp";
+					   }
+					   else if(parseInt(data.split("|")[0])==0)
+					   {
+							alert("删除成功！");
+							window.location.href="manage_daka.asp";
+					   }
+					}
+				});
+			}
+
+
+
+});
 	
 	
 	$("#add_product_submit").click(function(){

@@ -293,8 +293,8 @@ else
 			do while not rs.eof
 			%>
                                <tr>
-	                                <td style="vertical-align: middle;text-align:center">
-	                                  <input name="job_number<%=int(rs("work_id"))%>" id="job_number<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("job_number"))%>" style="width:60px;text-align:center"/>
+	                                <td style="vertical-align: middle;text-align:center" name="job_number<%=int(rs("work_id"))%>" id="job_number<%=int(rs("work_id"))%>">
+	                                  <%=trim(rs("job_number"))%>
 	                                </td>
 	                                <td style="vertical-align: middle;text-align:center">
 	                                  <input name="username<%=int(rs("work_id"))%>" id="username<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("username"))%>" style="text-align:center;width:60px"/> 
@@ -303,10 +303,15 @@ else
 	                                  <input name="work_date<%=int(rs("work_id"))%>" id="work_date<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("work_date"))%>" style="text-align:center;width:100px"/>
 	                                   </td>
 	                                <td style="vertical-align: middle;text-align:center">
-	                                  <input name="start_time<%=int(rs("work_id"))%>" id="start_time<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("start_time")\60&":"&rs("start_time") mod 60)%>" style="text-align:center;width:60px"/>
+	                                  <input name="start_time1<%=int(rs("work_id"))%>" id="start_time1<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("start_time")\60) %>" style="text-align:right;width:30px"/>
+                                    <span class="help-inline">&nbsp;:&nbsp;</span>
+                                     <input name="start_time2<%=int(rs("work_id"))%>" id="start_time2<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("start_time") mod 60)%>" style="text-align:right;width:30px"/>
 	                                 </td>
 	                                <td style="vertical-align: middle;text-align:center">
-	                                  <input name="end_time<%=int(rs("work_id"))%>" id="end_time<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("end_time")\60&":"&rs("end_time") mod 60)%>"  style="text-align:center;width:60px"/>
+	                                  
+                                     <input name="end_time1<%=int(rs("work_id"))%>" id="end_time1<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("end_time")\60) %>" style="text-align:right;width:30px"/>
+                                    <span class="help-inline">&nbsp;:&nbsp;</span>
+                                     <input name="end_time2<%=int(rs("work_id"))%>" id="end_time2<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("end_time") mod 60)%>" style="text-align:right;width:30px"/>
 	                                   </td>
 	                                <td style="vertical-align: middle; text-align:center">
 	                                    <a href="javascript:;" id="daka_edit_<%=int(rs("work_id"))%>" class="daka_edit">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;

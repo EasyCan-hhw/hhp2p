@@ -18,6 +18,7 @@ username=Trim(SafeRequest("username"))
 work_date=Trim(SafeRequest("work_date"))
 start_time=Trim(SafeRequest("start_time"))
 end_time=Trim(SafeRequest("end_time"))
+work_id=Trim(SafeRequest("work_id"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
@@ -39,9 +40,15 @@ if action="add" then
 	rs.close
 	set rs=nothing
 elseif action="edit" then
-	conn.execute "update products set product_name='"&product_name&"',cycle="&cycle&",base="&base&",profit="&profit/100&",penalty="&penalty/1000&" where id="&id
+	
+
+ conn.execute "update work_attendance set job_number='"&job_number&"',username='"&username&"',work_date='"&work_date&"',start_time="&start_time&",end_time="&end_time&" where work_id="&work_id
+
+
 elseif action="del" then	
-	conn.execute "delete from products where id="&id
+
+	conn.execute "delete from work_attendance where work_id="&work_id
+	
 end if
 	response.write "0|"
 	response.end
