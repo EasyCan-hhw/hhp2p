@@ -216,7 +216,7 @@ else
                             <div class="controls">
                                 上午:&nbsp;&nbsp;<input type="text" id="start_time1" name="start_time1" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="start_time2" name="start_time2" class="span5" style="width:50px;text-align:right"/>&nbsp;分&nbsp;&nbsp;下午:&nbsp;&nbsp;
                                 <input type="text" id="end_time1" name="end_time1" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="end_time2" name="end_tem2" class="span5" style="width:50px;text-align:right"/>&nbsp;分&nbsp;
-                                <span class="help-inline">格式：16:59分(24小时)</span>
+                                <span class="help-inline">格式：16:59分(24小时制)</span>
                                 <span id="star_time_err" class="err_text"></span>
                                 <span id="end_time_err" class="err_text"></span>
                             </div>
