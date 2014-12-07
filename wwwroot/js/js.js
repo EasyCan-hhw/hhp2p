@@ -1158,10 +1158,7 @@ $(".daka_edit").click(function(){
 		var tosubmit=true;
 		var id=this.id.split("_")[2];
 		$(".err_text").html("");
-		if ($.trim($("#job_number"+id).val()).length == 0) {
-			tosubmit=false;
-			alert("请输入工号");
-		}
+		
 		if ($.trim($("#username"+id).val()).length == 0) {
 			tosubmit=false
 			alert("请输入员工姓名");
@@ -1191,7 +1188,7 @@ $(".daka_edit").click(function(){
 			
 			var query = new Object();
 			query.work_id=id;
-			query.job_number=escape($("#job_number"+id).val());
+			
 			query.username=escape($("#username"+id).val());
 			query.work_date=escape($("#work_date"+id).val());
 			query.start_time=escape($("#start_time1"+id).val()*60+parseInt($("#start_time2"+id).val()));

@@ -42,7 +42,7 @@ if action="add" then
 elseif action="edit" then
 	
 
- conn.execute "update work_attendance set job_number='"&job_number&"',username='"&username&"',work_date='"&work_date&"',start_time="&start_time&",end_time="&end_time&" where work_id="&work_id
+ conn.execute "update work_attendance set username='"&username&"',work_date='"&work_date&"',start_time="&start_time&",end_time="&end_time&" where work_id="&work_id
 
 
 elseif action="del" then	
