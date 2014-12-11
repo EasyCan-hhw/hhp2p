@@ -25,7 +25,6 @@ end if
                 </div>
                 <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
-                  
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;借款人姓名:</label>
                             <div class="controls">

@@ -28,6 +28,8 @@ password=md5(Trim(SafeRequest("password")))
 		response.cookies("hhp2p_cookies")("uid")=rs("uid")
 		response.cookies("hhp2p_cookies")("username")=rs("username")
 		response.cookies("hhp2p_cookies")("quanxian")=rs("quanxian")
+		response.cookies("hhp2p_cookies")("full_name")=rs("full_name")
+		response.cookies("hhp2p_cookies")("job_number")=rs("job_number")
 		response.cookies("hhp2p_cookies")("job_id")=rs("job_id")
 		response.cookies("hhp2p_cookies")("company_id")=rs("company_id")
 		response.write "0|index.asp"

@@ -325,24 +325,49 @@ $(document).ready( function() {
 		}
 	});
 
+//职位管理
 
 	$("#add_job_submit").click(function(){
 		var tosubmit=true;
+		var query = new Object();
+		query.job_name=escape($("#job_name").val());
+		/*query.quanxian=quanxian;*/
+		query.position_id=escape($("#position_id").val());
+		query.base_pay=escape($("#base_pay").val());
+		query.action="add";
+			
 		$(".err_text").html("");
 		if($.trim($("#job_name").val()).length == 0){
 			tosubmit=false;
-			$("#job_name_err").html("请输入职位名称");
+			$("#job_name_err").html("请填写职位名称");
 		}
-		var quanxian ="";   
+		if ($.trim($("#position_id").val()).length == 0) {
+			tosubmit=false
+			$("#err_position_id").html("请选择职位")
+		}
+		if ($.trim($("#base_pay").val()).length == 0) {
+
+			tosubmit=false
+			$("#err_base_pay").html("请填写基本工资")
+		}
+		if ($.trim($("#least_money").val()).length == 0) {
+
+			query.least_money=0
+			//$("#err_least_money").html("请填写绩效低金")
+		}
+		if ($.trim($("#month_money").val()).length == 0) {
+			query.month_money=0
+			
+			//$("#err_month_money").html("请填写月考核绩效")
+		}
+
+
+		/*var quanxian ="";   
 		$('input[name="quanxian"]:checked').each(function(){    
 		   quanxian+=$(this).val()+",";     
-		}); 
+		}); */
 		if(tosubmit){
 			$("#add_job_submit").attr("disabled",true);
-			var query = new Object();
-			query.job_name=escape($("#job_name").val());
-			query.quanxian=quanxian;
-			query.action="add";
 			$.ajax({
 				url: "save_job.asp",
 				type:"post",
@@ -371,6 +396,7 @@ $(document).ready( function() {
 				   {
 						alert("添加成功！");
 						window.location.href="manage_jobs.asp";
+						$("#add_job_submit").attr("disabled",false);
 				   }
 				}
 			});
@@ -382,19 +408,39 @@ $(document).ready( function() {
 	$(".job_edit").click(function(){
 	 	var id=this.id.split("_")[2];
 		var tosubmit=true;
-		if($.trim($("#job_name"+id).val()).length == 0){
+		if($.trim($("#position_id"+id).val()).length == 0){
 			tosubmit=false;
-			alert("请输入职位名称");
+			alert("请输入选择职位");
 		}
-		var quanxian="";
+		/*var quanxian="";
 		$("input[name='quanxian"+id+"']:checked").each(function(){    
 		   quanxian+=$(this).val()+",";     
-		}); 
+		}); */
+		if ($.trim($("#job_name"+id).val()).length == 0) {
+			tosubmit=false
+			alert("请输入职位名称");
+		}
+		if ($.trim($("#base_pay"+id).val()).length == 0) {
+			tosubmit=false
+			alert("请输入基本工资");
+		}
+		if ($.trim($("#least_money"+id).val()).length == 0) {
+			tosubmit=false
+			alert("请输入低金");
+		}
+		if ($.trim($("#month_money"+id).val()).length == 0) {
+			tosubmit=false
+			alert("请输入月考核绩效")
+		}
 		if(tosubmit){
 			var query = new Object();
 			query.id=id;
 			query.job_name=escape($("#job_name"+id).val());
-			query.quanxian=quanxian;
+			/*query.quanxian=quanxian;*/
+			query.position_id=escape($("#position_id"+id).val());
+			query.base_pay=escape($("#base_pay"+id).val());
+			query.least_money=escape($("#least_money"+id).val());
+			query.month_money=escape($("#month_money"+id).val());
 			query.action="edit";
 			$.ajax({
 				url: "save_job.asp",
@@ -462,6 +508,33 @@ $(document).ready( function() {
 			});
 		}
 	});
+
+
+//考勤申请
+$("#add_work_application").click(function(){
+
+	var tosubmit=true
+	$(".err_text").html("");
+	if ($.trim($("#work_number").val()).length == 0) {
+		tosubmit=false;
+		$("#work_number_err").html("请输入工号");
+	}
+	if ($.trim($("#work_name").val()).length == 0) {
+		tosubmit=false;
+		$("#work_name_err").html("请输入员工姓名")
+	}
+	if ($.trim($("#work_type").val()).length == 0) {
+		tosubmit=false;
+		$("#work_type_err").html("请选择申请条目")
+	}
+	if (tosubmit) {
+
+		$("#add_work_application")
+	};
+
+
+
+});
 
 
 
@@ -671,6 +744,12 @@ $(document).ready( function() {
 			});
 		}
 	});
+
+
+<!-- -->
+
+
+
 
 
 	$(".follow_up").click(function(){

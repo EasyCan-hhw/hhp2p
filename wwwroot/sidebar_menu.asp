@@ -17,9 +17,9 @@
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_2" class="menu"><i class="icon <%if filename="add_creditor_right" or filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="manage_attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>债权管理</span></a> 
-        	<div class="sidebar" id="menu2" <%if filename="add_creditor_right" or filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="manage_attorn_creditor_right" then%>style="display:inherit"<%end if%>>
-            	<a href="add_creditor_right.asp" <%if filename="add_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-edit"></i> <span>添加债权</span></a>
+        <li><a href="javascript:;" id="sidebar_2" class="menu"><i class="icon <%if  filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="manage_attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>债权管理</span></a> 
+        	<div class="sidebar" id="menu2" <%if  filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="manage_attorn_creditor_right" then%>style="display:inherit"<%end if%>>
+            	
             	<a href="manage_creditor_right.asp" <%if filename="manage_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权查询</span></a>
             	<a href="attorn_creditor_right.asp" <%if filename="attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让</span></a>
             	<a href="manage_attorn_creditor_right.asp" <%if filename="manage_attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让查询</span></a>
@@ -35,16 +35,19 @@
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_daka" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
-        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_daka" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
+        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" then%>style="display:inherit"<%end if%>>
             	<a href="manage_users.asp" <%if filename="manage_users" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>员工管理</span></a>
                 <a href="manage_daka.asp" <%if filename="manage_daka" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>打卡录入</span></a>
+                <a href="manage_work.asp" <%if filename="manage_work" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>考勤申请</span></a>
+
             </div>
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
-        	<div class="sidebar" id="menu4" <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if filename="manage_products" or filename="add_creditor_right" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
+        	<div class="sidebar" id="menu4" <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="add_creditor_right" then%>style="display:inherit"<%end if%>>
+                <a href="add_creditor_right.asp" <%if filename="add_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>一般借贷申请</span></a>
             	<a href="manage_products.asp" <%if filename="manage_products" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>投资产品管理</span></a>
             	<a href="manage_monthly_bill.asp" <%if filename="manage_monthly_bill" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>账单查询</span></a>
                 <a href="manage_PaiXiTiXing.asp" <%if filename="manage_PaiXiTiXing" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>派息提醒</span></a>

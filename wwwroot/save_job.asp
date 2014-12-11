@@ -14,7 +14,10 @@ end if
 
 action=SafeRequest("action")
 job_name=Trim(SafeRequest("job_name"))
-quanxian=Trim(SafeRequest("quanxian"))
+position_id=Trim(SafeRequest("position_id"))
+base_pay=Trim(SafeRequest("base_pay"))
+least_money=Trim(SafeRequest("least_money"))
+month_money=Trim(SafeRequest("month_money"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
@@ -24,16 +27,20 @@ if action="add" then
 		response.end
 	end if
 	rs.close
+
 	sql = "Select * from jobs"
 	rs.Open sql,conn,1,3
 	rs.addnew
 	rs("job_name")=job_name
-	rs("quanxian")=quanxian
+	rs("position_id")=position_id
+	rs("base_pay")=base_pay
+	rs("least_money")=least_money
+	rs("month_money")=month_money
 	rs.update
 	rs.close
 	set rs=nothing
 elseif action="edit" then
-	conn.execute "update jobs set job_name='"&job_name&"',quanxian='"&quanxian&"' where id="&id
+	conn.execute "update jobs set job_name='"&job_name&"',position_id='"&position_id&"',base_pay="&base_pay&",least_money="&least_money&",month_money="&month_money&" where id="&id
 elseif action="del" then	
 	conn.execute "delete from jobs where id="&id
 end if

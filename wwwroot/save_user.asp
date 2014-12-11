@@ -47,6 +47,7 @@ if action="add" then
 	rs("password")=md5("123456")
 	rs("full_name")=full_name
 	rs("company_id")=company_id
+	rs("job_number")=job_number
 	rs("job_id")=job_id
 	rs("tel")=tel
 	rs("qq")=qq
