@@ -59,11 +59,12 @@
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_5" class="menu"><i class="icon <%if filename="approval_creditor_right" or filename="approval_attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>审批中心</span></a> 
-        	<div class="sidebar" id="menu5" <%if filename="approval_creditor_right" or filename="approval_attorn_creditor_right" or filename="approval_redeem_attorn_creditor_right" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_5" class="menu"><i class="icon <%if filename="approval_creditor_right" or filename="approval_attorn_creditor_right" or filename="manage_examine_work" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>审批中心</span></a> 
+        	<div class="sidebar" id="menu5" <%if filename="approval_creditor_right" or filename="approval_attorn_creditor_right" or filename="approval_redeem_attorn_creditor_right" or filename="manage_examine_work"  then%>style="display:inherit"<%end if%>>
             	<a href="approval_creditor_right.asp" <%if filename="approval_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>新增债权审批</span></a>
             	<a href="approval_attorn_creditor_right.asp" <%if filename="approval_attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让审批</span></a>
             	<a href="approval_redeem_attorn_creditor_right.asp" <%if filename="approval_redeem_attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>赎回债权转让审批</span></a>
+                <a href="manage_examine_work.asp" <%if filename="manage_examine_work" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>考勤审批</span></a>
             </div>
         </li>
         <%end if%>

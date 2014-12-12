@@ -5,6 +5,7 @@ if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
 response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
 response.End
 end if
+ dim mtype
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -45,7 +46,7 @@ end if
                           <label class="control-label"><font color="red">*</font>申请条目:</label>
                           <div class="controls">
                              <div class="span5" style="width:220px">
-                                <select id="work_type" name="work_type">
+                                <select id="work_type" name="work_type" value="">
                                       <option value="" ></option>
                                         <%
                                       set rs=server.CreateObject("adodb.recordset")
@@ -58,12 +59,49 @@ end if
                                        loop
                                        rs.close
                                        set rs=nothing
-                                      %>
+                                      %>  
                                     </select>
                                 </div>
                                 <span id="work_type_err" class="err_text"></span>
                           </div>
                         </div>
+                        <div id="dateSelect" style="display: none;" class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;日期选择:</label> 
+                            <div class="controls">
+                                <input type="text" id="start_date" name="start_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" style="width:100px;"/>
+                                &nbsp;至&nbsp;
+                                <input type="text" id="end_date" name="end_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" style="width:100px;"/>
+                                <span class="help-inline">格式：1970-01-01</span>
+                                <span id="work_name_err" class="err_text"></span>
+                            </div>
+                        </div> 
+                        <div id="timeSelectBegin" style="display: none;" class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;时间选择:</label> 
+                            <div class="controls">
+                                 开始时间:&nbsp;&nbsp;<input type="text" id="start_time_hours" name="start_time_hours" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;
+                                 <input type="text" id="start_time_minute" name="start_time_minute" class="span5" style="width:50px;text-align:right"/>&nbsp;分&nbsp;&nbsp;
+                                 <span class="help-inline">格式：16:59分(24小时制)</span>
+                                <span id="work_name_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div id="timeSelectEnd" style="display: none;" class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;时间选择:</label> 
+                            <div class="controls">
+                                结束时间:&nbsp;&nbsp;
+                                <input type="text" id="end_time_hours" name="end_time_hours" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;
+                                <input type="text" id="end_time_minute" name="end_time_minute" class="span5" style="width:50px;text-align:right"/>&nbsp;分&nbsp;
+                                <span class="help-inline">格式：16:59分(24小时制)</span>
+                                <span id="work_name_err" class="err_text"></span>
+                            </div>
+                        </div> 
+                        <div id="causeSelect" style="display: none;" class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</label> 
+                            <div class="controls">
+                                <input type="text" id="input_txt" name="input_txt" class="span5" style="width:220px;text-align:lift"/>
+                                <span class="help-inline">填写原因</span>
+                                <span id="work_name_err" class="err_text"></span>
+                            </div>
+                        </div> 
 
                    <!-- <div class="control-group">
                       <label class="control-label">权限:</label>

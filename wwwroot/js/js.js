@@ -334,6 +334,8 @@ $(document).ready( function() {
 		/*query.quanxian=quanxian;*/
 		query.position_id=escape($("#position_id").val());
 		query.base_pay=escape($("#base_pay").val());
+		query.least_money=escape($("#least_money").val());
+		query.month_money=escape($("#month_money").val());
 		query.action="add";
 			
 		$(".err_text").html("");
@@ -510,11 +512,56 @@ $(document).ready( function() {
 	});
 
 
+
+$("#work_type").change(function() {
+	workOverTime="加班申请";
+	complainWork="考勤申请";
+	if ($("#work_type").val() == "加班申请") {
+
+		$("#dateSelect").css('display','block'); 
+		$("#timeSelectBegin").css('display','block'); 
+		$("#timeSelectEnd").css('display','block'); 
+		$("#causeSelect").css('display','none'); 
+
+	}
+	if ($("#work_type").val() == "请假申请") {
+
+		$("#dateSelect").css('display','block'); 
+		$("#timeSelectBegin").css('display','none'); 
+		$("#timeSelectEnd").css('display','none'); 
+		$("#causeSelect").css('display','none'); 
+
+	}
+	if ($("#work_type").val() == "外出申请") {
+
+		$("#dateSelect").css('display','block'); 
+		$("#timeSelectBegin").css('display','none'); 
+		$("#timeSelectEnd").css('display','none'); 
+		$("#causeSelect").css('display','none'); 
+	}
+	if ($("#work_type").val() == "出差申请") {
+
+		$("#dateSelect").css('display','block'); 
+		$("#timeSelectBegin").css('display','none'); 
+		$("#timeSelectEnd").css('display','none'); 
+		$("#causeSelect").css('display','none'); 
+	}
+	if ($("#work_type").val() == "考勤申诉") {
+
+		$("#dateSelect").css('display','none'); 
+		$("#timeSelectBegin").css('display','none'); 
+		$("#timeSelectEnd").css('display','none'); 
+		$("#causeSelect").css('display','block'); 
+	}
+
+	
+});
+
 //考勤申请
 $("#add_work_application").click(function(){
 
 	var tosubmit=true
-	$(".err_text").html("");
+	
 	if ($.trim($("#work_number").val()).length == 0) {
 		tosubmit=false;
 		$("#work_number_err").html("请输入工号");
@@ -527,12 +574,70 @@ $("#add_work_application").click(function(){
 		tosubmit=false;
 		$("#work_type_err").html("请选择申请条目")
 	}
+	
 	if (tosubmit) {
 
-		$("#add_work_application")
-	};
+		$("#add_work_application").attr("disabled",true);
+		var query = new Object();
+		
+		if ($.trim($("#start_time_hours").val()).length > 0) {
+			query.work_number=escape($("#work_number").val());
+			query.work_name=escape($("#work_name").val());
+			query.work_type=escape($("#work_type").val());parseInt
+			query.mwork_start_time=escape($("#start_time_hours").val()*60+parseInt($("#start_time_minute").val()));
+			query.mwork_end_time=escape($("#end_time_hours").val()*60+parseInt($("#end_time_minute").val()));
+			query.mwork_start_date=escape($("#start_date").val());
+			query.mwork_end_date=escape($("#end_date").val());
+			query.mwork_cause_txt=escape($("#input_txt").val());
+			query.action="add";
+		}else if($.trim($("#start_time_hours").val()).length == 0){
+			query.work_number=escape($("#work_number").val());
+			query.work_name=escape($("#work_name").val());
+			query.work_type=escape($("#work_type").val());
+			query.mwork_start_time=escape("0");
+			query.mwork_end_time=escape("0");
+			query.mwork_start_date=escape($("#start_date").val());
+			query.mwork_end_date=escape($("#end_date").val());
+			query.mwork_cause_txt=escape($("#input_txt").val());
+			query.action="add";
 
+		}
+		
+		$.ajax({
 
+			url: "save_work.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+					 if(parseInt(data.split("|")[0])==1)
+				  {
+						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
+						$("#add_work_application").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+						$("#add_work_application").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("已提交！");
+						window.location.href="manage_work.asp";
+				   }
+
+				}
+
+		});
+	}
 
 });
 
@@ -1152,7 +1257,7 @@ $("#add_work_application").click(function(){
 	//考勤打卡添加JS
 	$("#insert_daka_submit").click(function(){
 		var tosubmit=true;
-		var he
+		
 		$(".err_text").html("");
 		if ($.trim($("#job_number").val()).length == 0) {
 			tosubmit=false;
