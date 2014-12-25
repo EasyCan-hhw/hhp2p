@@ -38,7 +38,7 @@ end if
             </div>
         </div>
         <div class="form-actions" style="border-top: none; text-align: center;">
-            <a type="submit" href="javascript:;" class="btn btn-large btn-warning" id="login_submit_submit"/>登录</a>
+            <button type="submit" href="javascript:;" class="btn btn-large btn-warning" id="login_submit_submit"/>登录</button>
         </div>
     </form>
 </div>

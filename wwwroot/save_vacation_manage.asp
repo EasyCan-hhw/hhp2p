@@ -14,48 +14,25 @@ if request.cookies("hhp2p_cookies")("uid")="" then
 end if
 
 action=SafeRequest("action")
-username=Trim(SafeRequest("username"))
-password=Trim(SafeRequest("password"))
-job_number=Trim(SafeRequest("job_number"))
-full_name=Trim(SafeRequest("full_name"))
-company_id=Trim(SafeRequest("company_id"))
-job_id=Trim(SafeRequest("job_id"))
-tel=Trim(SafeRequest("tel"))
-qq=Trim(SafeRequest("qq"))
-email=Trim(SafeRequest("email"))
-insurance=Trim(SafeRequest("insurance"))
-quanxian=Trim(SafeRequest("quanxian"))
-ifshow=Trim(SafeRequest("ifshow"))
+vid=Trim(SafeRequest("vid"))
+vacation_date=Trim(SafeRequest("vacation_date"))
+vacation_type=Trim(SafeRequest("vacation_type"))
+vacation_cause=Trim(SafeRequest("vacation_cause"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
-	rs.Open "select * from users where username='"&username&"'",conn,1,1
+	rs.Open "select * from vacation_manage where vacation_date='"&vacation_date&"'",conn,1,1
 	if not rs.eof then
-		response.write "1|username|用户名已存在"
+		response.write "1|vacation_date| 日期已存在"
 		response.end
-	end if
+	end if 
 	rs.close
-	rs.Open "select * from users where job_number='"&job_number&"'",conn,1,1
-	if not rs.eof then
-		response.write "1|job_number|工号已存在"
-		response.end
-	end if
-	rs.close
-	sql = "Select * from users"
+	sql = "Select * from vacation_manage"
 	rs.Open sql,conn,1,3
 	rs.addnew
-	rs("username")=username
-	rs("password")=md5("123456")
-	rs("full_name")=full_name
-	rs("company_id")=company_id
-	rs("job_number")=job_number
-	rs("job_id")=job_id
-	rs("tel")=tel
-	rs("qq")=qq
-	rs("email")=email
-	rs("add_insurance")=insurance
-	rs("quanxian")=quanxian
-	rs("inputdate")=now()
+	rs("vacation_date")=vacation_date
+	rs("vacation_type")=vacation_type
+	rs("vacation_cause")=vacation_cause
 	rs.update
 	rs.close
 	set rs=nothing
@@ -70,11 +47,11 @@ elseif action="edit" then
 	if password<>"" then password=",password='"&md5(password)&"'"
 	conn.execute "update users set job_number='"&job_number&"',full_name='"&full_name&"',company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&password&" where uid="&id
 elseif action="Invalid" then
-		conn.execute "update users set ifshow=1 where uid="&id
+	conn.execute "update users set ifshow=1 where uid="&id
 elseif action="Enable" then
-		conn.execute "update users set ifshow=0 where uid="&id
+	conn.execute "update users set ifshow=0 where uid="&id
 elseif action="del" then	
-		conn.execute "delete from users where uid="&id
+	conn.execute "delete from vacation_manage where vid="&vid
 end if
 	response.write "0|"
 	response.end

@@ -201,57 +201,63 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("job_number"))%></td>
                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%
-								set rs1=server.CreateObject("adodb.recordset")
-								rs1.Open "select * from companys where id="&rs("company_id"),conn,1,1
-								if not rs1.eof then
-									response.write rs1("company_name")
-									company_bonus_proportion=rs1("bonus_proportion")
-								else
-									response.write "其他"
-								end if
-								rs1.close
-								set rs1=nothing
-								%></td>
+                    								set rs1=server.CreateObject("adodb.recordset")
+                    								rs1.Open "select * from companys where id="&rs("company_id"),conn,1,1
+                    								if not rs1.eof then
+                    									response.write rs1("company_name")
+                    									company_bonus_proportion=rs1("bonus_proportion")
+                    								else
+                    									response.write "其他"
+                    								end if
+                    								rs1.close
+                    								set rs1=nothing
+                    								%></td>
+                                                    <td style="vertical-align: middle;text-align:center"><%
+                    								set rs1=server.CreateObject("adodb.recordset")
+                    								rs1.Open "select * from jobs where id="&rs("job_id"),conn,1,1
+                    								if not rs1.eof then
+                    									response.write rs1("job_name")
+                    									job_bonus_proportion=rs1("bonus_proportion")
+                    								else
+                    									response.write "其他"
+                    								end if
+                    								rs1.close
+                    								set rs1=nothing
+                    								%>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center"><%
-								set rs1=server.CreateObject("adodb.recordset")
-								rs1.Open "select * from jobs where id="&rs("job_id"),conn,1,1
-								if not rs1.eof then
-									response.write rs1("job_name")
-									job_bonus_proportion=rs1("bonus_proportion")
-								else
-									response.write "其他"
-								end if
-								rs1.close
-								set rs1=nothing
-								%></td>
+                  								Set db=Conn.execute("select count(*) As db from target_customers where add_uid="&rs("uid"))
+                  								response.write db("db")
+                  								%>
+                                </td>
+                                td style="vertical-align: middle;text-align:center"><%
+                  								Set db=Conn.execute("select count(*) As db from customers where uid="&rs("uid"))
+                  								response.write db("db")
+                  								%>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center"><%
-								Set db=Conn.execute("select count(*) As db from target_customers where add_uid="&rs("uid"))
-								response.write db("db")
-								%></td>
+                  								Set db=Conn.execute("select count(*) As db from contracts where approval=1 and add_uid="&rs("uid"))
+                  								response.write db("db")
+                  								%>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center"><%
-								Set db=Conn.execute("select count(*) As db from customers where uid="&rs("uid"))
-								response.write db("db")
-								%></td>
-                                <td style="vertical-align: middle;text-align:center"><%
-								Set db=Conn.execute("select count(*) As db from contracts where approval=1 and add_uid="&rs("uid"))
-								response.write db("db")
-								%></td>
-                                <td style="vertical-align: middle;text-align:center"><%
-								Set db=Conn.execute("select isnull(sum(capital),0) As db from contracts where approval=1 and add_uid="&rs("uid"))
-								response.write db("db")
-								zongjine=db("db")
-								%></td>
-                                <td style="vertical-align: middle;text-align:center"><%
-								bonus_proportion=0
-								if cdbl(rs("bonus_proportion"))>0 then
-									bonus_proportion=rs("bonus_proportion")
-								elseif cdbl(job_bonus_proportion)>0 then
-									bonus_proportion=job_bonus_proportion
-								elseif cdbl(company_bonus_proportion)>0 then
-									bonus_proportion=company_bonus_proportion
-								end if
-								response.write cdbl(zongjine)*cdbl(bonus_proportion)
-								%></td>
+                  								Set db=Conn.execute("select isnull(sum(capital),0) As db from contracts where approval=1 and add_uid="&rs("uid"))
+                  								response.write db("db")
+                  								zongjine=db("db")
+                  								%>
+                                </td>
+                               <td style="vertical-align: middle;text-align:center"><%
+                  								bonus_proportion=0
+                  								if cdbl(rs("bonus_proportion"))>0 then
+                  									bonus_proportion=rs("bonus_proportion")
+                  								elseif cdbl(job_bonus_proportion)>0 then
+                  									bonus_proportion=job_bonus_proportion
+                  								elseif cdbl(company_bonus_proportion)>0 then
+                  									bonus_proportion=company_bonus_proportion
+                  								end if
+                  								response.write cdbl(zongjine)*cdbl(bonus_proportion)
+                  								%>
+                                </td>
                             </tr>
             <%
 			i=i+1

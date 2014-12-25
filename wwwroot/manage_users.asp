@@ -192,6 +192,22 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;保险:</label>
+                            <div class="controls">
+                                <div class="span5">
+                                <select id="add_insurance" name="add_insurance">
+                                        <option value=""></option>
+                                        <option value="1">交城镇保险</option>
+                                        <option value="2">交农村保险</option>
+                                        <option value="3">不交保险</option>
+                                       
+                                </select>
+                                </div>
+                                <span class="help-inline">从下拉菜单中选择保险状况</span>
+                                <span id="add_insurance_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                           <label class="control-label">权限:</label>
                           <div class="controls">
                           <table>

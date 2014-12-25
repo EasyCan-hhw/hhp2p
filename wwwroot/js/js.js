@@ -511,8 +511,145 @@ $(document).ready( function() {
 		}
 	});
 
+//失去焦点控制
+/*$("input").blur(function (){
+	var id=$(this).attr("id");//根据input的id获取对应input
+	if (id == "job_number") {
+		
+		var query = new Object();
+			query.myvalue = escape($("#"+id).val());
+			query.action="sele";
+
+			$.ajax({
+				url: "save_daka.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						$("#job_number_err").html(data.split("|")[2]);
+
+						
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+						$("#insert_vacation_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						
+						$("#username").html(data.split("|")[2]);
+				   }
+				}
+			});
+
+	};
+});*/
+
+//假期添加
+$("#insert_vacation_submit").click(function(){
+		var tosubmit=true;
+		$(".err_text").html("");
+		if($.trim($("#vacation_date").val()).length == 0){
+			tosubmit=false;
+			$("#vacation_date_err").html("请选择日期");
+		}
+		if($.trim($("#vacation_type").val()).length == 0){
+			tosubmit=false;
+			$("#vacation_type_err").html("请选择类型");
+		}
+		
+		if(tosubmit){
+			$("#insert_vacation_submit").attr("disabled",true);
+			var query = new Object();
+			query.vacation_date=escape($("#vacation_date").val());
+			query.vacation_type=escape($("#vacation_type").val());
+			query.vacation_cause=escape($("#vacation_cause").val());
+			query.action="add";
+			$.ajax({
+				url: "save_vacation_manage.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						$("#vacation_date_err").html(data.split("|")[2]);
+
+						$("#insert_vacation_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+						$("#insert_vacation_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("添加成功！");
+						window.location.href="manage_add_vacation.asp";
+				   }
+				}
+			});
+		}
+	});
 
 
+//假期删除
+$(".vacation_del").click(function(){
+		if(confirm('是否确定删除？')){
+	 		var id=this.id.split("_")[2];
+			var query = new Object();
+			query.vid=id;
+			query.action="del";
+			$.ajax({
+				url: "save_vacation_manage.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("删除成功！");
+						window.location.href="manage_add_vacation.asp";
+				   }
+				}
+			});
+		}
+	});
+
+
+
+//考勤申请条目隐藏
 $("#work_type").change(function() {
 	workOverTime="加班申请";
 	complainWork="考勤申请";
@@ -521,7 +658,7 @@ $("#work_type").change(function() {
 		$("#dateSelect").css('display','block'); 
 		$("#timeSelectBegin").css('display','block'); 
 		$("#timeSelectEnd").css('display','block'); 
-		$("#causeSelect").css('display','none'); 
+		$("#causeSelect").css('display','block'); 
 
 	}
 	if ($("#work_type").val() == "请假申请") {
@@ -529,7 +666,7 @@ $("#work_type").change(function() {
 		$("#dateSelect").css('display','block'); 
 		$("#timeSelectBegin").css('display','none'); 
 		$("#timeSelectEnd").css('display','none'); 
-		$("#causeSelect").css('display','none'); 
+		$("#causeSelect").css('display','block'); 
 
 	}
 	if ($("#work_type").val() == "外出申请") {
@@ -537,14 +674,14 @@ $("#work_type").change(function() {
 		$("#dateSelect").css('display','block'); 
 		$("#timeSelectBegin").css('display','none'); 
 		$("#timeSelectEnd").css('display','none'); 
-		$("#causeSelect").css('display','none'); 
+		$("#causeSelect").css('display','block'); 
 	}
 	if ($("#work_type").val() == "出差申请") {
 
 		$("#dateSelect").css('display','block'); 
 		$("#timeSelectBegin").css('display','none'); 
 		$("#timeSelectEnd").css('display','none'); 
-		$("#causeSelect").css('display','none'); 
+		$("#causeSelect").css('display','block'); 
 	}
 	if ($("#work_type").val() == "考勤申诉") {
 
@@ -561,7 +698,8 @@ $("#work_type").change(function() {
 $("#add_work_application").click(function(){
 
 	var tosubmit=true
-	
+	var myDate = new Date(); 
+	var mtody = myDate.toLocaleDateString(); 
 	if ($.trim($("#work_number").val()).length == 0) {
 		tosubmit=false;
 		$("#work_number_err").html("请输入工号");
@@ -577,10 +715,11 @@ $("#add_work_application").click(function(){
 	
 	if (tosubmit) {
 
-		$("#add_work_application").attr("disabled",true);
+		$("#add_work_application").attr("disabled",true);	
 		var query = new Object();
-		
+		//判断是否有时间输入，以免将默认值通过公式计算添加到数据库
 		if ($.trim($("#start_time_hours").val()).length > 0) {
+			query.work_tody=escape(mtody);
 			query.work_number=escape($("#work_number").val());
 			query.work_name=escape($("#work_name").val());
 			query.work_type=escape($("#work_type").val());parseInt
@@ -591,6 +730,7 @@ $("#add_work_application").click(function(){
 			query.mwork_cause_txt=escape($("#input_txt").val());
 			query.action="add";
 		}else if($.trim($("#start_time_hours").val()).length == 0){
+			query.work_tody=escape(mtody);
 			query.work_number=escape($("#work_number").val());
 			query.work_name=escape($("#work_name").val());
 			query.work_type=escape($("#work_type").val());
@@ -646,6 +786,7 @@ $("#add_work_application").click(function(){
 
 	$("#add_user_submit").click(function(){
 		var tosubmit=true;
+		var insurance = "";
 		$(".err_text").html("");
 		if($.trim($("#username").val()).length == 0){
 			tosubmit=false;
@@ -679,6 +820,11 @@ $("#add_work_application").click(function(){
 			tosubmit=false;
 			$("#email_err").html("请输入E-mail地址");
 		}
+		if($.trim($("#add_insurance").val()).length == 0){
+			tosubmit=false;
+			$("#add_insurance_err").html("请选择");
+		}
+		insurance = $("#add_insurance").val();
 		var quanxian ="";   
 		$('input[name="quanxian"]:checked').each(function(){    
 		   quanxian+=$(this).val()+",";     
@@ -694,6 +840,7 @@ $("#add_work_application").click(function(){
 			query.tel=escape($("#tel").val());
 			query.qq=escape($("#qq").val());
 			query.email=escape($("#email").val());
+			query.insurance=escape(insurance);
 			query.quanxian=quanxian;
 			query.action="add";
 			$.ajax({
@@ -1995,10 +2142,10 @@ $(".daka_del").click(function(){
 			tosubmit=false;
 			$("#property_card_err").html("请上传房产证照片");
 		}
-		if($.trim($("#notarization").val()).length == 0){
+		/*if($.trim($("#notarization").val()).length == 0){
 			tosubmit=false;
 			$("#notarization_err").html("请上传公证书照片");
-		}
+		}*/
 		if($.trim($("#IOU_receipt").val()).length == 0){
 			tosubmit=false;
 			$("#IOU_receipt_err").html("请上传借据、收据照片");
@@ -2007,10 +2154,10 @@ $(".daka_del").click(function(){
 			tosubmit=false;
 			$("#contract_err").html("请上传借款合同照片");
 		}
-		if($.trim($("#other_evidence").val()).length == 0){
+		/*if($.trim($("#other_evidence").val()).length == 0){
 			tosubmit=false;
 			$("#other_evidence_err").html("请上传他证照片");
-		}
+		}*/
 		if(tosubmit){
 			$("#add_creditor_right_submit").attr("disabled",true);
 			var query = new Object();
@@ -2284,6 +2431,82 @@ $(".daka_del").click(function(){
 		}
 		}
 	});
+
+
+	//考勤审核
+	$("#manage_work_submit").click(function(){
+
+		if(confirm('是否确定审批？')){
+		var tosubmit=true;
+		if(tosubmit){
+			$("#manage_work_submit").attr("disabled",true);
+			var query = new Object();
+			query.wid=escape($("#id").val());
+			query.action="approval";
+			$.ajax({
+				url: "save_work.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+						$("#manage_work_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("审批成功！");
+						window.location.href="manage_examine_work.asp";
+				   }
+				}
+			});
+		}
+		}
+	});
+
+	$(".manage_examine_work").click(function(){
+		if(confirm('是否确定审批？')){
+	 		var id=this.id.split("_")[2];
+			var query = new Object();
+			query.wid=id;
+			query.action="approval";
+			$.ajax({
+				url: "save_work.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0) 
+				   {
+						alert("审批成功！");
+						window.location.href="manage_examine_work.asp";
+				   }
+				}
+			});
+		}
+	});
+
 
 
 	$("#creditor_right_approvals").click(function(){

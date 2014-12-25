@@ -25,9 +25,11 @@ end if
 <script src="js/select2.min.js"></script>
 <script src="js/js.js"></script>
 <script type="text/javascript" src="DatePicker/WdatePicker.js"></script>
+
 </head>
 
 <body>
+
 
 <!--Header-part-->
 <div id="header">

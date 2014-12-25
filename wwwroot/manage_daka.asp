@@ -191,14 +191,14 @@ else
                         <div class="control-group">
                             <label class="control-label">&nbsp;工号:</label>
                             <div class="controls">
-                                <input type="text" id="job_number" class="span5" name="job_number"/>
+                                <input type="text" id="job_number" class="span5" name="job_number" style="width:275px;"/>
                                 <span id="job_number_err" class="err_text"></span>
                             </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label">&nbsp;员工姓名:</label>
                             <div class="controls">
-                                <input type="text" id="username" class="span5" name="username"/>
+                                <input type="text" id="username" class="span5" name="username" style="width:275px;" />
                                 <span id="username_err" class="err_text"></span>
                             </div>
                         </div>
@@ -211,6 +211,9 @@ else
                                 <span id="work_date_err" class="err_text"></span>
                             </div>
                         </div>
+                        
+                        
+                       
                         <div class="control-group">
                             <label class="control-label">&nbsp;打卡时间:</label>
                             <div class="controls">

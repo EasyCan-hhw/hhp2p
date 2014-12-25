@@ -29,16 +29,23 @@ end if
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
                   
                         <div class="control-group">
+                          <label class="control-label" ><font color="red">*</font>&nbsp;当日时间:</label>
+                             <div class="controls">
+                              
+                                <input type="text" id="work_tody" class="half" name="work_number" value="<%=Year(now())&"年"&month(now())&"月"&day(now())&"日"%>" disabled/>
+                              </div>
+                        </div>
+                        <div class="control-group">
                           <label class="control-label"><font color="red">*</font>&nbsp;员工工号:</label>
                              <div class="controls">
-                              <input type="text" id="work_number" class="half" name="work_number" value="<%=request.cookies("hhp2p_cookies")("job_number")%>"/>
+                              <input type="text" id="work_number" class="half" name="work_number" value="<%=request.cookies("hhp2p_cookies")("job_number")%>" disabled/>
                                 <span id="work_number_err" class="err_text"></span>
                               </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;员工姓名:</label>
                             <div class="controls">
-                                <input type="text" id="work_name" class="half" name="work_name" value="<%=request.cookies("hhp2p_cookies")("full_name")%>"/>
+                                <input type="text" id="work_name" class="half" name="work_name" value="<%=request.cookies("hhp2p_cookies")("full_name")%>" disabled/>
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
                         </div>

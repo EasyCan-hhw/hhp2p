@@ -170,7 +170,7 @@ end if
                    <tr>
                           <td style="vertical-align: middle;text-align:center">
 
-                            <input name="position_id<%=int(rs("id"))%>" id="position_id<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("position_id"))%>">
+                            <input name="position_id<%=int(rs("id"))%>" id="position_id<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("position_id"))%>" disabled>
 
                           </td>
                           <td style="vertical-align: middle;text-align:center">

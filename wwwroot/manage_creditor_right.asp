@@ -443,7 +443,7 @@ if trim(request("collateral_class"))<>"" then collateral_class_name=" and collat
 								if rs("approval")=0 then
 									response.write "待审批"
 								elseif rs("approval")=1 then
-									response.write "已审批"
+									response.write "<font color='#FF0000'>已审批</font>"
 								end if
 								%></td>
                                <td style="vertical-align: middle; text-align:center">

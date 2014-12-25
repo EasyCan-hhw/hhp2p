@@ -219,7 +219,7 @@ else
                             	<th><input type="checkbox" id="check_all" name="title-table-checkbox"/></th>
                                 <th nowrap="nowrap">借款人姓名</th>
                                 <th>借款人身份证</th>
-                                <th>抵押物</th>
+                                <th>抵押物</th> 
                                 <th>抵押物价值</th>
                                <th>借款金额</th>
                                <th>还款日期</th>
@@ -227,22 +227,19 @@ else
                             </tr>
                             </thead>
                             <tbody>
-            <%
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-if trim(request("repayment_date"))<>"" then date1=" and datediff(d,'"&trim(request("repayment_date"))&"',repayment_date)>=0"
-if trim(request("repayment_date2"))<>"" then date2=" and datediff(d,repayment_date,'"&trim(request("repayment_date2"))&"')>=0"
-if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
-
+                          <%
+                        if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
+                        if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
+                        if trim(request("repayment_date"))<>"" then date1=" and datediff(d,'"&trim(request("repayment_date"))&"',repayment_date)>=0"
+                        if trim(request("repayment_date2"))<>"" then date2=" and datediff(d,repayment_date,'"&trim(request("repayment_date2"))&"')>=0"
+                        if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
 				err_txt="<tr><td colspan=""8"">没有待审批的债权</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
 			rs.Open "select * from creditor_right where approval=0"&full_name&passportdate1&date2&status&" order by id",conn,1,1
-
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
 			if not rs.eof then
-				
 	  				totalPut=rs.recordcount
       				if currentpage<1 then
           				currentpage=1
@@ -275,7 +272,7 @@ if trim(request("status"))<>"" then status=" and approval="&trim(request("status
 	   		i=0
 			do while not rs.eof
 			%>
-                                                        <tr>
+                                         <tr>
                                 <td><input type="checkbox" name="subBox" value="<%=rs("id")%>"/></td>
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
