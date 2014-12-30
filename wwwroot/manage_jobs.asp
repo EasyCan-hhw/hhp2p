@@ -129,7 +129,7 @@ end if
 
 				err_txt="<tr><td colspan=""3"">没有职位</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from jobs order by id",conn,1,1
+			rs.Open "select * from jobs order by month_money",conn,1,1
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if

@@ -20,6 +20,7 @@ job_number=Trim(SafeRequest("job_number"))
 full_name=Trim(SafeRequest("full_name"))
 company_id=Trim(SafeRequest("company_id"))
 job_id=Trim(SafeRequest("job_id"))
+lead_user=Trim(SafeRequest("lead_user"))
 tel=Trim(SafeRequest("tel"))
 qq=Trim(SafeRequest("qq"))
 email=Trim(SafeRequest("email"))
@@ -50,6 +51,7 @@ if action="add" then
 	rs("company_id")=company_id
 	rs("job_number")=job_number
 	rs("job_id")=job_id
+	rs("lead_user")=lead_user
 	rs("tel")=tel
 	rs("qq")=qq
 	rs("email")=email
@@ -68,7 +70,7 @@ elseif action="edit" then
 	end if
 	rs.close
 	if password<>"" then password=",password='"&md5(password)&"'"
-	conn.execute "update users set job_number='"&job_number&"',full_name='"&full_name&"',company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&password&" where uid="&id
+	conn.execute "update users set job_number='"&job_number&"',lead_user="&lead_user&",full_name='"&full_name&"',company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&password&" where uid="&id
 elseif action="Invalid" then
 		conn.execute "update users set ifshow=1 where uid="&id
 elseif action="Enable" then

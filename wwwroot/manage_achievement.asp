@@ -230,7 +230,7 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                   								response.write db("db")
                   								%>
                                 </td>
-                                td style="vertical-align: middle;text-align:center"><%
+                                <td style="vertical-align: middle;text-align:center"><%
                   								Set db=Conn.execute("select count(*) As db from customers where uid="&rs("uid"))
                   								response.write db("db")
                   								%>

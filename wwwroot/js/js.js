@@ -511,8 +511,186 @@ $(document).ready( function() {
 		}
 	});
 
+//input获得焦点
+
+/*$("input").blur(function test(){
+	var id = $(this).attr("id");//根据input的id获取对应input
+	if (id == "b_min" || id == "b_max") {
+
+		var str=(this.value).replace(/[^\d]/g, "");
+        var maxlen = 16;
+        if (str.length < maxlen) {
+            maxlen = str.length;
+        }
+        var temp = "";
+        for (var i = 0; i < maxlen; i++) {
+            temp = temp + str.substring(i, i + 1);
+            if (i != 0 && (i + 1) % 4 == 0 ) {
+                temp = temp + ",";
+            }
+        }
+        this.value=temp;
+	};
+});*/
+
+$(".section_edit").click(function(){
+	var id=this.id.split("_")[2];
+	var tosubmit=true;
+	if($.trim($("#b_min_"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请填写最小值");
+	}
+	if ($.trim($("#b_max_"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请填写最大值");
+	}
+	if ($.trim($("#b_scale_"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请填写提佣比例");
+	}
+	if(tosubmit){
+			var query = new Object();
+			query.id=id;
+			query.b_min=escape($("#b_min_"+id).val());
+			query.b_max=escape($("#b_max_"+id).val());
+			query.b_bscale=escape($("#b_scale_"+id).val());
+			query.action="edit";
+			$.ajax({
+				url: "save_brokerage_section.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("修改成功！");
+						window.location.href="manage_brokerage_section.asp";
+				   }
+				}
+			});
+		}
+
+});
+
+$(".section_del").click(function(){
+		if(confirm('是否确定删除？')){
+	 		var id=this.id.split("_")[2];
+			var query = new Object();
+			query.id=id;
+			query.action="del";
+			$.ajax({
+				url: "save_brokerage_section.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("删除成功！");
+						window.location.href="manage_brokerage_section.asp";
+				   }
+				}
+			});
+		}
+	});
+
+
+//提佣区间添加
+$("#add_brokerage_section_submit").click(function(){
+	var tosubmit=true;
+	if($.trim($("#b_jobs").val()).length == 0){
+			tosubmit=false;
+			$("#b_jobs_err").html("请选择职位");
+	}
+	if ($.trim($("#b_min").val()).length == 0 || $.trim($("#b_max").val()).length == 0) {
+		tosubmit=false;
+		$("#b_minmax_err").html("请填写区间值");
+	}
+	if($.trim($("#b_ladder").val()).length == 0){
+			tosubmit=false;
+			$("#b_ladder_err").html("请选择档位");
+	}
+	if($.trim($("#b_bscale").val()).length == 0){
+			tosubmit=false;
+			$("#b_bscale_err").html("请填写提佣比例");
+	}
+	if(tosubmit){
+			$("#add_brokerage_section_submit").attr("disabled",true);
+			var query = new Object();
+			query.b_jobs=escape($("#b_jobs").val());
+			query.b_min=escape($("#b_min").val());
+			query.b_max=escape($("#b_max").val());
+			query.b_ladder=escape($("#b_ladder").val());
+			query.b_bscale=escape($("#b_bscale").val());
+			query.action="add";
+			$.ajax({
+				url: "save_brokerage_section.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						//$("#vacation_date_err").html(data.split("|")[2]);
+
+						$("#add_brokerage_section_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+						$("#add_brokerage_section_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("添加成功！");
+						window.location.href="manage_brokerage_section.asp";
+				   }
+				}
+			});
+		}
+
+});
+
+
+
 //失去焦点控制
-/*$("input").blur(function (){
+$("input").blur(function (){
 	var id=$(this).attr("id");//根据input的id获取对应input
 	if (id == "job_number") {
 		
@@ -529,16 +707,20 @@ $(document).ready( function() {
 				dataType:"text",
 				success:function(data)
 				{
+					//alert(data);
 				  if(parseInt(data.split("|")[0])==1)
 				  {
 						$("#job_number_err").html(data.split("|")[2]);
-
-						
 				   }
 				   else if(parseInt(data.split("|")[0])==3)
 				   {
-						alert(data.split("|")[1]);
-						$("#insert_vacation_submit").attr("disabled",false);
+					 $("#job_number_err").html(data.split("|")[1]);
+					 $("#username").val(" "); 
+				   }
+				   else if(parseInt(data.split("|")[0])==4)
+				   {
+				   	$("#username").val(data.split("|")[1]);
+				   	$("#job_number_err").html(" ");
 				   }
 				   else if(parseInt(data.split("|")[0])==2)
 				   {
@@ -547,14 +729,13 @@ $(document).ready( function() {
 				   }
 				   else if(parseInt(data.split("|")[0])==0)
 				   {
-						
-						$("#username").html(data.split("|")[2]);
+							
 				   }
 				}
 			});
 
 	};
-});*/
+});
 
 //假期添加
 $("#insert_vacation_submit").click(function(){
@@ -837,6 +1018,7 @@ $("#add_work_application").click(function(){
 			query.full_name=escape($("#full_name").val());
 			query.company_id=escape($("#company_id").val());
 			query.job_id=escape($("#job_id").val());
+			query.lead_user=escape($("#lead_user").val());
 			query.tel=escape($("#tel").val());
 			query.qq=escape($("#qq").val());
 			query.email=escape($("#email").val());
@@ -923,6 +1105,7 @@ $("#add_work_application").click(function(){
 			query.full_name=escape($("#full_name").val());
 			query.company_id=escape($("#company_id").val());
 			query.job_id=escape($("#job_id").val());
+			query.lead_user=escape($("#lead_user").val());
 			query.tel=escape($("#tel").val());
 			query.qq=escape($("#qq").val());
 			query.email=escape($("#email").val());
@@ -1420,7 +1603,6 @@ $("#add_work_application").click(function(){
 			$("#work_date_err").html("请选择时间");
 		}
 		if ($.trim($("#start_time1").val())>=24 || $.trim($("#start_time1").val())<0) {
-
 			tosubmit=false
 			$("#star_time_err").html("输入的时钟格式不规范");
 		}
@@ -1437,7 +1619,7 @@ $("#add_work_application").click(function(){
 			$("#end_time_err").html("输入的分钟格式不规范")
 		}
 		if (tosubmit) {
-			$("#insert_daka_submit").attr("disabled",true);
+			//$("#insert_daka_submit").attr("disabled",true);
 			var query = new Object();
 			query.job_number=escape($("#job_number").val());
 			query.username=escape($("#username").val());
@@ -1454,10 +1636,10 @@ $("#add_work_application").click(function(){
 				dataType:"text",
 				success:function(data)
 				{
+					
 				  if(parseInt(data.split("|")[0])==1)
-				  {
+				  	{
 				  		alert(data.split("|")[2]);
-						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
 						$("#insert_daka_submit").attr("disabled",false);
 				   }
 				   else if(parseInt(data.split("|")[0])==3)
@@ -1477,9 +1659,7 @@ $("#add_work_application").click(function(){
 				   }
 				}
 			});
-
 		}
-
 	});
 
 
@@ -3598,6 +3778,7 @@ function onlyshu(str,str1){
 function onlymoney(str,str1){
 	str.value=str1.replace(/[^\d\.]/g,'');
 }
+
 function isNumber(s){
 	var patrn=/\D/;  
 	if (patrn.exec(s)) return false  
@@ -3609,6 +3790,7 @@ function ismoney(s){
 	if (patrn.exec(s)) return false  
 	return true  
 }
+
 function isTel(s){  
 	var patrn=/^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/;  
 	if (!patrn.exec(s)) return false  

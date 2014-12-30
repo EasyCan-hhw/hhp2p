@@ -14,6 +14,7 @@ if not rs.eof then
 	full_name=rs("full_name")
 	company_id=rs("company_id")
 	job_id=rs("job_id")
+    lead_user=rs("lead_user")
 	tel=rs("tel")
 	qq=rs("qq")
 	email=rs("email")
@@ -132,6 +133,31 @@ end if
                                 <span id="job_id_err" class="err_text"></span>
                             </div>
                         </div>
+                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;上级:</label>
+                            <div class="controls">
+                                <div class="span5">
+                                <select id="lead_user" name="lead_user">
+                                        <option value="" ></option>
+                                        <%
+                                        set rs=server.CreateObject("adodb.recordset")
+                                        rs.Open "select * from users order by uid" ,conn,1,1
+                                        do while not rs.eof
+                                        %>
+                                        <option value="<%=rs("job_number")%>" <%if rs("job_number")=job_id then%>selected<%end if%>><%=rs("full_name")%></option>
+                                        <%
+                                         rs.movenext
+                                         loop
+                                         rs.close
+                                         set rs=nothing
+                                        %>
+                                    </select>
+                                </div>
+                                <span class="help-inline">从下拉菜单中选择上级</span>
+                                <span id="lead_user_err" class="err_text"></span>
+                            </div>
+                        </div>
+
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;电话:</label>
                             <div class="controls">
@@ -253,6 +279,7 @@ end if
                                 <th>姓名</th>
                                 <th>分公司</th>
                                 <th>职位</th>
+                                <th>上级</th>
                                 <th>电话</th>
                                <th>QQ</th>
                                <th>E-mail</th>
@@ -336,6 +363,21 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
 								rs1.close
 								set rs1=nothing
 								%></td>
+                                <td style="vertical-align: middle;text-align:center">
+                                   
+                                    <%
+                                    if rs("lead_user")="" Or IsNull(rs("lead_user")) Or IsEmpty(rs("lead_user")) then 
+                                        response.write("无")
+                                    else
+                                        set rs2=server.CreateObject("adodb.recordset")
+                                        rs2.Open "select * from users where job_number="&rs("lead_user"),conn,1,1
+                                        response.write rs2("full_name")
+                                        rs2.close
+                                        set rs2=nothing
+
+                                    end if 
+                                    %>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("tel"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("qq"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("email"))%></td>
