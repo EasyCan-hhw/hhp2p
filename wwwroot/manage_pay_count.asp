@@ -111,65 +111,29 @@ else
             <div class="span12">
               <div class="widget-box">
                 <div class="widget-title"> <span class="icon"> <i class="icon-edit"></i> </span>
-                  <h5>员工考勤查询</h5>
+                  <h5>工资模块</h5>
                 </div>
                  <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" >
                         <div class="control-group">
                             <label class="control-label">&nbsp;员工工号:</label>
                             <div class="controls" style="width:500px">
-                                <input type="text" id="sel_mwork_number" class="span5" name="sel_mwork_number"/>
-                                <span id="full_name_err" class="err_text"></span>
+                                <input type="text" id="pay_usernumber" class="span5" name="pay_usernumber"/>
+                                <span id="pay_usernumber_err" class="err_text"></span>
                             </div>
                         </div>
+                        
                         <div class="control-group">
-                            <label class="control-label">&nbsp;员工姓名:</label>
+                            <label class="control-label">&nbsp;月份:</label>
                             <div class="controls" style="width:500px">
-                                <input type="text" id="sel_mwork_name" class="span5" name="sel_mwork_name"/>
-                                <span id="passport_err" class="err_text"></span>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label">&nbsp;申请日期:</label>
-                            <div class="controls" style="width:500px">
-                                <input type="text" id="sel_mwork_tody" name="sel_mwork_tody" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" />
+                                <input type="text" id="pay_usermonth" name="pay_usermonth" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" />
                                 <span class="help-inline">格式：1970-01-01</span>
-                                <span id="sel_mwork_tody" class="err_text"></span>
+                                <span id="pay_usermonth_err" class="err_text"></span>
                             </div>
                         </div>
-                       <!-- <div class="control-group">
-                            <label class="control-label">&nbsp;申请类型:</label>
-                            <div class="controls">
-                                <input type="text" id="sel_mwork_type" class="span5" name="sel_mwork_type"/>
-                                <span id="email_err" class="err_text"></span>
-                            </div>
-                        </div>-->
-                        <div class="control-group">
-                          <label class="control-label"><font color="red">*</font>申请条目:</label>
-                          <div class="controls">
-                             <div class="span5" style="width:220px">
-                                <select id="sel_mwork_type" name="sel_mwork_type" value="">
-                                      <option value="" ></option>
-                                        <%
-                                      set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from work_application order by id" ,conn,1,1
-                                      do while not rs.eof
-                                      %>
-                                      <option  value="<%=rs("work_application")%>" <%if rs("id")=work_application then%>selected<%end if%>><%=rs("work_application")%></option>
-                                      <%
-                                       rs.movenext
-                                       loop
-                                       rs.close
-                                       set rs=nothing
-                                      %>  
-                                    </select>
-                                </div>
-                                <span id="work_type_err" class="err_text"></span>
-                          </div>
-                        </div>
-                      <div class="form-actions">
+                       <div class="form-actions">
                           <label class="control-label"></label>
-                          <button id="search_mwork_submit" type="submit" class="btn btn-primary">组合查询</button>
+                          <button id="pay_user_submit" type="submit" class="btn btn-primary">组合查询</button>
                       </div>
                   </form>
                 </div>
@@ -180,32 +144,45 @@ else
              <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
-                        <h5>待审批考勤列表</h5>
+                        <h5>待审批考勤列表
+
+                          
+                        </h5>
                     </div>
                     <div class="widget-content">
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                              <th><input type="checkbox" id="check_all" name="title-table-checkbox"/></th>
-                                <th nowrap="nowrap">申请时间</th>
-                                <th>员工工号</th>
-                                <th>员工姓名</th>
-                                <th>申请类型</th>
-                               <th>时间</th>
-                               <th>日期</th>
-                                <th>原因</th> 
-                                <th width="20%">操作</th>
+                              <!--<th><input type="checkbox" id="check_all" name="title-table-checkbox"/></th>-->
+                                <th>工号</th>
+                                <th nowrap="nowrap">姓名</th>
+                                <th>级别</th>
+                                <th>底薪</th>
+                                <th>月份</th>
+                                <th>出勤天数</th>
+                               <th>绩效奖金</th>
+                               <th>绩效奖金追加</th>
+                                <th>小组长津贴佣金</th> 
+                                <th>加班</th>
+                                <th><font color="#FF0000">社保</font></th> 
+                                <th><font color="#FF0000">公积金</font></th> 
+                                <th><font color="#FF0000">请假</font></th> 
+                                <th><font color="#FF0000">迟到</font></th> 
+                                <th><font color="#FF0000">漏打卡</font></th> 
+                                <th><font color="#FF0000">旷工</font></th> 
+                                <th><font color="#FF0000">其他</font></th> 
+                                <th>应发工资</th> 
+                                <th width="10%">操作</th>
                             </tr>
                             </thead>
                             <tbody>
                           <%
-                        if trim(request("sel_mwork_number"))<>"" then sel_mwork_number=" and mwork_number='"&trim(request("sel_mwork_number"))&"'"
-                        if trim(request("sel_mwork_name"))<>"" then sel_mwork_name=" and mwork_name='"&trim(request("sel_mwork_name"))&"'"
-                        if trim(request("sel_mwork_tody"))<>"" then sel_mwork_tody=" and mwork_tody='"&trim(request("sel_mwork_tody"))&"'"
-                        if trim(request("sel_mwork_type"))<>"" then sel_mwork_type=" and mwork_type='"&trim(request("sel_mwork_type"))&"'"
-        err_txt="<tr><td colspan=""8"">没有待审批的债权</td></tr>"
+                        if trim(request("pay_usernumber"))<>"" then pay_usernumber=" and job_number='"&trim(request("pay_usernumber"))&"'"
+                       '' if trim(request("pay_usermonth"))<>"" then pay_usermonth=" and mwork_name='"&trim(request("pay_usermonth"))&"'"
+                       
+        err_txt="<tr><td colspan=""8"">没有员工工资信息</td></tr>"
       set rs=server.CreateObject("adodb.recordset")
-      rs.Open "select * from work_application_message where mwork_tody IS NOT NULL  "&sel_mwork_number&sel_mwork_name&sel_mwork_tody&sel_mwork_type&" order by wid",conn,1,1
+      rs.Open "select * from users where job_number IS NOT NULL  "&pay_usernumber&" order by uid",conn,1,1
 
         if err.number<>0 or rs.eof then
         response.write err_txt
@@ -224,18 +201,18 @@ else
               end if
               if currentPage=1 then
                   showContent
-                  showpage1=showpage(totalput,MaxPerPage,"manage_examine_work.asp","&sel_mwork_number="&trim(request("sel_mwork_number"))&"&sel_mwork_name="&trim(request("sel_mwork_name"))&"&sel_mwork_tody="&trim(request("sel_mwork_tody"))&"&sel_mwork_type="&trim(request("sel_mwork_type")))
+                  showpage1=showpage(totalput,MaxPerPage,"manage_pay_count.asp","&pay_usernumber="&trim(request("pay_usernumber")))
               else
                   if (currentPage-1)*MaxPerPage<totalPut then
                     rs.move  (currentPage-1)*MaxPerPage
                     dim bookmark
                     bookmark=rs.bookmark
                     showContent
-                    showpage1=showpage(totalput,MaxPerPage,"manage_examine_work.asp","&sel_mwork_number="&trim(request("sel_mwork_number"))&"&sel_mwork_name="&trim(request("sel_mwork_name"))&"&sel_mwork_tody="&trim(request("sel_mwork_tody"))&"&sel_mwork_type="&trim(request("sel_mwork_type")))
+                    showpage1=showpage(totalput,MaxPerPage,"manage_pay_count.asp","&pay_usernumber="&trim(request("pay_usernumber")))
                 else
                   currentPage=1
                     showContent
-                    showpage1=showpage(totalput,MaxPerPage,"manage_examine_work.asp","&sel_mwork_number="&trim(request("sel_mwork_number"))&"&sel_mwork_name="&trim(request("sel_mwork_name"))&"&sel_mwork_tody="&trim(request("sel_mwork_tody"))&"&sel_mwork_type="&trim(request("sel_mwork_type")))
+                    showpage1=showpage(totalput,MaxPerPage,"manage_pay_count.asp","&pay_usernumber="&trim(request("pay_usernumber")))
             end if
             end if
       end if
@@ -244,29 +221,54 @@ else
       do while not rs.eof
       %>
                               <tr>
-                                <td><input type="checkbox" name="subBox" value="<%=rs("wid")%>"/></td>
-                                <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("mwork_tody"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_number"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_name"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_type"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_start_time") \ 60)%>&nbsp;:&nbsp;<%=trim(rs("mwork_start_time") mod 60)%>&nbsp;至&nbsp;&nbsp;<%=trim(rs("mwork_end_time")\60)%>&nbsp;:&nbsp;<%=trim(rs("mwork_end_time") mod 60)%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_start_date"))%>&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;<%=trim(rs("mwork_end_date"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_cause_txt"))%></td>
+                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("job_number"))%></td>
+                                <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                 
+                                  set rsjob=server.CreateObject("adodb.recordset")
+                                   rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
+                                   least_money=rsjob("least_money")
+                                   month_money=rsjob("month_money")
+                                   response.write rsjob("job_name")
+                                   %>
+                                </td>
+                                <td style="vertical-align: middle;text-align:center"><%=trim(rsjob("base_pay"))%></td>
+                                <td style="vertical-align: middle;text-align:center">2015-01</td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                   rsjob.close
+                                   datemonth="'"+"2015-01%"+"'"
+                                   set rstody=server.CreateObject("adodb.recordset")
+                                     rstody.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                    response.write rstody.recordcount
+                                      rstody.close
+                                  %>
+
+                                </td>
+                                <td style="vertical-align: middle;text-align:center">绩效奖金</td>
+                                <td style="vertical-align: middle;text-align:center">绩效奖金追加</td>
+                                <td style="vertical-align: middle;text-align:center">小组长津贴佣金</td>
+                                <td style="vertical-align: middle;text-align:center">加班</td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+
+                                  %>
+                                </td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+
+                                  %>
+                                </td>
+                                <td style="vertical-align: middle;text-align:center">请假</td>
+                                <td style="vertical-align: middle;text-align:center">迟到</td>
+                                <td style="vertical-align: middle;text-align:center">漏打卡</td>
+                                <td style="vertical-align: middle;text-align:center">旷工</td>
+                                <td style="vertical-align: middle;text-align:center">其他</td>
+                                <td style="vertical-align: middle;text-align:center">应发工资</td>
+                                
                                <td style="vertical-align: middle; text-align:center">
-                                   
-                                    <%if rs("approval")=1 then
-                                    %>
-                                    <a ><font color="#FF0000">
-                                     <%
-                                     response.write("已审批</font></a>&nbsp;&nbsp;|&nbsp;&nbsp;") 
-                                    else 
-                                    %>
-                                    
-                                    <a href="javascript:;" id="manage_work_<%=int(rs("wid"))%>" class="manage_examine_work">
-                                      <%
-                                      response.write("审批</a>&nbsp;&nbsp;|&nbsp;&nbsp;") 
-                                      end if%>
-                                    <a href="manage_examine_work.asp?id=<%=int(rs("wid"))%>">查看详情</a>
+                                    <a href="">查看详情</a>
                                 </td>
                             </tr>
             <%
