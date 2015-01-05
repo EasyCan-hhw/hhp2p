@@ -1068,6 +1068,10 @@ $("#add_work_application").click(function(){
 			tosubmit=false;
 			$("#job_number_err").html("请输入工号");
 		}
+		if($.trim($("#password").val()).length == 0){
+			tosubmit=false;
+			$("#password_err").html("请输入姓名");
+		}
 		if($.trim($("#full_name").val()).length == 0){
 			tosubmit=false;
 			$("#full_name_err").html("请输入姓名");
@@ -1080,6 +1084,11 @@ $("#add_work_application").click(function(){
 			tosubmit=false;
 			$("#job_id_err").html("请选择职位");
 		}
+		if($.trim($("#lead_user").val()).length == 0){
+			tosubmit=false;
+			$("#lead_user_err").html("请选择上级");
+		}
+
 		if($.trim($("#tel").val()).length == 0){
 			tosubmit=false;
 			$("#tel_err").html("请输入电话");
@@ -1092,6 +1101,16 @@ $("#add_work_application").click(function(){
 			tosubmit=false;
 			$("#email_err").html("请输入E-mail地址");
 		}
+		if($.trim($("#entry_date").val()).length == 0){
+			tosubmit=false;
+			$("#entry_date_err").html("请选择入职时间");
+		}
+		if($.trim($("#add_insurance").val()).length == 0){
+			tosubmit=false;
+			$("#add_insurance_err").html("请选择保险");
+		}
+
+		
 		var quanxian ="";   
 		$('input[name="quanxian"]:checked').each(function(){    
 		   quanxian+=$(this).val()+",";     
@@ -1103,12 +1122,28 @@ $("#add_work_application").click(function(){
 			query.password=escape($("#password").val());
 			query.job_number=escape($("#job_number").val());
 			query.full_name=escape($("#full_name").val());
-			query.company_id=escape($("#company_id").val());
-			query.job_id=escape($("#job_id").val());
-			query.lead_user=escape($("#lead_user").val());
+			query.company_id=escape($("#company_id").val());//所属公司
+			query.job_id=escape($("#job_id").val());//职位
+			if ($.trim($("#lead_user").val()).length == 0){
+				query.lead_user=escape("");//上级
+			}
+			else{
+				query.lead_user=escape($("#lead_user").val());//上级
+			}
+			
 			query.tel=escape($("#tel").val());
 			query.qq=escape($("#qq").val());
 			query.email=escape($("#email").val());
+			if ($.trim($("#lead_user").val()).length == 0){
+				query.insurance=escape("");//保险
+			}
+			else{
+				query.insurance=escape($("#add_insurance").val());//保险
+			}
+			
+			query.inputdate=escape($("#entry_date").val());//入职时间
+			query.census_register=escape($("#census_register").val());//户籍
+			query.add_gold=escape($("#add_gold").val());//加金
 			query.quanxian=quanxian;
 			query.action="edit";
 			$.ajax({
@@ -1120,6 +1155,7 @@ $("#add_work_application").click(function(){
 				dataType:"text",
 				success:function(data)
 				{
+					
 				  if(parseInt(data.split("|")[0])==1)
 				  {
 						$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);

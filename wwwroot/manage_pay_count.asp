@@ -144,7 +144,7 @@ else
              <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
-                        <h5>待审批考勤列表
+                        <h5>工资核算
 
                           
                         </h5>
@@ -163,11 +163,10 @@ else
                                <th>绩效奖金</th>
                                <th>绩效奖金追加</th>
                                 <th>小组长津贴佣金</th> 
-                                <th>加班</th>
                                 <th><font color="#FF0000">社保</font></th> 
                                 <th><font color="#FF0000">公积金</font></th> 
                                 <th><font color="#FF0000">请假</font></th> 
-                                <th><font color="#FF0000">迟到</font></th> 
+                                <th><font color="#FF0000">迟到/早退</font></th> 
                                 <th><font color="#FF0000">漏打卡</font></th> 
                                 <th><font color="#FF0000">旷工</font></th> 
                                 <th><font color="#FF0000">其他</font></th> 
@@ -238,7 +237,7 @@ else
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
                                    rsjob.close
-                                   datemonth="'"+"2015-01%"+"'"
+                                   datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
                                    set rstody=server.CreateObject("adodb.recordset")
                                      rstody.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
                                     response.write rstody.recordcount
@@ -249,36 +248,95 @@ else
                                 <td style="vertical-align: middle;text-align:center">绩效奖金</td>
                                 <td style="vertical-align: middle;text-align:center">绩效奖金追加</td>
                                 <td style="vertical-align: middle;text-align:center">小组长津贴佣金</td>
-                                <td style="vertical-align: middle;text-align:center">加班</td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-
+                                     set rsInsurance=server.CreateObject("adodb.recordset")
+                                     rsInsurance.Open "select * from users where job_number="&rs("job_number")&" ",conn,1,1
+                                     if rsInsurance("add_insurance")=1 then
+                                        oneInsurance=317'城镇保险
+                                        response.write oneInsurance
+                                      elseif rsInsurance("add_insurance")=2 then
+                                        twoInsurance=249'农村保险
+                                        response.write twoInsurance
+                                        elseif rsInsurance("add_insurance")=3 then
+                                        thereInsurance=0
+                                        response.write ("不交保险")
+                                        else 
+                                        nullInsurance=0
+                                        response.write ("无选项")
+                                        end if 
                                   %>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-
+                                    if rsInsurance("add_insurance")=1 or rsInsurance("add_insurance")=2 then 
+                                      insuranceGold=113'公积金
+                                      response.write insuranceGold
+                                    else
+                                      response.write ("0")
+                                    end if
+                                      rsInsurance.close
                                   %>
                                 </td>
-                                <td style="vertical-align: middle;text-align:center">请假</td>
-                                <td style="vertical-align: middle;text-align:center">迟到</td>
+                                <td style="vertical-align: middle;text-align:center">
+
+                                  <%
+                                      set rsworkApplication=server.CreateObject("adodb.recordset")
+                                     rsWorkApplication.Open "select * from work_application_message where mwork_number="&rs("job_number")&" and mwork_tody like "&datemonth&" ",conn,1,1
+                                     if rsWorkApplication.recordcount = 0 then 
+                                     response.write "无"
+                                     else
+                                      if rsWorkApplication("mwork_type") = "请假申请" or rsWorkApplication("mwork_type") = "外出申请" then 
+                                         startDate=rsWorkApplication("mwork_start_date")'请假开始日期'
+                                         endDate=rsWorkApplication("mwork_end_date")'请假结束日期'
+                                         Difference= DateDiff("H",rsWorkApplication("mwork_start_date"),rsWorkApplication("mwork_end_date"))/24
+                                         response.write Difference&"天"
+                                      else 
+
+                                      end if 
+                                     end if 
+                                     rsworkApplication.close
+                                  %>
+                                </td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                     set rsworklate=server.CreateObject("adodb.recordset")
+                                    rsworklate.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                  if rsworklate.recordcount = 0 then 
+                                      response.write "无"
+                                  else 
+                                    starttime=rsworklate("start_time")'上班时间'
+                                    endtime=rsworklate("end_time")'下班时间'
+                                    response.write rsworklate("starttime")
+                                    for i=1 to rsworklate.recordcount step 1 
+                                        if starttime > 540 then 
+                                          diffValueS=starttime-540 
+                                          diffValueE=1080-endtime
+                                          if diffValueS<10 then 
+
+                                          end if 
+
+                                        end if 
+                                    Next
+                                  end if 
+                                  %>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center">漏打卡</td>
                                 <td style="vertical-align: middle;text-align:center">旷工</td>
                                 <td style="vertical-align: middle;text-align:center">其他</td>
                                 <td style="vertical-align: middle;text-align:center">应发工资</td>
-                                
-                               <td style="vertical-align: middle; text-align:center">
+                                <td style="vertical-align: middle; text-align:center">
                                     <a href="">查看详情</a>
                                 </td>
                             </tr>
             <%
-          i=i+1
-          if i>=MaxPerPage then Exit Do
-          rs.movenext
-          loop
-          rs.close
-          set rs=nothing
-          End Sub   
+              i=i+1
+              if i>=MaxPerPage then Exit Do
+              rs.movenext
+              loop
+              rs.close
+              set rs=nothing
+              End Sub   
             %>
                                                         </tbody>
                         </table> 
@@ -286,7 +344,7 @@ else
                             <span class="icon" style="cursor: pointer;" id="creditor_right_approvals"> <i class="icon-tags"></i> 批量审批</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </div>
                        
-<%=showpage1%>
+        <%=showpage1%>
                        
                     
                 </div>

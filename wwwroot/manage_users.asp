@@ -50,7 +50,7 @@ end if
                             <label class="control-label">&nbsp;用户名:</label>
                             <div class="controls">
                                 <input type="text" id="username" class="span5" name="username" value="<%=username%>" disabled/>
-                                <span id="password_err" class="err_text"></span>
+                                <span id="username_err" class="err_text"></span>
                             </div>
                         </div>
                         <div class="control-group">
@@ -137,7 +137,7 @@ end if
                             <label class="control-label"><font color="red">*</font>&nbsp;上级:</label>
                             <div class="controls">
                                 <div class="span5">
-                                <select id="lead_user" name="lead_user">
+                                <select id="lead_user" name="lead_user" value="<%=lead_user%>">
                                         <option value="" ></option>
                                         <%
                                         set rs=server.CreateObject("adodb.recordset")
@@ -187,7 +187,7 @@ end if
                                 <span id="entry_date_err" class="err_text"></span>
                             </div>
                         </div>
-                        <div class="control-group">
+                        <!--<div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;户籍:</label>
                             <div class="controls">
                             	<div class="span5">
@@ -216,7 +216,7 @@ end if
                                 <span class="help-inline">从下拉菜单中选择加金状况</span>
                                 <span id="add_gold_err" class="err_text"></span>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;保险:</label>
                             <div class="controls">
@@ -226,7 +226,6 @@ end if
                                         <option value="1">交城镇保险</option>
                                         <option value="2">交农村保险</option>
                                         <option value="3">不交保险</option>
-                                       
                                 </select>
                                 </div>
                                 <span class="help-inline">从下拉菜单中选择保险状况</span>
