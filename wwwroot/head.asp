@@ -24,6 +24,7 @@ end if
 <script src="js/jquery-1.4.2.min.js"></script>
 <script src="js/select2.min.js"></script>
 <script src="js/js.js"></script>
+<script src="js/mjs.js"></script>
 <script type="text/javascript" src="DatePicker/WdatePicker.js"></script>
 
 </head>

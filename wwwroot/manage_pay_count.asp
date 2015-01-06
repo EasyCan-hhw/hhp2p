@@ -300,25 +300,33 @@ else
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-                                     set rsworklate=server.CreateObject("adodb.recordset")
-                                    rsworklate.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
-                                  if rsworklate.recordcount = 0 then 
-                                      response.write "无"
-                                  else 
-                                    starttime=rsworklate("start_time")'上班时间'
-                                    endtime=rsworklate("end_time")'下班时间'
-                                    response.write rsworklate("starttime")
-                                    for i=1 to rsworklate.recordcount step 1 
-                                        if starttime > 540 then 
-                                          diffValueS=starttime-540 
-                                          diffValueE=1080-endtime
-                                          if diffValueS<10 then 
+                                     set rssetrest=server.CreateObject("adodb.recordset")
+                                     rssetrest.Open "select * from setrest_worktime where setrest_year like "&datemonth&" ",conn,1,1
+                                     if not rssetrest.eof then 
+                                         start_worktime=rssetrest("start_worktime")'规定的上班作息时间'
+                                         end_worktime=rssetrest("end_worktime")'规定的下班作息时间'
+                                         rssetrest.close
+                                        rssetrest.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                        if rssetrest.eof then 
+                                            response.write "无"
+                                        else 
+                                          
+                                          response.write rssetrest("start_time")
+                                          mcount = rssetrest.recordcount
+                                          for i=1 to mcount                              
+                                                starttime = rssetrest("start_time")'上班时间'
+                                                endtime = rssetrest("end_time")'下班时间'
+                                              if starttime > CInt(start_worktime) then 
+                                                  startint = starttime-Cint(start_worktime)'上班迟到时间'
+                                                   closeglod = 0 '扣除的金额'
 
-                                          end if 
-
+                                              end if 
+                                              rssetrest.movenext
+                                          next 
                                         end if 
-                                    Next
-                                  end if 
+                                     else
+                                        response.write "没有作息时间"
+                                     end if 
                                   %>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">漏打卡</td>

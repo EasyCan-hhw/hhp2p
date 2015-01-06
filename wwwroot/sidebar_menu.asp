@@ -34,11 +34,12 @@
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" or filename="manage_add_vacation" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
-        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" or filename="manage_add_vacation" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_work_setrest" or filename="manage_daka" or filename="manage_work" or filename="manage_add_vacation" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
+        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" or filename="manage_work_setrest" or filename="manage_add_vacation" then%>style="display:inherit"<%end if%>>
             	<a href="manage_users.asp" <%if filename="manage_users" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>员工管理</span></a>
                 <a href="manage_daka.asp" <%if filename="manage_daka" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>打卡录入</span></a>
                 <a href="manage_work.asp" <%if filename="manage_work" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>考勤申请</span></a>
+                <a href="manage_work_setrest.asp" <%if filename="manage_work_setrest" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>上班作息调整</span></a>
                 <a href="manage_add_vacation.asp" <%if filename="manage_add_vacation" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>假期添加</span></a>
 
             </div>
