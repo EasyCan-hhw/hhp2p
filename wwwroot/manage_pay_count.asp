@@ -159,7 +159,7 @@ else
                                 <th>级别</th>
                                 <th>底薪</th>
                                 <th>月份</th>
-                                <th>出勤天数</th>
+                                
                                <th>绩效奖金</th>
                                <th>绩效奖金追加</th>
                                 <th>小组长津贴佣金</th> 
@@ -170,6 +170,7 @@ else
                                 <th><font color="#FF0000">漏打卡</font></th> 
                                 <th><font color="#FF0000">旷工</font></th> 
                                 <th><font color="#FF0000">其他</font></th> 
+                                <th>出勤天数</th>
                                 <th>应发工资</th> 
                                 <th width="10%">操作</th>
                             </tr>
@@ -224,27 +225,20 @@ else
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-                                 
+                                  intdatemonth="2015-01"
+                                 datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
                                   set rsjob=server.CreateObject("adodb.recordset")
                                    rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
                                    least_money=rsjob("least_money")
                                    month_money=rsjob("month_money")
                                    response.write rsjob("job_name")
+                                   
                                    %>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rsjob("base_pay"))%></td>
+                                <%rsjob.close%>
                                 <td style="vertical-align: middle;text-align:center">2015-01</td>
-                                <td style="vertical-align: middle;text-align:center">
-                                  <%
-                                   rsjob.close
-                                   datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
-                                   set rstody=server.CreateObject("adodb.recordset")
-                                     rstody.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
-                                    response.write rstody.recordcount
-                                      rstody.close
-                                  %>
-
-                                </td>
+                                
                                 <td style="vertical-align: middle;text-align:center">绩效奖金</td>
                                 <td style="vertical-align: middle;text-align:center">绩效奖金追加</td>
                                 <td style="vertical-align: middle;text-align:center">小组长津贴佣金</td>
@@ -254,10 +248,10 @@ else
                                      rsInsurance.Open "select * from users where job_number="&rs("job_number")&" ",conn,1,1
                                      if rsInsurance("add_insurance")=1 then
                                         oneInsurance=317'城镇保险
-                                        response.write oneInsurance
+                                        response.write oneInsurance&"/元"
                                       elseif rsInsurance("add_insurance")=2 then
                                         twoInsurance=249'农村保险
-                                        response.write twoInsurance
+                                        response.write twoInsurance&"/元"
                                         elseif rsInsurance("add_insurance")=3 then
                                         thereInsurance=0
                                         response.write ("不交保险")
@@ -271,7 +265,7 @@ else
                                   <%
                                     if rsInsurance("add_insurance")=1 or rsInsurance("add_insurance")=2 then 
                                       insuranceGold=113'公积金
-                                      response.write insuranceGold
+                                      response.write insuranceGold&"/元"
                                     else
                                       response.write ("0")
                                     end if
@@ -286,14 +280,18 @@ else
                                      if rsWorkApplication.recordcount = 0 then 
                                      response.write "无"
                                      else
-                                      if rsWorkApplication("mwork_type") = "请假申请" or rsWorkApplication("mwork_type") = "外出申请" then 
+                                     Difference = 0 '请假天数'
+                                      if rsWorkApplication("mwork_type") = "请假申请" then
+                                        for r=1 to rsWorkApplication.recordcount
                                          startDate=rsWorkApplication("mwork_start_date")'请假开始日期'
                                          endDate=rsWorkApplication("mwork_end_date")'请假结束日期'
-                                         Difference= DateDiff("H",rsWorkApplication("mwork_start_date"),rsWorkApplication("mwork_end_date"))/24
-                                         response.write Difference&"天"
+                                         Difference=Difference + DateDiff("H",rsWorkApplication("mwork_start_date"),rsWorkApplication("mwork_end_date"))/24
+                                         rsWorkApplication.movenext
+                                         next
                                       else 
 
                                       end if 
+                                      response.write Difference&"天"
                                      end if 
                                      rsworkApplication.close
                                   %>
@@ -311,27 +309,94 @@ else
                                             response.write "无"
                                         else 
                                           
-                                          response.write rssetrest("start_time")
                                           mcount = rssetrest.recordcount
-                                          for i=1 to mcount                              
-                                                starttime = rssetrest("start_time")'上班时间'
-                                                endtime = rssetrest("end_time")'下班时间'
+                                          closeglod = 0 '迟到、早退 扣除的金额'
+                                     
+                                          for i=1 to mcount
+                                          starttime = rssetrest("start_time")'下班时间'
+                                          endtime = rssetrest("end_time")'下班时间'                             
                                               if starttime > CInt(start_worktime) then 
-                                                  startint = starttime-Cint(start_worktime)'上班迟到时间'
-                                                   closeglod = 0 '扣除的金额'
+                                                    'response.write "_上班时间"&starttime&"/迟到时间"
 
-                                              end if 
+                                                  startint = cint(starttime)-Cint(start_worktime)'上班迟到时间'
+                                                  'response.write startint&"/扣除工资"
+                                                  
+                                                    if startint <= 10 then 
+                                                    closeglod = closeglod + 10
+                                                    elseif startint > 10 and startint <= 30 then 
+                                                    closeglod = closeglod + 20
+                                                    elseif startint > 30 and startint <= 60 then 
+                                                    closeglod = closeglod + 50 
+                                                    else 
+                                                      closeglod = closeglod + 100 '旷工处理'
+                                                      kuanggong = kuanggong + 1
+                                                    end if 
+                                                   
+                                              end if  
+                                              
+                                               if endtime < CInt(end_worktime) then 
+                                              
+                                                    
+                                                    endint = Cint(end_worktime) - cint(endtime)'下班迟到时间'
+                                                  
+                                                    if endint > 0 and endint <= 10 then 
+                                                    closeglod = closeglod + 10
+                                                    elseif endint > 10 and endint <= 30 then 
+                                                    closeglod = closeglod + 20
+                                                    elseif endint > 30 and endint <= 60 then 
+                                                    closeglod = closeglod + 50 
+                                                    else 
+                                                      closeglod = closeglod + 100 '旷工处理'
+                                                      kuanggong = kuanggong + 1
+                                                    end if 
+                                                    
+                                                end if   
                                               rssetrest.movenext
                                           next 
+                                           response.write closeglod&"/元"
                                         end if 
                                      else
-                                        response.write "没有作息时间"
+                                        response.write "没有该月作息时间"
                                      end if 
+                                     rssetrest.close
                                   %>
                                 </td>
-                                <td style="vertical-align: middle;text-align:center">漏打卡</td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%  '漏打卡'
+                                      set rsdaka=server.CreateObject("adodb.recordset")
+                                     rsdaka.Open "select * from work_attendance where work_date like "&datemonth&" ",conn,1,1
+
+
+                                     rsdaka.Open "select * from vacation_manage where vacation_date like "&datemonth&" ",conn,1,1
+                                     '计算给定当月的天数'
+                                           ym = split(intdatemonth,"-")
+                                           oldInty=cint(ym(0))
+                                           oldIntm=cint(ym(1))
+                                           testdate = 0
+                                           oldDate = oldInty&"-"&oldIntm&"-1"
+                                           if oldIntm+1 >12 then 
+                                            inty = oldInty + 1
+                                            oldDate2 = inty&"-1-1"
+                                            newDate2 = DateAdd("d",-1,inty&"-2-1")
+                                            testdate = DateDiff("d",oldDate2,newDate2)
+                                            else
+                                           '' newDate = DateAdd("d",-1,oldInty&"-"&oldIntm+1&"-1")
+                                           newDate = oldInty&"-"&oldIntm+1&"-1"
+                                           testdate = DateDiff("d",oldDate,newDate)
+                                            end if
+                                            response.write testdate
+                                  %>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center">旷工</td>
                                 <td style="vertical-align: middle;text-align:center">其他</td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                   set rstody=server.CreateObject("adodb.recordset")
+                                     rstody.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                    response.write rstody.recordcount 
+                                      rstody.close
+                                  %>
+                                </td>
                                 <td style="vertical-align: middle;text-align:center">应发工资</td>
                                 <td style="vertical-align: middle; text-align:center">
                                     <a href="">查看详情</a>
@@ -349,7 +414,7 @@ else
                                                         </tbody>
                         </table> 
                         <div style="margin-bottom: 20px;">
-                            <span class="icon" style="cursor: pointer;" id="creditor_right_approvals"> <i class="icon-tags"></i> 批量审批</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <!--<span class="icon" style="cursor: pointer;" id="creditor_right_approvals"> <i class="icon-tags"></i> 批量审批</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
                         </div>
                        
         <%=showpage1%>

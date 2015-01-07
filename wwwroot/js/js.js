@@ -832,16 +832,9 @@ $(".vacation_del").click(function(){
 
 //考勤申请条目隐藏
 $("#work_type").change(function() {
-	workOverTime="加班申请";
+	
 	complainWork="考勤申请";
-	if ($("#work_type").val() == "加班申请") {
-
-		$("#dateSelect").css('display','block'); 
-		$("#timeSelectBegin").css('display','block'); 
-		$("#timeSelectEnd").css('display','block'); 
-		$("#causeSelect").css('display','block'); 
-
-	}
+	
 	if ($("#work_type").val() == "请假申请") {
 
 		$("#dateSelect").css('display','block'); 
@@ -1759,7 +1752,7 @@ $(".daka_edit").click(function(){
 				   else if(parseInt(data.split("|")[0])==2)
 				   {
 						alert("登录超时！");
-						window.location.href="login.asp";
+					window.location.href="login.asp";
 				   }
 				   else if(parseInt(data.split("|")[0])==0)
 				   {
