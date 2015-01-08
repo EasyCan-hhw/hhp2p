@@ -64,27 +64,26 @@ if not rs.eof then
                          <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;时间:</label>
                             <div class="controls" >
-                                <input type="text" id="mwork_start_time" class="span5" name="mwork_start_time" value="<%=trim(rs("mwork_start_time") \ 60)%>" style="width:35px;text-align:right" disabled/>
-                                &nbsp;:&nbsp;<input type="text" id="mwork_start_time" class="span5" name="mwork_start_time" value="<%=trim(rs("mwork_start_time") mod 60)%>" style="width:35px;text-align:right" disabled/>
-                                &nbsp;&nbsp;至&nbsp;&nbsp;
-                                <input type="text" id="mwork_end_time" class="span5" name="mwork_end_time" value="<%=trim(rs("mwork_end_time") \ 60)%>" style="width:35px;text-align:right" disabled/>
-                                &nbsp;:&nbsp;<input type="text" id="mwork_end_time" class="span5" name="mwork_end_time" value="<%=trim(rs("mwork_end_time") mod 60)%>" style="width:35px;text-align:right" disabled/>
-                                <span id="mwork_time_err" class="err_text"></span>
+                               <input type="text" id="mwork_time_my" class="span5" name="mwork_time_my" value="<%=rs("mwork_time_my")%>" style="width:200px;" disabled/>
+
+                                <span id="mwork_time_my_err" class="err_text"></span>
                             </div>
                         </div>
                          <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;日期:</label>
                             <div class="controls" style="width:217px">
+
                                 <input type="text" id="mwork_start_date" class="span5" name="mwork_start_date" value="<%=rs("mwork_start_date")%>" disabled/>
                                 &nbsp;&nbsp;至&nbsp;&nbsp;
                                 <input type="text" id="mwork_end_date" class="span5" name="mwork_end_date" value="<%=rs("mwork_end_date")%>" disabled/>
+                                <span class="help-inline">如1990-01-01 则为系统默认;无需考虑</span>
                                 <span id="mwork_type_err" class="err_text"></span>
                             </div>
                         </div>
                          <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;原因:</label>
                             <div class="controls" style="width:500px">
-                                <input type="text" style="width:220px;height:150px" id="mwork_cause_txt" class="span5" name="mwork_cause_txt" value="<%=rs("mwork_cause_txt")%>" disabled/>
+                                <input type="text" style="width:200px;height:150px" id="mwork_cause_txt" class="span5" name="mwork_cause_txt" value="<%=rs("mwork_cause_txt")%>" disabled/>
                                 <span id="mwork_cause_txt_err" class="err_text"></span>
                             </div>
                         </div>
@@ -249,7 +248,13 @@ else
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_number"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_type"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_start_time") \ 60)%>&nbsp;:&nbsp;<%=trim(rs("mwork_start_time") mod 60)%>&nbsp;至&nbsp;&nbsp;<%=trim(rs("mwork_end_time")\60)%>&nbsp;:&nbsp;<%=trim(rs("mwork_end_time") mod 60)%></td>
+                                <td style="vertical-align: middle;text-align:center"><%
+                                  if rs("mwork_time_my") = "1900-01-01" or rs("mwork_time_my") = "" then 
+                                    response.write "无"
+                                    else 
+                                      response.write rs("mwork_time_my")
+                                  end if 
+                                %></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_start_date"))%>&nbsp;&nbsp;&nbsp;至&nbsp;&nbsp;<%=trim(rs("mwork_end_date"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("mwork_cause_txt"))%></td>
                                <td style="vertical-align: middle; text-align:center">

@@ -163,6 +163,7 @@ else
                                <th>绩效奖金</th>
                                <th>绩效奖金追加</th>
                                 <th>小组长津贴佣金</th> 
+                                <th>提成</th>
                                 <th><font color="#FF0000">社保</font></th> 
                                 <th><font color="#FF0000">公积金</font></th> 
                                 <th><font color="#FF0000">请假</font></th> 
@@ -225,8 +226,8 @@ else
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-                                  intdatemonth="2015-01"
-                                 datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
+                                  intdatemonth="2014-12"'工资核算日期int依据'
+                                  datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
                                   set rsjob=server.CreateObject("adodb.recordset")
                                    rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
                                    least_money=rsjob("least_money")
@@ -242,6 +243,7 @@ else
                                 <td style="vertical-align: middle;text-align:center">绩效奖金</td>
                                 <td style="vertical-align: middle;text-align:center">绩效奖金追加</td>
                                 <td style="vertical-align: middle;text-align:center">小组长津贴佣金</td>
+                                <td style="vertical-align: middle;text-align:center">提成</td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
                                      set rsInsurance=server.CreateObject("adodb.recordset")
@@ -363,12 +365,8 @@ else
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%  '漏打卡'
-                                      set rsdaka=server.CreateObject("adodb.recordset")
-                                     rsdaka.Open "select * from work_attendance where work_date like "&datemonth&" ",conn,1,1
-
-
-                                     rsdaka.Open "select * from vacation_manage where vacation_date like "&datemonth&" ",conn,1,1
-                                     '计算给定当月的天数'
+                                  
+                                         'Start计算给定当月的天数'
                                            ym = split(intdatemonth,"-")
                                            oldInty=cint(ym(0))
                                            oldIntm=cint(ym(1))
@@ -378,13 +376,65 @@ else
                                             inty = oldInty + 1
                                             oldDate2 = inty&"-1-1"
                                             newDate2 = DateAdd("d",-1,inty&"-2-1")
-                                            testdate = DateDiff("d",oldDate2,newDate2)
-                                            else
-                                           '' newDate = DateAdd("d",-1,oldInty&"-"&oldIntm+1&"-1")
-                                           newDate = oldInty&"-"&oldIntm+1&"-1"
-                                           testdate = DateDiff("d",oldDate,newDate)
-                                            end if
-                                            response.write testdate
+                                            'testdate = DateDiff("d",oldDate2,newDate2)
+                                            testdate = DateDiff("d",oldInty&"-"&oldIntm&"-1",inty&"-1-1")
+                                           else
+                                            newDate = oldInty&"-"&oldIntm+1&"-1"
+                                            testdate = DateDiff("d",oldDate,newDate)
+                                           end if
+                                            'response.write testdate
+                                          'End计算给定当月的天数'
+                                          set rsdaka=server.CreateObject("adodb.recordset")
+                                          '获得员工该月请假天数'
+                                          dim mvacation
+                                          dim mels
+                                          rsdaka.Open "select * from work_application_message where job_number="&rs("job_number")&" and mwork_type="请假申请" and  mwork_tody like "&datemonth&" ",conn,1,1
+                                          if not rsdaka.eof then
+                                           els = DateDiff("d",rsdaka("mwork_start_date"),rsdaka("mwork_end_date"))
+                                           redim mels(els)
+                                            for e=0 to els - 1
+                                              els(e) = DateAdd("d",+1,)
+                                            next
+                                            redim mvacation(rsdaka.recordcount)
+                                            for 
+
+
+                                          Dim myDate
+                                          '获得员工这个月的打卡天数'
+                                          rsdaka.Open "select work_date from work_attendance where job_number="&rs("job_number")&" and  work_date like "&datemonth&" ",conn,1,1
+                                          if not rsdaka.eof then 
+                                            redim myDate(rsdaka.recordcount)
+                                            for Ddate=0 to rsdaka.recordcount - 1 
+                                              myDate(Ddate) = rsdaka("work_date")
+                                              rsdaka.movenext
+                                              response.write myDate(Ddate)
+                                            next
+                                            
+                                            
+                                          else 
+                                          
+                                          end if
+                                          rsdaka.close
+
+
+                                          '获得这个月的假期天数'
+                                          rsdaka.Open "select * from vacation_manage where vacation_date like "&datemonth&" ",conn,1,1
+                                          if not rsdaka.eof then 
+                                            for Xdate=1 to rsdaka.recordcount 
+                                              Udate=rsdaka("vacation_date")
+                                              rsdaka.movenext
+                                            next
+                                          else 
+                                          response.write "该月没有设置假期"
+                                          end if 
+                                          rsdaka.close
+                                          set rsdaka=nothing
+
+                                          'for d=1 to testdate 
+                                           '' set rsleak=server.CreateObject("adodb.recordset")
+                                         
+
+                                         
                                   %>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">旷工</td>

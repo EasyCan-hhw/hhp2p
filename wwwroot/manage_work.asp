@@ -82,7 +82,7 @@ end if
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
                         </div> 
-                        <div id="timeSelectBegin" style="display: none;" class="control-group">
+                        <!--<div id="timeSelectBegin" style="display: none;" class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;时间选择:</label> 
                             <div class="controls">
                                  开始时间:&nbsp;&nbsp;<input type="text" id="start_time_hours" name="start_time_hours" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;
@@ -90,15 +90,15 @@ end if
                                  <span class="help-inline">格式：16:59分(24小时制)</span>
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
-                        </div>
+                        </div>-->
                         <div id="timeSelectEnd" style="display: none;" class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;时间选择:</label> 
+                            <label class="control-label"><font color="red">*</font>&nbsp;日期选择:</label> 
                             <div class="controls">
-                                结束时间:&nbsp;&nbsp;
-                                <input type="text" id="end_time_hours" name="end_time_hours" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;
-                                <input type="text" id="end_time_minute" name="end_time_minute" class="span5" style="width:50px;text-align:right"/>&nbsp;分&nbsp;
-                                <span class="help-inline">格式：16:59分(24小时制)</span>
-                                <span id="work_name_err" class="err_text"></span>
+                                
+                                
+                                <input type="text" id="work_time_my" name="work_time_my" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" style="width:220px;"/>
+                                <span class="help-inline">格式：1970-01-01</span>
+                                <span id="work_time_my_err" class="err_text"></span>
                             </div>
                         </div> 
                         <div id="causeSelect" style="display: none;" class="control-group">
@@ -109,7 +109,6 @@ end if
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
                         </div> 
-
                    <!-- <div class="control-group">
                       <label class="control-label">权限:</label>
                       <div class="controls">

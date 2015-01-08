@@ -838,34 +838,26 @@ $("#work_type").change(function() {
 	if ($("#work_type").val() == "请假申请") {
 
 		$("#dateSelect").css('display','block'); 
-		$("#timeSelectBegin").css('display','none'); 
+		
 		$("#timeSelectEnd").css('display','none'); 
 		$("#causeSelect").css('display','block'); 
 
-	}
-	if ($("#work_type").val() == "外出申请") {
-
-		$("#dateSelect").css('display','block'); 
-		$("#timeSelectBegin").css('display','none'); 
-		$("#timeSelectEnd").css('display','none'); 
-		$("#causeSelect").css('display','block'); 
 	}
 	if ($("#work_type").val() == "出差申请") {
 
 		$("#dateSelect").css('display','block'); 
-		$("#timeSelectBegin").css('display','none'); 
 		$("#timeSelectEnd").css('display','none'); 
 		$("#causeSelect").css('display','block'); 
 	}
+	
 	if ($("#work_type").val() == "考勤申诉") {
 
 		$("#dateSelect").css('display','none'); 
-		$("#timeSelectBegin").css('display','none'); 
-		$("#timeSelectEnd").css('display','none'); 
+		
+		$("#timeSelectEnd").css('display','block'); 
 		$("#causeSelect").css('display','block'); 
 	}
 
-	
 });
 
 //考勤申请
@@ -892,18 +884,19 @@ $("#add_work_application").click(function(){
 		$("#add_work_application").attr("disabled",true);	
 		var query = new Object();
 		//判断是否有时间输入，以免将默认值通过公式计算添加到数据库
-		if ($.trim($("#start_time_hours").val()).length > 0) {
+		//if ($.trim($("#start_time_hours").val()).length > 0) {
 			query.work_tody=escape(mtody);
 			query.work_number=escape($("#work_number").val());
 			query.work_name=escape($("#work_name").val());
-			query.work_type=escape($("#work_type").val());parseInt
-			query.mwork_start_time=escape($("#start_time_hours").val()*60+parseInt($("#start_time_minute").val()));
-			query.mwork_end_time=escape($("#end_time_hours").val()*60+parseInt($("#end_time_minute").val()));
+			query.work_type=escape($("#work_type").val());
+			//query.mwork_start_time=escape($("#start_time_hours").val()*60+parseInt($("#start_time_minute").val()));
+			//query.mwork_end_time=escape($("#end_time_hours").val()*60+parseInt($("#end_time_minute").val()));
+			query.mwork_time_my=escape($("#work_time_my").val());
 			query.mwork_start_date=escape($("#start_date").val());
 			query.mwork_end_date=escape($("#end_date").val());
 			query.mwork_cause_txt=escape($("#input_txt").val());
 			query.action="add";
-		}else if($.trim($("#start_time_hours").val()).length == 0){
+		/*}else if($.trim($("#start_time_hours").val()).length == 0){
 			query.work_tody=escape(mtody);
 			query.work_number=escape($("#work_number").val());
 			query.work_name=escape($("#work_name").val());
@@ -915,7 +908,7 @@ $("#add_work_application").click(function(){
 			query.mwork_cause_txt=escape($("#input_txt").val());
 			query.action="add";
 
-		}
+		}*/
 		
 		$.ajax({
 
@@ -927,6 +920,7 @@ $("#add_work_application").click(function(){
 				dataType:"text",
 				success:function(data)
 				{
+					
 					 if(parseInt(data.split("|")[0])==1)
 				  {
 						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
