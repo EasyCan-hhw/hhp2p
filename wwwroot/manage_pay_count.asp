@@ -226,7 +226,7 @@ else
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-                                  intdatemonth="2014-12"'工资核算日期int依据'
+                                  intdatemonth="2015-01"'工资核算日期int依据'
                                   datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
                                   set rsjob=server.CreateObject("adodb.recordset")
                                    rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
@@ -351,7 +351,6 @@ else
                                                       closeglod = closeglod + 100 '旷工处理'
                                                       kuanggong = kuanggong + 1
                                                     end if 
-                                                    
                                                 end if   
                                               rssetrest.movenext
                                           next 
@@ -383,37 +382,63 @@ else
                                             testdate = DateDiff("d",oldDate,newDate)
                                            end if
                                             'response.write testdate
+                                            dim  fordate
+                                            redim fordate(testdate)'得到该月所有天数的日期格式'
+                                            newmdate = dateadd("d",-1,intdatemonth&"-1")
+
+                                            for da=0 to testdate-1 
+                                              fordate(da) = DateAdd("d",+1,newmdate)
+                                              newmdate = fordate(da)
+                                              
+                                            next
+                                          
                                           'End计算给定当月的天数'
-                                          set rsdaka=server.CreateObject("adodb.recordset")
+                                          
                                           '获得员工该月请假天数'
                                           dim mvacation
                                           dim mels
-                                          rsdaka.Open "select * from work_application_message where job_number="&rs("job_number")&" and mwork_type="请假申请" and  mwork_tody like "&datemonth&" ",conn,1,1
+                                          mstr = "'"+"请假申请"+"'"
+                                          set rsdaka=server.CreateObject("adodb.recordset")
+                                          rsdaka.Open "select * from work_application_message where mwork_number='"&rs("job_number")&"' and mwork_type="&mstr&" and  mwork_tody like "&datemonth&" ",conn,1,1
+
+                                           
                                           if not rsdaka.eof then
-                                           els = DateDiff("d",rsdaka("mwork_start_date"),rsdaka("mwork_end_date"))
-                                           redim mels(els)
-                                            for e=0 to els - 1
-                                              els(e) = DateAdd("d",+1,)
+                                            for rse=1 to rsdaka.recordcount
+                                              start_date=rsdaka("mwork_start_date")'拿出请假开始日期用于for运算'
+                                             els = DateDiff("d",start_date,rsdaka("mwork_end_date"))'计算请假区间，拿出天数'
+                                             maxels= maxels + els
+                                             redim mels(els)
+                                                for e=0 to els - 1 'for循环拿出请假期间每天的日期'
+                                                  mels(e) =  DateAdd("d",+1,start_date)
+                                                  start_date = DateAdd("d",+1,start_date)
+                                                  'response.write mels(e)&"^"'得到这个月员工的请假所有日期'**
+                                                next
+                                              rsdaka.movenext
                                             next
-                                            redim mvacation(rsdaka.recordcount)
-                                            for 
+                                          else 
 
-
+                                          end if 
+                                        
+                                        rsdaka.close
+                                            
                                           Dim myDate
                                           '获得员工这个月的打卡天数'
                                           rsdaka.Open "select work_date from work_attendance where job_number="&rs("job_number")&" and  work_date like "&datemonth&" ",conn,1,1
+                                          redim myDate(rsdaka.recordcount)
                                           if not rsdaka.eof then 
-                                            redim myDate(rsdaka.recordcount)
                                             for Ddate=0 to rsdaka.recordcount - 1 
                                               myDate(Ddate) = rsdaka("work_date")
                                               rsdaka.movenext
-                                              response.write myDate(Ddate)
+                                              'response.write myDate(Ddate)&"_"'得到员工该月所有打卡日期'
                                             next
-                                            
-                                            
+                                           
                                           else 
                                           
                                           end if
+                                           for maxels = 0 to rsdaka.recordcount -1
+                                            'response.write myDate(maxels)
+                                            next
+                                          
                                           rsdaka.close
 
 

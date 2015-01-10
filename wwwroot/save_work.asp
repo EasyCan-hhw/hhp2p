@@ -46,36 +46,97 @@ if action="add" then
 elseif action="approval" then	
 	set rs=server.createobject("adodb.recordset")
 	rs.Open "Select * from work_application_message where approval=0 and wid="&work_id,conn,1,1
-	workDate=rs("mwork_time_my")
-	rs.close
-	set rs=nothing
-	if workDate="" or workDate = "1900-01-01" or IsNull(workDate) then 
-
-		if rs.eof then
+	
+	
+	if rs.eof then
 			response.write "1|passport|不允许重复审批！"
 			response.end
 		else
+			mwork_number = rs("mwork_number")
 			
+			workDate=rs("mwork_time_my")
 			
-			conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
-			
-		end if
-		
-	else
-		set rs=server.createobject("adodb.recordset")
-			sql = "Select * from work_attendance"
-			rs.Open sql,conn,1,3
-				rs.addnew
-				rs("job_number")=request.cookies("hhp2p_cookies")("job_number")
-				rs("username")=request.cookies("hhp2p_cookies")("username")
-				rs("work_date")=workDate
-				rs("start_time")=540
-				rs("end_time")=1050
-				rs.update
+			if rs("mwork_type")="出差申请" then
+			'rs.close
+			'set rs=nothing
+										  'dim mvacation
+                                          dim mels
+                                         '' mstr = "'"+"出差申请"+"'"
+                                          'set rsdaka=server.CreateObject("adodb.recordset")
+                                          'rsdaka.Open "select * from work_application_message where mwork_number='"&mwork_number&"' and mwork_type="&mstr&" and  mwork_tody like "&datemonth&" ",conn,1,1
+                                          dim els
+                                          mname = rs("mwork_name")
+                                          mcount = rs.recordcount
+                                          if not rs.eof then
+                                            for rse=1 to rs.recordcount
+                                              start_date=rs("mwork_start_date")'拿出请假开始日期用于for运算'
+                                             els = DateDiff("d",start_date,rs("mwork_end_date"))'计算请假区间，拿出天数'
+                                             'maxels= maxels + els
+                                             redim mels(els)
+                                                for e=0 to els - 1 'for循环拿出请假期间每天的日期'
+                                                  mels(e) =  DateAdd("d",+1,start_date)
+                                                  start_date = DateAdd("d",+1,start_date)
+                                                  'response.write mels(e)&"^"'得到这个月员工的请假所有日期'**
+
+                                                next
+                                              rs.movenext
+                                            next
+                                          else 
+                                          
+                                          
+
+
+                                          end if 
+                                          
+                                          rs.close
+                                          sql = "Select * from work_attendance"
+											rs.Open sql,conn,1,3
+											
+											
+											
+                                          for se=0 to els -1
+                                         	 rs.addnew
+                                          	rs("job_number")=mwork_number
+											rs("username")=mname
+											rs("work_date")=mels(se)
+											rs("start_time")=540
+											rs("end_time")=1050
+											rs.update
+                                          next
+                                        rs.close
+                                        conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
+										set rs=nothing
+                                        
+					conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
+
+			elseif  workDate="" or workDate = "1900-01-01" or IsNull(workDate) then 
+
+				conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
 				rs.close
 				set rs=nothing
-			conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
+			
+
+
+				
+			else
+			rs.close
+			set rs=nothing
+				set rs=server.createobject("adodb.recordset")
+					sql = "Select * from work_attendance"
+					rs.Open sql,conn,1,3
+						rs.addnew
+						rs("job_number")=request.cookies("hhp2p_cookies")("job_number")
+						rs("username")=request.cookies("hhp2p_cookies")("username")
+						rs("work_date")=workDate
+						rs("start_time")=540
+						rs("end_time")=1050
+						rs.update
+						rs.close
+						set rs=nothing
+					conn.execute "update work_application_message set approval=1,approval_uid="&request.cookies("hhp2p_cookies")("uid")&",approval_date='"&now()&"' where approval=0 and wid="&work_id
+			end if
 	end if
+	
 	
 end if
 	response.write "0|"

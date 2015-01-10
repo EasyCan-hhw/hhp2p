@@ -411,8 +411,8 @@ $(document).ready( function() {
 	 	var id=this.id.split("_")[2];
 		var tosubmit=true;
 		if($.trim($("#position_id"+id).val()).length == 0){
-			tosubmit=false;
 			alert("请输入选择职位");
+			tosubmit=false;
 		}
 		/*var quanxian="";
 		$("input[name='quanxian"+id+"']:checked").each(function(){    
@@ -838,7 +838,6 @@ $("#work_type").change(function() {
 	if ($("#work_type").val() == "请假申请") {
 
 		$("#dateSelect").css('display','block'); 
-		
 		$("#timeSelectEnd").css('display','none'); 
 		$("#causeSelect").css('display','block'); 
 
@@ -853,7 +852,6 @@ $("#work_type").change(function() {
 	if ($("#work_type").val() == "考勤申诉") {
 
 		$("#dateSelect").css('display','none'); 
-		
 		$("#timeSelectEnd").css('display','block'); 
 		$("#causeSelect").css('display','block'); 
 	}
@@ -907,7 +905,6 @@ $("#add_work_application").click(function(){
 			query.mwork_end_date=escape($("#end_date").val());
 			query.mwork_cause_txt=escape($("#input_txt").val());
 			query.action="add";
-
 		}*/
 		
 		$.ajax({
@@ -921,6 +918,7 @@ $("#add_work_application").click(function(){
 				success:function(data)
 				{
 					
+
 					 if(parseInt(data.split("|")[0])==1)
 				  {
 						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
