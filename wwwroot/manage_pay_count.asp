@@ -9,7 +9,7 @@ end if
          public val2
      end class
                                 function dateNumber()
-'漏打卡'                                 
+                                 
                                set dateNumber= new valMy
                                       intdatemonth="2015-01"
                                        'Start计算给定当月的天数'
@@ -22,23 +22,22 @@ end if
                                           inty = oldInty + 1
                                           oldDate2 = inty&"-1-1"
                                           newDate2 = DateAdd("d",-1,inty&"-2-1")
-                                          'testdate = DateDiff("d",oldDate2,newDate2)
+                                          
                                           testdate = DateDiff("d",oldInty&"-"&oldIntm&"-1",inty&"-1-1")
                                          else
                                           newDate = oldInty&"-"&oldIntm+1&"-1"
                                           testdate = DateDiff("d",oldDate,newDate)
                                          end if
-                                          'response.write testdate
+                                         
                                           dim  fordate
                                           redim fordate(testdate)
                                           newmdate = dateadd("d",-1,intdatemonth&"-1")
-                                          'dim dateN(2)
-
-                                          'dateN(0)=testdate
-                                          'dateN(1)=newmdate
+                                         
+                                            '该月的天数'
                                             dateNumber.val1 = testdate
+                                            '该月的第一天'
                                             dateNumber.val2 = newmdate
-                                            'dateNumber = testdate
+                                            
                                 end function
 
 
@@ -412,7 +411,7 @@ else
                                              if endtime < CInt(end_worktime) then 
                                             
                                                   
-                                                  endint = Cint(end_worktime) - cint(endtime)'下班迟到时间'
+                                                  endint = Cint(end_worktime) - cint(endtime)'下班早退时间'
                                                 
                                                   if endint > 0 and endint <= 10 then 
                                                   closeglod = closeglod + 10
@@ -441,233 +440,16 @@ else
 
                                 <%  
                                 
-
-                                 '漏打卡'
-                                
-                                       'Start计算给定当月的天数'
-                                         ym = split(intdatemonth,"-")
-                                         oldInty=cint(ym(0))
-                                         oldIntm=cint(ym(1))
-                                         testdate = 0
-                                         oldDate = oldInty&"-"&oldIntm&"-1"
-                                         if oldIntm+1 >12 then 
-                                          inty = oldInty + 1
-                                          oldDate2 = inty&"-1-1"
-                                          newDate2 = DateAdd("d",-1,inty&"-2-1")
-                                          'testdate = DateDiff("d",oldDate2,newDate2)
-                                          testdate = DateDiff("d",oldInty&"-"&oldIntm&"-1",inty&"-1-1")
-                                         else
-                                          newDate = oldInty&"-"&oldIntm+1&"-1"
-                                          testdate = DateDiff("d",oldDate,newDate)
-                                         end if
-                                         
-                                          dim  fordate
-                                          redim fordate(testdate)
-                                          newmdate = dateadd("d",-1,intdatemonth&"-1")
-                                          
-                                        
-                                          'response.write dateNumber.val1&"-"&dateNumber.val2
-                                          
-
-                                          
-                                        '该月的第一天dateNumber.val2 该月的天数 dateNumber.val1
-
-                                        attendanceInt = 0 '获得没有打卡的天数'
-                                        nextInt = 0
-                                       newMyDate = dateNumber.val2
-                                        dim notattendance
-                                        dim mnotattendance
-                                        redim mnotattendance(attendanceInt)
-                                    for da=0 to dateNumber.val1-1
-                                     testbool = false
-                                    
-                                    
-
-                                            'response.write testdate
-                                                fordate(da) = DateAdd("d",+1,newMyDate)
-                                                newMyDate = fordate(da)
-                                                toDate=split(newMyDate,"/")
-                                                'if cint(toDate(1)) <10 or cint(toDate(2)) <10 then 
-                                                if cint(toDate(2)) <10 and cint(toDate(1)) >= 10 then 
-                                                  newMyDate = cint(toDate(0))&"-"&cint(toDate(1))&"-0"&cint(toDate(2))
-                                                elseif cint(toDate(1)) <10 and cint(toDate(2)) >=10 then 
-                                                  newMyDate = cint(toDate(0))&"-0"&cint(toDate(1))&"-"&cint(toDate(2))
-                                                elseif cint(toDate(1)) <10 and cint(toDate(2)) <10 then
-                                                    newMyDate = cint(toDate(0))&"-0"&cint(toDate(1))&"-0"&cint(toDate(2))
-                                                else 
-                                                  newMyDate = cint(toDate(0))&"-"&cint(toDate(1))&"-"&cint(toDate(2))
-                                                end if 
-                                               
-                                                  Dim myDate
-                                                  '获得员工这个月的打卡天数'
-                                                  set rsdakaDate=server.CreateObject("adodb.recordset")
-                                                  rsdakaDate.Open "select work_date from work_attendance where job_number="&rs("job_number")&" and  work_date like "&datemonth&" ",conn,1,1
-                                                  redim myDate(rsdakaDate.recordcount)
-
-                                                  attendanceInt = dateNumber.val1 - rsdakaDate.recordcount
-                                                  redim notattendance(attendanceInt)
-
-
-                                                  if not rsdakaDate.eof then 
-                                                        
-                                                        for Ddate=0 to rsdakaDate.recordcount - 1 
-                                                        myDate(Ddate) = rsdakaDate("work_date")
-                                                       '' response.write "&nbsp;&nbsp;&nbsp;"&newMyDate&"对"&myDate(Ddate)
-                                                          
-                                                          '------------------判断是否属于打卡日期-----------------'
-
-                                                           if myDate(Ddate) <> newMyDate then 
-                                                          
-                                                                'rsdakaDate.close
-                                                                'set rsdakaDate=nothing
-                                                                '获得员工该月请假天数'
-                                                               
-                                                                dim mvacation
-                                                                dim mels
-                                                                mstr = "'"+"请假申请"+"'"
-                                                                set rsdakaleave =server.CreateObject("adodb.recordset")
-                                                                rsdakaleave.Open "select * from work_application_message where mwork_number='"&rs("job_number")&"' and mwork_type="&mstr&" and  mwork_tody like "&datemonth&" ",conn,1,1
-
-                                                                 
-                                                                if not rsdakaleave.eof then
-                                                                 
-                                                                    for rse=1 to rsdakaleave.recordcount
-                                                                      start_date=rsdakaleave("mwork_start_date")'拿出请假开始日期用于for运算'
-                                                                     els = DateDiff("d",start_date,rsdakaleave("mwork_end_date"))'计算请假区间，拿出天数'
-                                                                     maxels= maxels + els
-
-                                                                     
-                                                                      'response.write endResult(start_date,newMyDate)
-
-
-                                                                     redim mels(els)
-                                                                        for e=0 to els - 1 'for循环拿出请假期间每天的日期'
-                                                                          mels(e) =  DateAdd("d",+1,start_date)
-                                                                          start_date = DateAdd("d",+1,start_date)
-                                                                          'response.write mels(e)&"^"'得到这个月员工的请假所有日期'**
-                                                                          '----------判断是否属于请假日期---------------'
-
-                                                                          Ndatemy = mels(e)
-                                                                          
-                                                                          NtoDate=split(Ndatemy,"/")
-                                                                           if cint(NtoDate(2)) <10 and cint(NtoDate(1)) >= 10 then 
-                                                                              lmels = cint(NtoDate(0))&"-"&cint(NtoDate(1))&"-0"&cint(NtoDate(2))
-                                                                            elseif cint(NtoDate(1)) <10 and cint(NtoDate(2)) >=10 then 
-                                                                              lmels = cint(NtoDate(0))&"-0"&cint(NtoDate(1))&"-"&cint(NtoDate(2))
-                                                                            elseif cint(NtoDate(1)) <10 and cint(NtoDate(2)) <10 then
-                                                                                lmels = cint(NtoDate(0))&"-0"&cint(NtoDate(1))&"-0"&cint(NtoDate(2))
-                                                                            else 
-                                                                              lmels = cint(NtoDate(0))&"-"&cint(NtoDate(1))&"-"&cint(NtoDate(2))
-                                                                           end if 
-                                                                        
-
-                                                                          if newMyDate <> lmels then 
-                                                                          
-                                                                           
-                                                                              '获得这个月的假期天数'
-                                                                              set rsdakavacation=server.CreateObject("adodb.recordset")
-                                                                                rsdakavacation.Open "select * from vacation_manage where vacation_date like "&datemonth&" ",conn,1,1
-                                                                                dim Svacation
-                                                                                redim Svacation(rsdakavacation.recordcount)
-                                                                                forget_attendance = 0
-                                                                                if not rsdakavacation.eof then 
-                                                                                    for Xdate=0 to rsdakavacation.recordcount -1
-                                                                                      'Udate=rsdakavacation("vacation_date")
-                                                                                      Svacation(Xdate) = rsdakavacation("vacation_date")
-                                                                                        '--------------判断是否属于假期的日期---------------'
-                                                                                        if newMyDate <> Svacation(Xdate) then 
-                                                                                            forget_attendance = forget_attendance + 1
-                                                                                            'response.write "+"&forget_attendance&"-"
-                                                                                        else
-                                                                                        end if 
-                                                                                      rsdakavacation.movenext
-                                                                                    next
-                                                                                else 
-                                                                                response.write "该月没有设置假期"
-                                                                                end if 
-                                                                                forget_attendance=0
-                                                                                rsdakavacation.close
-                                                                                set rsdakavacation=nothing
-                                                                          else
-                                                                         
-                                                                            %>
-                                                                        <font color="#CD3278">
-                                                                            <%
-                                                                            response.write newMyDate
-                                                                           response.write "是请假日期</font>" 
-                                                                          end if 
-                                                                        next
-                                                                        rsdakaleave.movenext
-                                                                      next
-                                                                     
-                                                                else
-                                                                'response.write "木请假"
-                                                                response.write endResult(rsdakaleave("mwork_start_date"),newMyDate)
-                                                                  rsdakaleave.close
-                                                                set rsdakaleave=nothing
-                                                                'response.write "/菜籽\" 
-
-
-
-                                                                end if 
-                                                                
-                                                              
-                                                              'rsdaka.close
-                                                            else
-                                                                testbool = true
-                                                                Exit for 
-                                                                'rsdakaleave.close
-                                                                'set rsdakaleave=nothing
-                                                                'Exit for
-                                                                 
-
-                                                            end if 
-                                                          rsdakaDate.movenext
-                                                          'response.write myDate(Ddate)&"_"'得到员工该月所有打卡日期'
-                                                        next
-                                                      
-                                                  else
-
-
-
-                                                 response.write "没打卡" 
-                                                  
-                                                  Exit for
-
-
-                                                  
-                                                  end if
-                                                  rsdakaDate.close
-                                                  set rsdakaDate=nothing
-                                              
-                                        
-                                        
-                                          if testbool then 
-
-                                            else 
-                                           '' response.write nextInt
-                                            notattendance(nextInt) = newMyDate
-                                            'response.write "=="&notattendance(nextInt)&"--"
-                                            nextInt  = nextInt + 1
-
-                                          end if 
-                                          for ron = 0 to nextInt -1
-                                             response.write "--"&nextInt&"--"
-                                               response.write "***"&notattendance(ron)
-                                               if notattendance(ron) = "" then 
-                                                response.write "NULL"
-                                                else 
-                                                 mnotattendance(ron) = notattendance(ron)
-                                                end if 
-                                          next
-                                          
-                                       next
-                                       for ro = 0 to nextInt-1
-                                       response.write mnotattendance(ro)
-                                       next
+                                   set missWork=server.CreateObject("adodb.recordset")
+                                    missw = "'"+"考勤申诉"+"'"
+                                   missWork.Open "select * from work_application_message where mwork_number='"&rs("job_number")&"' and mwork_type like "&missw&" ",conn,1,1
+                                  
+                                    if not missWork.eof then
+                                     response.write missWork.recordcount
+                                    else
+                                      response.write "无"
+                                    end if 
                                        
-                                       
-                                          
                                 %>
 
                                
@@ -745,7 +527,45 @@ else
    
                                 %>
                               </td>
-                              <td style="vertical-align: middle;text-align:center">旷工</td>
+                              <td style="vertical-align: middle;text-align:center">
+                                 <%  
+                                
+
+                                 
+                                          
+                                        '该月的第一天dateNumber.val2 该月的天数 dateNumber.val1  
+
+                                        myDatenumber = dateNumber.val1
+                                        '拿到本月的假期天数'
+                                        set vacationDate=server.CreateObject("adodb.recordset")
+                                        vacationDate.Open "select * from vacation_manage where vacation_date like "&datemonth&" ",conn,1,1
+                                        workDateNumber = myDatenumber - vacationDate.recordcount
+                                       vacationDate.close
+                                       '拿出请假申请天数'
+                                       mstr = "'"+"请假申请"+"'"
+                                       vacationDate.Open "select * from work_application_message where mwork_number='"&rs("job_number")&"' and mwork_type="&mstr&" and  mwork_tody like "&datemonth&" ",conn,1,1
+                                        els=0
+                                        if not vacationDate.eof then
+                                          for rse=1 to vacationDate.recordcount
+                                            start_date=vacationDate("mwork_start_date")'拿出请假开始日期用于for运算'
+                                           els = els + DateDiff("d",start_date,vacationDate("mwork_end_date"))'计算请假区间，拿出天数'
+                                          
+                                            vacationDate.movenext
+                                          next
+                                        else 
+
+                                        end if 
+
+                                       workDateNumber = workDateNumber - els
+                                       vacationDate.close
+                                       '拿到本月打卡的天数'
+                                       vacationDate.Open "select * from work_attendance where job_number='"&rs("job_number")&"' and  work_date like "&datemonth&" ",conn,1,1
+                                       workDateNumber = workDateNumber - vacationDate.recordcount + forget_attendance
+                                       response.write workDateNumber
+                                       set vacationDate = nothing
+                                       
+                                %>
+                              </td>
                               <td style="vertical-align: middle;text-align:center">其他</td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
