@@ -41,19 +41,20 @@
                 <a href="manage_work.asp" <%if filename="manage_work" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>考勤申请</span></a>
                 <a href="manage_work_setrest.asp" <%if filename="manage_work_setrest" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>上班作息调整</span></a>
                 <a href="manage_add_vacation.asp" <%if filename="manage_add_vacation" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>假期添加</span></a>
-
             </div>
         </li>
         <%end if%>
     	<%if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")>0 then%>
-        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if filename="manage_products" or filename="manage_brokerage_section" or filename="add_creditor_right" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_pay_count" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
-        	<div class="sidebar" id="menu4" <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_brokerage_section" or filename="manage_companys_bonus_proportion" or filename="manage_pay_count" or filename="manage_achievement" or filename="add_creditor_right" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if filename="manage_products" or filename="manage_brokerage_section" or filename="add_creditor_right" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_pay_count" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_add_Results" or filename="manage_commission_set" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
+        	<div class="sidebar" id="menu4" <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_brokerage_section" or filename="manage_companys_bonus_proportion" or filename="manage_pay_count" or filename="manage_achievement" or filename="manage_commission_set" or filename="manage_add_Results" or filename="add_creditor_right" then%>style="display:inherit"<%end if%>>
                 <a href="add_creditor_right.asp" <%if filename="add_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>一般借贷申请</span></a>
             	<a href="manage_products.asp" <%if filename="manage_products" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>投资产品管理</span></a>
             	<a href="manage_monthly_bill.asp" <%if filename="manage_monthly_bill" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>账单查询</span></a>
                 <a href="manage_PaiXiTiXing.asp" <%if filename="manage_PaiXiTiXing" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>派息提醒</span></a>
                 <a href="manage_pay_count.asp" <%if filename="manage_pay_count" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>工资核算</span></a>
+                 <a href="manage_add_Results.asp" <%if filename="manage_add_Results" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>添加线上员工业绩</span></a>
                 <a href="manage_brokerage_section.asp" <%if filename="manage_brokerage_section" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>提佣区间设置</span></a>
+                <a href="manage_commission_set.asp" <%if filename="manage_commission_set" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>提成加薪设置</span></a>
             	<a href="manage_achievement.asp" <%if filename="manage_achievement" then%>class="active1"<%end if%>><i class="icon icon-edit"></i> <span>员工业绩查询</span></a>
             	<a href="manage_companys_bonus_proportion.asp" <%if filename="manage_companys_bonus_proportion" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>分公司业绩提成设置</span></a>
             	<a href="manage_jobs_bonus_proportion.asp" <%if filename="manage_jobs_bonus_proportion" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>职位业绩提成设置</span></a>

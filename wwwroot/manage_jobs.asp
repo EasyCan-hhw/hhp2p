@@ -114,13 +114,13 @@ end if
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th nowrap="nowrap">职位</th>
-                                <th>职位名称</th>
-                                <th>基本工资</th>
-                                 <th>绩效低金</th>
-                                 <th>月考核绩效</th>
+                                <th nowrap="nowrap"width="15%">职位</th>
+                                <th width="15%">职位名称</th>
+                                <th width="15%">基本工资</th>
+                                 <th width="15%">绩效低金</th>
+                                 <th width="15%">月考核绩效</th>
                                 
-                                <th>权限</th>
+                                
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
@@ -193,7 +193,6 @@ end if
 
                             <input name="month_money<%=int(rs("id"))%>" id="month_money<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("month_money"))%>">
                             &nbsp;<span class="help-inline">(单位:万)</span>
-
                           </td>
                         <!--  <td style="vertical-align: middle;">
                               <div style="float:left; width:140px;">
@@ -211,20 +210,20 @@ end if
                             </div>
                             <div style=" clear:both"></div>
                         </td>-->
-                        <td></td>
+                        
                          <td style="vertical-align: middle; text-align:center">
                                <a href="javascript:;" id="job_edit_<%=int(rs("id"))%>" class="job_edit">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                               <a href="javascript:;" id="job_del_<%=int(rs("id"))%>" class="job_del">删除</a>
                         </td>
                    </tr>
             <%
-			i=i+1
-			if i>=MaxPerPage then Exit Do
-			rs.movenext
-			loop
-			rs.close
-			set rs=nothing
-			End Sub   
+        			i=i+1
+        			if i>=MaxPerPage then Exit Do
+        			rs.movenext
+        			loop
+        			rs.close
+        			set rs=nothing
+        			End Sub   
             %>
                                                         </tbody>
                         </table>

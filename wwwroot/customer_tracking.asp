@@ -66,18 +66,18 @@ end if
                             	<div class="span5">
                                 <select id="uid" name="uid">
                                     	<option value="" ></option>
-									    <%
-										set rs=server.CreateObject("adodb.recordset")
-										rs.Open "select * from users order by uid" ,conn,1,1
-										do while not rs.eof
-										%>
-										<option value="<%=rs("uid")%>"><%=rs("full_name")%></option>
-										<%
-										 rs.movenext
-										 loop
-										 rs.close
-										 set rs=nothing
-										%>
+            									    <%
+            										set rs=server.CreateObject("adodb.recordset")
+            										rs.Open "select * from users order by uid" ,conn,1,1
+            										do while not rs.eof
+            										%>
+            										<option value="<%=rs("uid")%>"><%=rs("full_name")%></option>
+            										<%
+            										 rs.movenext
+            										 loop
+            										 rs.close
+            										 set rs=nothing
+            										%>
                                 </select>
                                 </div>
                                  <span class="help-inline">此处查询时有效</span>

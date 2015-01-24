@@ -25,18 +25,32 @@ end if
                 </div>
                 <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
-                        <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;职位选择:</label>
+                       <div class="control-group">
+                            <label class="control-label">&nbsp;工号:</label>
                             <div class="controls">
-                              <div class="span5" style="width:320px">
-                                <select id="b_jobs" name="b_jobs">
+                                <input type="text" id="result_number" class="span5" name="result_number" style="width:275px;"/>
+                                <span id="result_number_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;员工姓名:</label>
+                            <div class="controls">
+                                <input type="text" id="result_name" class="span5" name="result_name" style="width:275px;" disabled />
+                                <span id="result_name_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;投资产品:</label>
+                            <div class="controls">
+                              <div class="span5" style="width:275px;">
+                                <select id="result_product" name="result_product">
                                       <option value="" ></option>
-                                        <%
+                                      <%
                                       set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from position where identification=1 order by id" ,conn,1,1
+                                      rs.Open "select * from products  order by id" ,conn,1,1
                                       do while not rs.eof
                                       %>
-                                      <option value="<%=rs("position")%>" <%if rs("id")=position_id then%>selected<%end if%>><%=rs("position")%></option>
+                                      <option value="<%=rs("product_name")%>" <%if rs("id")=position_id then%>selected<%end if%>><%=rs("product_name")%></option>
                                       <%
                                        rs.movenext
                                        loop
@@ -45,50 +59,22 @@ end if
                                       %>
                                     </select>
                                 </div>
-                                <span id="b_jobs_err" class="err_text"></span>
+                                <span id="result_product_err" class="err_text"></span>
                               </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;提佣区间:</label>
-                             <div class="controls">
-                                <input type="text" id="b_min" name="b_min"  onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" class="span5" style="width:150px;text-align:right;" />
-                                &nbsp;至&nbsp;
-                                <input type="text" id="b_max" name="b_max"  onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" class="span5" style="width:150px;text-align:right;" />
-                                <span class="help-inline">必须是数字</span>
-                                <span id="b_minmax_err" class="err_text"></span>
-                            </div>
-                        </div>
-                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;阶梯档数:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;理财金额:</label>
                             <div class="controls">
-                               <div class="span5" style="width:220px">
-                                <select id="b_ladder" name="b_ladder" value="" style="width:320px">
-                                      <option value="" ></option>
-                                      <option value="1" >一档</option>
-                                      <option value="2" >二档</option>
-                                      <option value="3" >三档</option>
-                                      <option value="4" >四档</option>
-                                      <option value="5" >五档</option>
-                                      <option value="6" >六档</option>
-                                      <option value="7" >七档</option>
-                                      <option value="8" >八档</option>
-                                      <option value="9" >九档</option>
-                                 </select>
-                                </div>
-                                <span id="b_ladder_err" class="err_text"></span>
-                            </div>
-                        </div>
-                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;提佣比例:</label>
-                            <div class="controls">
-                                <input type="text" id="b_bscale" class="half" name="b_bscale" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" style="text-align:right;width:310px"/> %
-                                <span id="b_bscale_err" class="err_text"></span>
+                                <input type="text" id="result_capital" class="span5" name="result_capital" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" style="width:275px;"/>
+                                <span class="help-inline">元</span>
+                                <span id="result_capital_err" class="err_text"></span>
                             </div>
                         </div>
                          
+                         
                      <div class="form-actions">
                           <label class="control-label"></label>
-                          <button id="add_brokerage_section_submit" type="submit" class="btn btn-primary">提交</button>
+                          <button id="add_user_result_submit" type="submit" class="btn btn-primary">提交</button>
                       </div>
                   </form>
                 </div>

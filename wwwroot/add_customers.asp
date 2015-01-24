@@ -198,7 +198,7 @@ end if
                             </div>
                         </div>
                         <div class="control-group alert">
-                            <label class="control-label"><font color="red">*</font>&nbsp;紧急联系人称呼:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;跟紧急联系人关系:</label>
                             <div class="controls">
                                 <input type="text" id="emergency_title" class="span5" name="emergency_title"/>
                                 <span id="emergency_title_err" class="err_text"></span>

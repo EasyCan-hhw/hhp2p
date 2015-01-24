@@ -300,13 +300,13 @@ else
                             </thead>
                             <tbody>
             <%
-if trim(request("number"))<>"" then numbers=" and number='"&trim(request("number"))&"'"
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-if trim(request("start_date"))<>"" then date1=" and datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
-if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
-if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
-if trim(request("product_name"))<>"" then product_name=" and product_name='"&trim(request("product_name"))&"'"
+            if trim(request("number"))<>"" then numbers=" and number='"&trim(request("number"))&"'"
+            if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
+            if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
+            if trim(request("start_date"))<>"" then date1=" and datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
+            if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
+            if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
+            if trim(request("product_name"))<>"" then product_name=" and product_name='"&trim(request("product_name"))&"'"
 
 				err_txt="<tr><td colspan=""9"">没有债权转让信息</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")

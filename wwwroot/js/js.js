@@ -15,7 +15,7 @@ $(document).ready( function() {
 			   for (var i=0; i<$('input[name="download_csv"]').length; i++)
 				  $('input[name="download_csv"]')[i].checked = true;
 			}else{
-			   for (var i=0; i<$('input[name="download_csv"]').length; i++)
+			   for (var i=0; i<$('input[name="download_csv"]').length; i++)job_number
 				  $('input[name="download_csv"]')[i].checked = false;
 			}
 		});

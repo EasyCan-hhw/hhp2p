@@ -448,10 +448,10 @@ if trim(request("collateral_class"))<>"" then collateral_class_name=" and collat
 								%></td>
                                <td style="vertical-align: middle; text-align:center">
                                		<%if rs("approval")=0 then%>
-                                    <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                    <a href="javascript:;" id="creditor_right_del_<%=int(rs("id"))%>" class="creditor_right_del">删除</a>
+                                        <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+                                        <a href="javascript:;" id="creditor_right_del_<%=int(rs("id"))%>" class="creditor_right_del">删除</a>
 									<%else%>
-                                     <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">查看详情</a>
+                                        <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">查看详情</a>
 									<%end if%>
                                     
                                 </td>
