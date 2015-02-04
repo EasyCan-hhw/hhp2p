@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -183,6 +180,26 @@ if not rs.eof then
                             <div id="other_evidence_show" style="display:inline;">
                             <%=other_evidence_img%>
                             </div>
+                            </div>
+                        </div>
+                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;其他證件:</label>
+                            <div class="controls">
+                            <%
+                            set rs1=server.CreateObject("adodb.recordset")
+                            rs1.Open "select * from upload_files where table_name='creditor_right' and file_type='other_other' and cid="&rs("id"),conn,1,1
+                            do while not rs1.eof
+                                other_other_img=other_other_img&"<a href='Upload_file/"&rs1("filename")&"' target='_blank'><img src='Upload_file/"&rs1("filename")&"' width='160'></a>&nbsp;&nbsp;"
+                                if other_other_file<>"" then other_other_file=other_other_file&","
+                                other_other_file=other_other_file&rs1("filename")
+                            rs1.movenext
+                            loop
+                            rs1.close
+                            set rs1=nothing
+                            %>
+                            <div id="other_other_show" style="display:inline;">
+                            <%=other_other_img%>
+                             </div>
                             </div>
                         </div>
                     <div class="form-actions">

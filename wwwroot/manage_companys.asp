@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -29,7 +26,7 @@ end if
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;分公司代码:</label>
                             <div class="controls">
-                                <input type="text" id="company_code" class="half" name="company_code"/>
+                                <input type="text" id="company_code" class="half" name="company_code" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
                                 <span id="company_code_err" class="err_text"></span>
                             </div>
                         </div>
@@ -37,6 +34,30 @@ end if
                             <label class="control-label"><font color="red">*</font>&nbsp;分公司名称:</label>
                             <div class="controls">
                                 <input type="text" id="company_name" class="half" name="company_name"/>
+                                <span id="company_name_err" class="err_text"></span>
+                            </div>
+                        </div>
+                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;上级分公司:</label>
+                            <div class="controls">
+                               <div class="span5" style="width:220px" >
+                                <select id="superior_companys" name="superior_companys" value="">
+                                      <option value="" ></option>
+                                        <%
+                                      set rs=server.CreateObject("adodb.recordset")
+                                      rs.Open "select * from companys order by id" ,conn,1,1
+                                      do while not rs.eof
+                                      %>
+                                      <option  value="<%=rs("company_code")%>" <%if rs("id")=company_name then%>selected<%end if%>><%=rs("company_name")%></option>
+                                      <%
+                                       rs.movenext
+                                       loop
+                                       rs.close
+                                       set rs=nothing
+                                      %>  
+                                    </select>
+                                  </div>
+                                <span class="help-inline">无可不填</span>
                                 <span id="company_name_err" class="err_text"></span>
                             </div>
                         </div>
@@ -60,8 +81,9 @@ end if
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th>分公司代码</th>
-                                <th>分公司名称</th>
+                                <th width="25%">分公司代码</th>
+                                <th width="30%">分公司名称</th>
+                                <th width="30">上级分公司</th>
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
@@ -112,6 +134,7 @@ end if
                                                         <tr>
                                 <td style="vertical-align: middle;text-align:center"><input name="company_code<%=int(rs("id"))%>" id="company_code<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_code"))%>"></td>
                                 <td style="vertical-align: middle;text-align:center"><input name="company_name<%=int(rs("id"))%>" id="company_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_name"))%>"></td>
+                                <td style="vertical-align: middle;text-align:center"><input name="company_name<%=int(rs("id"))%>" id="company_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_count"))%>"></td>
                                 <td style="vertical-align: middle; text-align:center">
                                     <a href="javascript:;" id="company_edit_<%=int(rs("id"))%>" class="company_edit">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     <a href="javascript:;" id="company_del_<%=int(rs("id"))%>" class="company_del">删除</a>

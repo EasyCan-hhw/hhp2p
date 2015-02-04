@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -92,8 +89,8 @@ end if
                             <tbody>
             <%
 				err_txt="<tr><td colspan=""5"">没有产品</td></tr>"
-			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from products order by id",conn,1,1
+  			set rs=server.CreateObject("adodb.recordset")
+  			rs.Open "select * from products order by id",conn,1,1
 
   		  if err.number<>0 or rs.eof then
   				response.write err_txt

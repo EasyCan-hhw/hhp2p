@@ -1,5 +1,5 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="936"%>
-<!--#include file="Connections/web.asp" -->
+<!--#include file="conn.asp" -->
 <%
 ' *** Validate request to log in to this site.
 MM_LoginAction = Request.ServerVariables("URL")
@@ -46,17 +46,32 @@ End If
 </head>
 
 <body>
-<form id="form1" name="form1" method="POST" action="<%=MM_LoginAction%>">
-<p align="right"><span class="STYLE11">  会员名：</span>
-  <input name="user" id="user" size="20" maxlength="16">
-  
-  <span class="STYLE9 STYLE11">密码：</span>
-  <input name="password" type="password" size="20" maxlength="20">
-  <a href="#" class="STYLE11" onclick="javascript:checkvalue();return false;">  
-   <label>
-  <input type="submit" name="Submit" value="登录" />
-  </label>
-  </a> <a href="../zhuce.asp" class="STYLE11">注册</a></p>
-</form>
+<% 
+ o_number=0120120123
+  set rs=server.createobject("adodb.recordset")
+  sql = "Select * from contracts"
+  rs.Open sql,conn,1,3
+  rs.addnew
+  rs("number")=o_number
+  rs("cid")=cid
+  rs("passport")=passport
+  rs("full_name")=full_name
+  rs("product_name")=product_name
+  rs("cycle")=cycle
+  rs("profit")=profit
+  rs("capital")=capital
+  rs("start_date")=start_date
+  rs("add_uid")=request.cookies("hhp2p_cookies")("uid")
+  rs("inputdate")=now()
+  rs.update
+  rs.close
+  'getIdSql = "Select * from contracts where number ="&o_number
+  rs.Open "Select * from contracts where number ="&o_number,conn,1,3
+  if not rs.eof then 
+  c_id=rs("id")
+  response.write c_id
+  end if 
+  rs.close
+%>
 </body>
 </html>

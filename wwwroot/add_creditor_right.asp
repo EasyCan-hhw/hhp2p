@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -101,6 +98,14 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;预付利息:</label>
+                            <div class="controls">
+                                <input type="text" id="advance_pay_creditorRight" class="span5" name="advance_pay_creditorRight" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
+                                <span class="help-inline">%</span>
+                                <span id="advance_pay_creditorRight_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;身份证:</label>
                             <div class="controls">
                             <input name="passport_img" id="passport_img" type="hidden" value="" />
@@ -158,6 +163,16 @@ end if
                              <span class="help-inline">请上传他证照片，支持文件格式：JPG、GIF、PNG</span>
                                 <span id="other_evidence_err" class="err_text"></span>
                             <div id="other_evidence_show"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;其他证件:</label>
+                            <div class="controls">
+                            <input name="other_other" id="other_other" type="hidden" value="" />
+                             <input name="upload-other_other" id="upload-other_other" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
+                             <span class="help-inline">请上传他证照片，支持文件格式：JPG、GIF、PNG</span>
+                                <span id="other_other_err" class="err_text"></span>
+                            <div id="other_other_show"></div>
                             </div>
                         </div>
                     <div class="form-actions">
