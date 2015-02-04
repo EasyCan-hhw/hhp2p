@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
 
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -119,7 +122,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="passport_img" id="passport_img" type="hidden" value="<%=passport_img_file%>" />
                              <input name="upload-passport_img" id="upload-passport_img" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传身份证照片，支持文件格式：JPG、GIF、PNG</span>
@@ -144,7 +147,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="property_card" id="property_card" type="hidden" value="<%=property_card_file%>" />
                              <input name="upload-property_card" id="upload-property_card" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传房产证照片，支持文件格式：JPG、GIF、PNG</span>
@@ -169,7 +172,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="notarization" id="notarization" type="hidden" value="<%=notarization_file%>" />
                              <input name="upload-notarization" id="upload-notarization" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传公证书照片，支持文件格式：JPG、GIF、PNG</span>
@@ -194,7 +197,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="IOU_receipt" id="IOU_receipt" type="hidden" value="<%=IOU_receipt_file%>" />
                              <input name="upload-IOU_receipt" id="upload-IOU_receipt" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传借据、收据照片，支持文件格式：JPG、GIF、PNG</span>
@@ -219,7 +222,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or  rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="contract" id="contract" type="hidden" value="<%=contract_file%>" />
                              <input name="upload-contract" id="upload-contract" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传借款合同照片，支持文件格式：JPG、GIF、PNG</span>
@@ -244,7 +247,7 @@ if not rs.eof then
 							loop
 							rs1.close
 							set rs1=nothing
-							if rs("approval")=0 or rs("approval_other")=0 then%>
+							if rs("approval")=0 then%>
                             <input name="other_evidence" id="other_evidence" type="hidden" value="<%=other_evidence_file%>" />
                              <input name="upload-other_evidence" id="upload-other_evidence" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传他证照片，支持文件格式：JPG、GIF、PNG</span>
@@ -255,37 +258,11 @@ if not rs.eof then
                             </div>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;其他证件:</label>
-                            <div class="controls">
-                            <%
-                            set rs1=server.CreateObject("adodb.recordset")
-                            rs1.Open "select * from upload_files where table_name='creditor_right' and file_type='other_other' and cid="&rs("id"),conn,1,1
-                            do while not rs1.eof
-                                other_other_img=other_other_img&"<a href='Upload_file/"&rs1("filename")&"' target='_blank'><img src='Upload_file/"&rs1("filename")&"' width='160'></a>&nbsp;&nbsp;"
-                                if other_other_file<>"" then other_other_file=other_other_file&","
-                                other_other_file=other_other_file&rs1("filename")
-                            rs1.movenext
-                            loop
-                            rs1.close
-                            set rs1=nothing
-                            if rs("approval")=0 or rs("approval_other")=0 then%>
-                            <input name="other_other" id="other_other" type="hidden" value="<%=other_evidence_file%>" />
-                             <input name="upload-other_other_other" id="upload-other_other" type="button" value="重新上传文件" class="btn btn-primary upload_imgs_submit">
-                             <span class="help-inline">请上传其他证照片，支持文件格式：JPG、GIF、PNG</span>
-                                <span id="other_other_err" class="err_text"></span>
-                             <%end if%>
-                            <div id="other_other_show" style="display:inline;">
-                            <%=other_other_img%>
-                            </div>
-                            </div>
-                        </div>
                     <div class="form-actions">
                           <label class="control-label"></label>
                         <%if rs("approval")=0 then%>
                           <button id="edit_creditor_right_submit" type="submit" class="btn btn-primary">提交</button>
                         <%else%>
-                         <button id="edit_creditor_right_submit" type="submit" class="btn btn-primary">提交</button>
                           <button id="history_back" type="submit" class="btn btn-primary">返回</button>
                       <%end if%>
                       </div>
@@ -474,21 +451,7 @@ if trim(request("collateral_class"))<>"" then collateral_class_name=" and collat
                                         <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                         <a href="javascript:;" id="creditor_right_del_<%=int(rs("id"))%>" class="creditor_right_del">删除</a>
 									<%else%>
-                                        <%
-                                            approvalInt = rs("id")
-                                            set other=server.createobject("adodb.recordset")
-                                            other.Open "select * from upload_files where cid="&rs("id")&" and file_type='other_evidence' order by id",conn,1,1
-                                            if other.eof then 
-                                        %>
-                                            <a href="manage_creditor_right.asp?id=<%=int(approvalInt)%>" ><font color="#ff0000">添加他证</font></a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                            <a href="manage_creditor_right.asp?id=<%=int(approvalInt)%>">查看详情</a>
-                                        <%else%>
-                                            <a href="manage_creditor_right.asp?id=<%=int(approvalInt)%>">查看详情</a>
-                                        <%
-                                            end if 
-                                            other.close
-                                            set other=nothing
-                                        %>
+                                        <a href="manage_creditor_right.asp?id=<%=int(rs("id"))%>">查看详情</a>
 									<%end if%>
                                     
                                 </td>

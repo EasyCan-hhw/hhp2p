@@ -1,7 +1,10 @@
 
 <!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
  dim mtype
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -28,6 +31,7 @@
                         <div class="control-group">
                           <label class="control-label" ><font color="red">*</font>&nbsp;当日时间:</label>
                              <div class="controls">
+                              
                                 <input type="text" id="work_tody" class="half" name="work_number" value="<%=Year(now())&"年"&month(now())&"月"&day(now())&"日"%>" disabled/>
                               </div>
                         </div>
@@ -62,7 +66,7 @@
                                        loop
                                        rs.close
                                        set rs=nothing
-                                      %>
+                                      %>  
                                     </select>
                                 </div>
                                 <span id="work_type_err" class="err_text"></span>

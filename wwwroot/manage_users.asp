@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
 
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
@@ -23,12 +26,14 @@ end if
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
+
 <div id="content">
     <!--breadcrumbs-->
     <div id="content-header">
         <div id="breadcrumb"> <a href="####" class="tip-bottom"><i class="icon-th-list"></i> 员工管理</a></div>
     </div>
     <!--End-breadcrumbs-->
+
     <div class="container-fluid">
         
         <div class="row-fluid">
@@ -51,7 +56,7 @@ end if
                         <div class="control-group">
                             <label class="control-label">&nbsp;密码:</label>
                             <div class="controls">
-                                <input type="text" id="password" class="span5" name="password" />
+                                <input type="text" id="password" class="span5" name="password"/>
                                 <span class="help-inline">无需修改请留空</span>
                                 <span id="password_err" class="err_text"></span>
                             </div>
@@ -69,7 +74,7 @@ end if
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;工号:</label>
                             <div class="controls">
-                                <input type="text" id="job_numberS" class="span5" name="job_numberS" value="<%=job_number%>"/>
+                                <input type="text" id="job_number" class="span5" name="job_number" value="<%=job_number%>"/>
                                 <span id="job_number_err" class="err_text"></span>
                             </div>
                         </div>
@@ -88,23 +93,10 @@ end if
                                     	<option value="" ></option>
 									    <%
 										set rs=server.CreateObject("adodb.recordset")
-										rs.Open "select * from companys where company_code like '1%' and company_count='' order by id" ,conn,1,1
+										rs.Open "select * from companys order by id" ,conn,1,1
 										do while not rs.eof
-                                            set rsSubRegion = server.CreateObject("adodb.recordset")
-                                            sqlQuery = "select * from companys where company_count='"&rs("company_code")&"'"
-                                            rsSubRegion.Open sqlQuery,conn,1,1
-                                            subRegionsIdAndNames = ""
-                                            do while not rsSubRegion.eof
-                                                subRegionsIdAndNames = subRegionsIdAndNames + rsSubRegion("company_code") + ":" + rsSubRegion("company_name") + ";"
-                                                rsSubRegion.movenext
-                                            loop
-                                            rsSubRegion.close
-                                            set rsSubRegion=nothing
-                                            if subRegionsIdAndNames = "" then
-                                                subRegionsIdAndNames = "none"
-                                            end if
 										%>
-										<option id="companyId_<%=rs("id")%>"  subregions=<%=subRegionsIdAndNames%> unval="<%=rs("company_code")%>" value="<%=rs("id")%>" <%if rs("id")=company_id then%>selected<%end if%>><%=rs("company_name")%></option>
+										<option value="<%=rs("id")%>" <%if rs("id")=company_id then%>selected<%end if%>><%=rs("company_name")%></option>
 										<%
 										 rs.movenext
 										 loop
@@ -112,23 +104,9 @@ end if
 										 set rs=nothing
 										%>
                                     </select>
-                                    
                                 </div>
                                 <span class="help-inline">从下拉菜单中选择分公司</span>
                                 <span id="company_id_err" class="err_text"></span>
-                            </div>
-                        </div>
-                         <div class="control-group">
-                            <label class="control-label">&nbsp;下属分公司:</label>
-                            <div class="controls">
-                                <div class="span5">
-                                <select id="company_porportion" name="company_porportion">  
-                                        <option value="" ></option>
-                                        
-                                    </select>
-                                </div>
-                                <span class="help-inline">(没有请留空)请选择正确的下属分公司</span>
-                                <span id="company_porportion_err" class="err_text"></span>
                             </div>
                         </div>
                         <div class="control-group">
@@ -156,10 +134,10 @@ end if
                             </div>
                         </div>
                          <div class="control-group">
-                            <label class="control-label">&nbsp;上级:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;上级:</label>
                             <div class="controls">
                                 <div class="span5">
-                                <select id="lead_user" name="lead_user" >
+                                <select id="lead_user" name="lead_user" value="<%=lead_user%>">
                                         <option value="" ></option>
                                         <%
                                         set rs=server.CreateObject("adodb.recordset")
@@ -179,6 +157,7 @@ end if
                                 <span id="lead_user_err" class="err_text"></span>
                             </div>
                         </div>
+
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;电话:</label>
                             <div class="controls">
@@ -253,72 +232,22 @@ end if
                                 <span id="add_insurance_err" class="err_text"></span>
                             </div>
                         </div>
-
-                        <%
-                             quanxianString = request.cookies("hhp2p_cookies")("quanxian")
-                                splitvalue = split(quanxianString,",")
-                                splitlength = ubound(splitvalue)
-
-                            for s=0 to splitlength 
-                                if splitvalue(s)="[29]" then 
-                
-                        %>
                         <div class="control-group">
                           <label class="control-label">权限:</label>
                           <div class="controls">
                           <table>
                           <tr>
                             <td><input name="checkbox_all" type="checkbox" id="checkbox_all" onClick="check_all('checkbox_all','quanxian')"> 全选&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[1]" <%if InStr(quanxian,"[1]")>0 then%>checked<%end if%>> 目标客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[2]" <%if InStr(quanxian,"[2]")>0 then%>checked<%end if%>> 正式客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[3]" <%if InStr(quanxian,"[3]")>0 then%>checked<%end if%>> 客户查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[4]" <%if InStr(quanxian,"[4]")>0 then%>checked<%end if%>> 一般借贷申请&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[5]" <%if InStr(quanxian,"[5]")>0 then%>checked<%end if%>> 债权查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[6]" <%if InStr(quanxian,"[6]")>0 then%>checked<%end if%>> 债权转让&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[7]" <%if InStr(quanxian,"[7]")>0 then%>checked<%end if%>> 债权转让查询&nbsp;&nbsp;&nbsp;&nbsp;</td>    
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[8]" <%if InStr(quanxian,"[8]")>0 then%>checked<%end if%>> 员工管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[29]" <%if InStr(quanxian,"[29]")>0 then%>checked<%end if%>> 员工权限管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[9]" <%if InStr(quanxian,"[9]")>0 then%>checked<%end if%>> 打卡录入&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[10]" <%if InStr(quanxian,"[10]")>0 then%>checked<%end if%>> 考勤申请&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[11]" <%if InStr(quanxian,"[11]")>0 then%>checked<%end if%>> 上班作息调整&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[12]" <%if InStr(quanxian,"[12]")>0 then%>checked<%end if%>> 假期添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[13]" <%if InStr(quanxian,"[13]")>0 then%>checked<%end if%>> 投资产品管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[14]" <%if InStr(quanxian,"[14]")>0 then%>checked<%end if%>> 派息提醒&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[15]" <%if InStr(quanxian,"[15]")>0 then%>checked<%end if%>> 工资核算&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[16]" <%if InStr(quanxian,"[16]")>0 then%>checked<%end if%>> 提佣区间设置&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[17]" <%if InStr(quanxian,"[17]")>0 then%>checked<%end if%>> 提成加薪设置&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                          </tr>
-                          <tr>
-                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[18]" <%if InStr(quanxian,"[18]")>0 then%>checked<%end if%>> 员工业绩查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[19]" <%if InStr(quanxian,"[19]")>0 then%>checked<%end if%>> 新增债权审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[20]" <%if InStr(quanxian,"[20]")>0 then%>checked<%end if%>> 债权转让审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[21]" <%if InStr(quanxian,"[21]")>0 then%>checked<%end if%>> 赎回债权审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[22]" <%if InStr(quanxian,"[22]")>0 then%>checked<%end if%>> 考勤审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[23]" <%if InStr(quanxian,"[23]")>0 then%>checked<%end if%>> 职位管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        </tr>
-                        <tr>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[24]" <%if InStr(quanxian,"[24]")>0 then%>checked<%end if%>> 分公司管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[25]" <%if InStr(quanxian,"[25]")>0 then%>checked<%end if%>> 债权转让赎回&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[26]" <%if InStr(quanxian,"[26]")>0 then%>checked<%end if%>> 赎回查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[27]" <%if InStr(quanxian,"[27]")>0 then%>checked<%end if%>> 账单查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[28]" <%if InStr(quanxian,"[28]")>0 then%>checked<%end if%>> 债权分类管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                        </tr>
-                            
+                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[1]" <%if InStr(quanxian,"[1]")>0 then%>checked<%end if%>> 分公司管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            </tr>
+                            <tr>
+                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[2]" <%if InStr(quanxian,"[2]")>0 then%>checked<%end if%>> 职位管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[3]" <%if InStr(quanxian,"[3]")>0 then%>checked<%end if%>> 员工管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                             </tr>
                             </table>
-                            <span class="help-inline"></span>
+                            <span class="help-inline">此处查询时无效</span>
                           </div>
                         </div>
-                        <%
-                                   exit for 
-                            else 
-                            end if 
-                        next
-                
-                        %>
                       <div class="form-actions">
                           <label class="control-label"></label>
                           <button id="<%if id<>"" then%>edit<%else%>add<%end if%>_user_submit" type="submit" class="btn btn-primary"><%if id<>"" then%>提交修改<%else%>添加员工<%end if%></button>
@@ -332,7 +261,8 @@ end if
               </div>
             </div>
           </div>
-    <%if id="" then%>        
+  
+<%if id="" then%>        
         <div class="row-fluid">
              <div class="span12">
                 <div class="widget-box">
@@ -361,7 +291,6 @@ if trim(request("username"))<>"" then username=" and username='"&trim(request("u
 if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
 if trim(request("company_id"))<>"" then company_id=" and company_id="&trim(request("company_id"))
 if trim(request("job_id"))<>"" then job_id=" and job_id="&trim(request("job_id"))
-if trim(request("lead_user"))<>"" then lead_user= " and lead_user="&trim(request("lead_user"))
 if trim(request("tel"))<>"" then tel=" and tel='"&trim(request("tel"))&"'"
 if trim(request("qq"))<>"" then qq=" and qq='"&trim(request("qq"))&"'"
 if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"'"
@@ -369,6 +298,7 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
 				err_txt="<tr><td colspan=""9"">没有员工</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
 			rs.Open "select * from users where uid>0"&username&full_name&company_id&job_id&tel&qq&email&" order by uid desc",conn,1,1
+
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
@@ -387,18 +317,18 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
       				end if
        				if currentPage=1 then
             			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&lead_user="&trim(request("lead_user"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
+            			showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
        				else
           				if (currentPage-1)*MaxPerPage<totalPut then
             				rs.move  (currentPage-1)*MaxPerPage
             				dim bookmark
             				bookmark=rs.bookmark
             				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&lead_user="&trim(request("lead_user"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
+             				showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
         				else
 	        				currentPage=1
            					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&lead_user="&trim(request("lead_user"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
+           					showpage1=showpage(totalput,MaxPerPage,"manage_users.asp","&username="&trim(request("username"))&"&full_name="&trim(request("full_name"))&"&company_id="&trim(request("company_id"))&"&job_id="&trim(request("job_id"))&"&tel="&trim(request("tel"))&"&qq="&trim(request("qq"))&"&email="&trim(request("email")))
 						end if
 	   				end if
 			end if
@@ -411,32 +341,15 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("job_number"))%></td>
                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%
-
-                                if IsNull(rs("company_code")) or rs("company_code") = 0 then 
-                                        
-                                        set rs1=server.CreateObject("adodb.recordset")
-                                        rs1.Open "select * from companys where company_code="&rs("company_id"),conn,1,1
-                                        if not rs1.eof then
-                                            response.write "(一级)"&rs1("company_name")
-                                        else
-                                            response.write "其他"
-                                        end if
-                                        rs1.close
-                                        set rs1=nothing
-                                else 
-                                        
-                                        set rs3=server.CreateObject("adodb.recordset")
-                                        rs3.Open "select * from companys where company_code="&rs("company_code"),conn,1,1
-                                        if not rs3.eof then
-                                            response.write "(二级)"&rs3("company_name")
-                                        else
-                                            response.write "其他"
-                                        end if
-                                        rs3.close
-                                        set rs3=nothing
-                                      
-                                end if 
-
+								set rs1=server.CreateObject("adodb.recordset")
+								rs1.Open "select * from companys where id="&rs("company_id"),conn,1,1
+								if not rs1.eof then
+									response.write rs1("company_name")
+								else
+									response.write "其他"
+								end if
+								rs1.close
+								set rs1=nothing
 								%></td>
                                 <td style="vertical-align: middle;text-align:center"><%
 								set rs1=server.CreateObject("adodb.recordset")
@@ -450,20 +363,16 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
 								set rs1=nothing
 								%></td>
                                 <td style="vertical-align: middle;text-align:center">
+                                   
                                     <%
-                                    if rs("lead_user")="" Or IsNull(rs("lead_user")) Or IsEmpty(rs("lead_user")) or rs("lead_user")=0 then 
+                                    if rs("lead_user")="" Or IsNull(rs("lead_user")) Or IsEmpty(rs("lead_user")) then 
                                         response.write("无")
                                     else
-                                        
                                         set rs2=server.CreateObject("adodb.recordset")
                                         rs2.Open "select * from users where job_number="&rs("lead_user"),conn,1,1
-                                        if not rs2.eof then 
-                                         response.write rs2("full_name")
-                                         else 
-                                         response.write "该上级缺失"
-                                         end if 
+                                        response.write rs2("full_name")
                                         rs2.close
-                                        
+                                        set rs2=nothing
 
                                     end if 
                                     %>

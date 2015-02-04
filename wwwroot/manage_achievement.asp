@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
 
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
@@ -198,9 +201,8 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("job_number"))%></td>
                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%
-                                  
                     								set rs1=server.CreateObject("adodb.recordset")
-                    								rs1.Open "select * from companys where company_code="&rs("company_id"),conn,1,1
+                    								rs1.Open "select * from companys where id="&rs("company_id"),conn,1,1
                     								if not rs1.eof then
                     									response.write rs1("company_name")
                     									company_bonus_proportion=rs1("bonus_proportion")
@@ -210,7 +212,7 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                     								rs1.close
                     								set rs1=nothing
                     								%></td>
-                                  <td style="vertical-align: middle;text-align:center"><%
+                                                    <td style="vertical-align: middle;text-align:center"><%
                     								set rs1=server.CreateObject("adodb.recordset")
                     								rs1.Open "select * from jobs where id="&rs("job_id"),conn,1,1
                     								if not rs1.eof then

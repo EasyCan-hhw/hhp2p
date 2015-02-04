@@ -1,6 +1,9 @@
 <!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
       class valMy
           public val1
          public val2

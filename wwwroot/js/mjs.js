@@ -48,22 +48,9 @@ $("input").blur(function (){
 				   }
 				}
 			});
-	};
-
-	
-});
-
-$("select").blur(function (){
-	var id=$(this).attr("id");//根据select的id获取对应select
-	if (id == "company_porportion") {
-		//$("#company_porportion_err").html("过");
-		//var company_select = document.getElementsByName("company_porportion");
-		//company_select.length = 0
 
 	};
-
 });
-
 	//线上员工业绩添加  
 
 	$("#add_user_result_submit").click(function(){
@@ -425,30 +412,7 @@ $("select").blur(function (){
 
 
 
-	});
+});
 
-	//分公司传值给下属分公司
-	$("#company_id").change(function() {
-
-			var mcount = $("#company_id").val()
-		    companyVal = $("#companyId_"+mcount).attr("subregions")//得到选中的数组
-		    varlength = companyVal.split(";")//得到数组的长度
-		    
-		    var select1 = $("#company_porportion")
-		    select1.empty()
-		  
-		    for (var iv = 0; iv < varlength.length - 1 ; iv++) {
-		    	var smlength=companyVal.split(";")[iv];
-		    	
-		    	var companyId = smlength.split(":")[0];
-		    	var companyName = smlength.split(":")[1];
-		    	var htmlString = "<option value='" + companyId + "'>";
-		    	htmlString += companyName;
-		    	htmlString += "</option>";
-		    	select1.append(htmlString);
-
-		    }
-		    
-	});	
-			
+	
 });

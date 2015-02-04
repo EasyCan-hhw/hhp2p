@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -275,14 +278,14 @@
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">&nbsp;渠道名称:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;渠道名称:</label>
                             <div class="controls">
                                 <input type="text" id="channel_name" class="span5" name="channel_name"/>
                                 <span id="channel_name_err" class="err_text"></span>
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label">&nbsp;推荐人:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;推荐人:</label>
                             <div class="controls">
                                 <input type="text" id="recommend" class="span5" name="recommend"/>
                                 <span id="recommend_err" class="err_text"></span>

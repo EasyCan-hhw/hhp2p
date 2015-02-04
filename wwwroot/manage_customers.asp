@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
 <%
-
+if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
+response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
+response.End
+end if
 
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -266,7 +269,7 @@ if not rs.eof then
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red"></font>&nbsp;推荐人:</label>
+                            <label class="control-label"><font color="red">*</font>&nbsp;推荐人:</label>
                             <div class="controls">
                                 <input type="text" id="recommend" class="span5" name="recommend" value="<%=rs("recommend")%>"/>
                                 <span id="recommend_err" class="err_text"></span>
@@ -281,12 +284,12 @@ if not rs.eof then
               </div>
             </div>
           </div>
-    <%
-    end if
-    rs.close
-    set rs=nothing
-    else
-    %>
+<%
+end if
+rs.close
+set rs=nothing
+else
+%>
 
 
         
@@ -342,31 +345,7 @@ if not rs.eof then
                                 <span id="custome_source_err" class="err_text"></span>
                             </div>
                         </div>
-                        <div class="control-group" style="display: block;" >
-                            <label class="control-label">&nbsp;员工工号:</label>
-                            <div class="controls">
-                                <div class="span5">
-                                <!--<input type="text" id="select_jobNumber" class="span5" name="select_jobNumber"/>-->
-                                <select id="select_jobNumber" name="select_jobNumber" value="">
-                                      <option value="" ></option>
-                                        <%
-                                      set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from users order by uid" ,conn,1,1
-                                      do while not rs.eof
-                                      %>
-                                      <option  value="<%=rs("uid")%>" <%if rs("uid")=work_application then%>selected<%end if%>><%=rs("job_number")%></option>
-                                      <%
-                                       rs.movenext
-                                       loop
-                                       rs.close
-                                       set rs=nothing
-                                      %>  
-                                    </select>
-                                 </div>
-                                <span id="select_jobNumber_err" class="err_text"></span>
-                            </div>
-                        </div>
-                      <div class="form-actions" >
+                      <div class="form-actions">
                           <label class="control-label"></label>
                           <button id="search_custome_submit" type="submit" class="btn btn-primary">组合查询</button>
                       </div>
@@ -409,11 +388,10 @@ if trim(request("custome_source"))<>"" then
 	end if
 end if
 if trim(request("c_type"))<>"" then c_type=" and c_type="&trim(request("c_type"))
-if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(request("select_jobNumber"))
 
 				err_txt="<tr><td colspan=""8"">没有客户</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" order by id desc",conn,1,1
+			rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&custome_source&c_type&" order by id desc",conn,1,1
 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
@@ -433,18 +411,18 @@ if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(
       				end if
        				if currentPage=1 then
             			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&select_jobNumber="&trim(request("select_jobNumber"))&"&custome_source="&trim(request("custome_source")))
+            			showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&custome_source="&trim(request("custome_source")))
        				else
           				if (currentPage-1)*MaxPerPage<totalPut then
             				rs.move  (currentPage-1)*MaxPerPage
             				dim bookmark
             				bookmark=rs.bookmark
             				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&select_jobNumber="&trim(request("select_jobNumber"))&"&custome_source="&trim(request("custome_source")))
+             				showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&custome_source="&trim(request("custome_source")))
         				else
 	        				currentPage=1
            					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&select_jobNumber="&trim(request("select_jobNumber"))&"&custome_source="&trim(request("custome_source")))
+           					showpage1=showpage(totalput,MaxPerPage,"manage_customers.asp","&c_type="&trim(request("c_type"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&mobile="&trim(request("mobile"))&"&email="&trim(request("email"))&"&custome_source="&trim(request("custome_source")))
 						end if
 	   				end if
 			end if
