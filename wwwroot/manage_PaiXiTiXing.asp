@@ -1,9 +1,6 @@
 <!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 
 %>
 <!--#include file="sidebar_menu.asp" --> 
@@ -34,6 +31,17 @@ end if
         <div class="widget-box">
           <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
             <h5>派息查询账单列表</h5>
+            <%
+            'tomou=Year(now())&"-"&month(now())&"-"&day(now())+1
+           '' tomou2=Year(now())&"/"&month(now())&"/"&day(now())
+            'tomou3=DateAdd("d",1,tomou2)
+            'response.write tomou&"===="&tomou3
+            'if cdate(tomou) = cdate(tomou3) then 
+            ''  response.write "通过"
+            'else 
+            ''  response.write "未通过"
+            'end if
+            %>
           </div>
           <div class="widget-content">
             <table class="table table-bordered table-striped with-check">
@@ -108,7 +116,8 @@ end if
           	   		i=0
           			do while not rs.eof
                   nowdate=Year(now())&"-"&month(now())&"-"&day(now())
-                  tomdate=Year(now())&"-"&month(now())&"-"&day(now())+1
+                  tomdate=DateAdd("d",1,nowdate)
+                  forsttomdate=DateAdd("d",2,nowdate)
                   if cdate(rs("periods_end_date"))=cdate(nowdate) then
                   i=i+1
           			%>
@@ -150,6 +159,25 @@ end if
                   <td style="vertical-align: middle; text-align:center"><a href="monthly_bill.asp?id=<%=int(rs("id"))%>" target="_blank">打印账单</a></td>
                 </tr>
 
+                <%
+                elseif  cdate(rs("periods_end_date"))=cdate(forsttomdate) then
+                %>
+                  <tr> 
+                  <!-- <td><input type="checkbox" name="subBox" value="</=rs("id")/>"/></td> -->
+                  <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("number"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("start_date"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("periods_start_date"))&"至"&trim(rs("periods_end_date"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("periods"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("grand_total"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=trim(rs("accrual"))%></td>
+                  <td style="vertical-align: middle;text-align:center"><%=ForMatDate(trim(rs("inputdate")),2)%></td>
+                  <td style="vertical-align: middle;text-align:center">后天派息</td>
+                  <td style="vertical-align: middle; text-align:center"><a href="monthly_bill.asp?id=<%=int(rs("id"))%>" target="_blank">打印账单</a></td>
+                </tr>
                 <%
                 else
                 end if

@@ -1,9 +1,6 @@
 <!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
       class valMy
           public val1
          public val2
@@ -296,8 +293,8 @@ else
                               <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
-                                    intdatemonth="2015-01"'工资核算日期int依据'
-                                    datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
+                                    intdatemonth="2015-02"'工资核算日期int依据'
+                                    datemonth="'"+"2015-02%"+"'"'工资核算日期依据'
                                     forget_attendance = 0 '漏打卡'
                                     set rsjob=server.CreateObject("adodb.recordset")
                                    rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
@@ -411,16 +408,27 @@ else
                                    else
                                    Difference = 0 '请假天数'
                                     if rsWorkApplication("mwork_type") = "请假申请" then
-                                      for r=1 to rsWorkApplication.recordcount
-                                       startDate=rsWorkApplication("mwork_start_date")'请假开始日期'
-                                       endDate=rsWorkApplication("mwork_end_date")'请假结束日期'
-                                       Difference=Difference + DateDiff("H",rsWorkApplication("mwork_start_date"),rsWorkApplication("mwork_end_date"))/24
-                                       rsWorkApplication.movenext
-                                       next
+                                        set rsw=server.CreateObject("adodb.recordset")
+                                        rsw.Open "select * from jobs where id="&rs("job_id")&" ",conn,1,1
+                                        hours = rsw("base_pay")/30/8
+                                        rsw.close
+                                        set rsw=nothing
+                                        hnumber = 0
+                                        for  r=1 to rsWorkApplication.recordcount
+                                         hnumber = hnumber + rsWorkApplication("mwork_input_hour")
+
+                                        next
+                                        Difference = hours * hnumber
+                                      'for r=1 to rsWorkApplication.recordcount
+                                       'startDate=rsWorkApplication("mwork_start_date")'请假开始日期'
+                                       'endDate=rsWorkApplication("mwork_end_date")'请假结束日期'
+                                       'Difference=Difference + DateDiff("H",rsWorkApplication("mwork_start_date"),rsWorkApplication("mwork_end_date"))/24
+                                       'rsWorkApplication.movenext
+                                       'next
                                     else 
 
                                     end if 
-                                    response.write Difference&"天"
+                                    response.write  Round(Difference, 2)&"元"
                                    end if 
                                    rsworkApplication.close
                                 %>

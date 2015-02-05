@@ -18,7 +18,8 @@ username=Trim(SafeRequest("username"))'用户名'
 password=Trim(SafeRequest("password"))'密码'
 job_number=Trim(SafeRequest("job_number"))'工号'
 full_name=Trim(SafeRequest("full_name"))'姓名'
-company_id=Trim(SafeRequest("company_id"))'公司名称'
+company_id=Trim(SafeRequest("company_id"))'公司名称id'
+company_code=Trim(SafeRequest("company_porportion"))'下属公司代码  
 job_id=Trim(SafeRequest("job_id"))'职位'
 lead_user=Trim(SafeRequest("lead_user"))'上级'
 tel=Trim(SafeRequest("tel"))'D电话'
@@ -31,6 +32,7 @@ entry_date=Trim(SafeRequest("inputdate"))'入职时间
 census_register=Trim(SafeRequest("census_register"))'户籍'
 add_gold=Trim(SafeRequest("add_gold"))'加金'
 id=Trim(SafeRequest("id"))'用户登陆名'
+company_name=Trim(SafeRequest("companyVal"))
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
 	rs.Open "select * from users where username='"&username&"'",conn,1,1
@@ -57,6 +59,7 @@ if action="add" then
 	rs("lead_user")=lead_user
 	rs("tel")=tel
 	rs("qq")=qq
+	rs("company_code")=company_code
 	rs("email")=email
 	rs("add_insurance")=insurance
 	rs("quanxian")=quanxian
@@ -84,6 +87,8 @@ elseif action="Enable" then
 		conn.execute "update users set ifshow=0 where uid="&id
 elseif action="del" then
 		conn.execute "delete from users where uid="&id
+elseif action="sele" then 
+	
 end if
 	response.write "0|"
 	response.end

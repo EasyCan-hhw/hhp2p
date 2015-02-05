@@ -112,9 +112,15 @@ if action="add" then
 	rs("add_uid")=request.cookies("hhp2p_cookies")("uid")
 	rs("inputdate")=now()
 	rs.update
-	temp = rs.bookmark 
-	rs.bookmark = temp
+	'temp = rs.bookmark 
+	'rs.bookmark = temp
+	rs.close
+	'getIdSql = "Select * from contracts where number ="&o_number
+	rs.Open "Select * from contracts where number ="&o_number,conn,1,3
+	if not rs.eof then
 	c_id=rs("id")
+	'response.write c_id
+	end if 
 	rs.close
 	
 	if creditor_right_amount="1" then

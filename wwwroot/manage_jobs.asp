@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -62,18 +59,18 @@ end if
                             <table>
                               <tr>
                                 <td > 
-                                 &nbsp;&nbsp; 基本工资&nbsp;<input type="text" id="base_pay" name="base_pay" class="span5" style="width:150px;text-align:center"/><span id="err_base_pay" class="err_text"></span>
+                                 &nbsp;&nbsp; 基本工资&nbsp;<input type="text" id="base_pay" name="base_pay" class="span5" style="width:150px;text-align:center" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/><span id="err_base_pay" class="err_text"></span>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
-                                &nbsp;&nbsp;  绩效低金&nbsp;<input type="text" id="least_money" name="least_money" class="span5" style="width:150px;text-align:center"/>
+                                &nbsp;&nbsp;  绩效低金&nbsp;<input type="text" id="least_money" name="least_money" class="span5" style="width:150px;text-align:center" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
                                 <span id="err_least_money" class="err_text"></span>
                                 </td>
                               </tr>
                               <tr>
                                 <td>
-                                月考核绩效&nbsp;<input type="text" id="month_money" name="month_money" class="span5" style="width:150px;text-align:center"/>&nbsp;<span class="help-inline">(单位:万)</span><span id="err_month_money" class="err_text"></span>
+                                月考核绩效&nbsp;<input type="text" id="month_money" name="month_money" class="span5" style="width:150px;text-align:center" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>&nbsp;<span class="help-inline">(单位:万)</span><span id="err_month_money" class="err_text"></span>
                                 </td>
                               </tr>
                             </table>
@@ -119,54 +116,51 @@ end if
                                 <th width="15%">基本工资</th>
                                  <th width="15%">绩效低金</th>
                                  <th width="15%">月考核绩效</th>
-                                
-                                
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
                             <tbody>
-            <%
+                     <%
 
-				err_txt="<tr><td colspan=""3"">没有职位</td></tr>"
-			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from jobs order by month_money",conn,1,1
-		   	if err.number<>0 or rs.eof then
-				response.write err_txt
-			end if
-			if not rs.eof then
-				
-	  				totalPut=rs.recordcount
-      				if currentpage<1 then
-          				currentpage=1
-      				end if
-      				if (currentpage-1)*MaxPerPage>totalput then
-	   					if (totalPut mod MaxPerPage)=0 then
-	     					currentpage= totalPut \ MaxPerPage
-	   					else
-	      					currentpage= totalPut \ MaxPerPage + 1
-	   					end if
-      				end if
-       				if currentPage=1 then
-            			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
-       				else
-          				if (currentPage-1)*MaxPerPage<totalPut then
-            				rs.move  (currentPage-1)*MaxPerPage
-            				dim bookmark
-            				bookmark=rs.bookmark
-            				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
-        				else
-	        				currentPage=1
-           					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
-						end if
-	   				end if
-			end if
-   			sub showContent
-	   		i=0
-			do while not rs.eof
-			%>
+                  				err_txt="<tr><td colspan=""3"">没有职位</td></tr>"
+                  			set rs=server.CreateObject("adodb.recordset")
+                  			rs.Open "select * from jobs order by month_money",conn,1,1
+                  		   	if err.number<>0 or rs.eof then
+                  				response.write err_txt
+                  			end if
+                  			if not rs.eof then
+                  	  				totalPut=rs.recordcount
+                        				if currentpage<1 then
+                            				currentpage=1
+                        				end if
+                        				if (currentpage-1)*MaxPerPage>totalput then
+                  	   					if (totalPut mod MaxPerPage)=0 then
+                  	     					currentpage= totalPut \ MaxPerPage
+                  	   					else
+                  	      					currentpage= totalPut \ MaxPerPage + 1
+                  	   					end if
+                        				end if
+                         				if currentPage=1 then
+                              			showContent
+                              			showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
+                         				else
+                            				if (currentPage-1)*MaxPerPage<totalPut then
+                              				rs.move  (currentPage-1)*MaxPerPage
+                              				dim bookmark
+                              				bookmark=rs.bookmark
+                              				showContent
+                               				showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
+                          				else
+                  	        				currentPage=1
+                             					showContent
+                             					showpage1=showpage(totalput,MaxPerPage,"manage_jobs.asp","")
+                  						end if
+                  	   				end if
+                  			end if
+                     			sub showContent
+                  	   		i=0
+                  			do while not rs.eof
+            			 %>
                    <tr>
                           <td style="vertical-align: middle;text-align:center">
 

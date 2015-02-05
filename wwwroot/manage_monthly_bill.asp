@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -277,9 +274,9 @@ else
                                 <th>理财产品</th>
                                <th>初始理财金额</th>
                                <th>初始理财日期</th>
-                               <th>账单周期</th>
                                <th>账单期数</th>
-                               <th>本期末资产总值</th>
+                                <th>账单周期</th>
+                               <!--<th>本期末资产总值</th>-->
                                <th>本期派息额</th>
                                <th>出账日期</th>
                                 <th width="20%">操作</th>
@@ -297,9 +294,9 @@ else
           if trim(request("inputdate2"))<>"" then inputdate2=" and datediff(d,inputdate,'"&trim(request("inputdate2"))&"')>=0"
 
 				err_txt="<tr><td colspan=""12"">没有债权转让账单信息</td></tr>"
+        '"&numbers&full_name&passport&product_name&date1&date2&inputdate1&inputdate2&" 
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from monthly_bill where id>0"&numbers&full_name&passport&product_name&date1&date2&inputdate1&inputdate2&" order by id desc",conn,1,1
-
+			rs.Open "select * from contracts where id>0 and approval=1 order by id desc",conn,1,1
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
@@ -346,10 +343,74 @@ else
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("start_date"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("periods_start_date"))&"至"&trim(rs("periods_end_date"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("periods"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("grand_total"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("accrual"))%></td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+
+                                  if datediff("d",rs("start_date"),now())<30 then
+                                      periods=1
+                                      
+                                  else
+                                    if (datediff("d",rs("start_date"),now())/30)=int(datediff("d",rs("start_date"),now())/30) then
+                                      periods=datediff("d",rs("start_date"),now())/30
+                                    else
+                                      periods=int(datediff("d",rs("start_date"),now())/30)+1
+                                    end if
+                                  end if
+                                    response.write periods
+                                  %></td>
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                    if periods>1 then
+                                      periods_start_date=DateAdd("d",(periods-1)*30+1, rs("start_date"))
+                                    else
+                                      periods_start_date=rs("start_date")
+                                    end if
+                                    response.write periods_start_date&"&nbsp;至&nbsp;"&DateAdd("d",30, periods_start_date)
+                                  %>
+                                </td>
+                                
+                                 <!--<td style="vertical-align: middle;text-align:center">
+                                  
+                                   set rs1=server.CreateObject("adodb.recordset")
+                                    rs1.Open "select penalty from products where product_name='"&rs("product_name")&"'",conn,1,1
+                                    if not rs1.eof then
+                                      penalty=cdbl(rs1("penalty"))*cdbl(rs("capital"))
+                                    end if
+                                    rs1.close
+                                    'set rs1=nothing
+                                    'accrual=round(cdbl(rs("capital"))*(cdbl(rs("profit"))/365)*datediff("d",periods_start_date,now())-cdbl(penalty),2)
+                                    'Set db=Conn.execute("select sum(accrual) As db from monthly_bill where c_id="&rs("id"))
+                                    'if db("db")>0 then
+                                    ''  grand_total=cdbl(rs("capital"))+cdbl(db("db"))+cdbl(accrual)
+                                    'else
+                                    ''  grand_total=cdbl(rs("capital"))+cdbl(accrual)
+                                    'end if
+                                     grand_total = rs("")(penalty /12 * periods)
+                                    response.write grand_total
+                                 
+                                </td> -->
+                                <td style="vertical-align: middle;text-align:center">
+                                  <%
+
+                                  set rs1=server.CreateObject("adodb.recordset")
+                                    rs1.Open "select profit from products where product_name='"&rs("product_name")&"'",conn,1,1
+                                    if not rs1.eof then
+                                      profit=cdbl(rs1("profit"))*cdbl(rs("capital"))
+                                    end if
+                                    rs1.close
+                                    'set rs1=nothing
+                                    'accrual=round(cdbl(rs("capital"))*(cdbl(rs("profit"))/365)*datediff("d",periods_start_date,now())-cdbl(penalty),2)
+                                    'Set db=Conn.execute("select sum(accrual) As db from monthly_bill where c_id="&rs("id"))
+                                    'if db("db")>0 then
+                                    ''  grand_total=cdbl(rs("capital"))+cdbl(db("db"))+cdbl(accrual)
+                                    'else
+                                    ''  grand_total=cdbl(rs("capital"))+cdbl(accrual)
+                                    'end if
+                                     grand_total = profit /12
+
+                                    response.write Round(profit/12, 2)
+                                  %>
+                              </td>
                                 <td style="vertical-align: middle;text-align:center"><%=ForMatDate(trim(rs("inputdate")),2)%></td>
                                <td style="vertical-align: middle; text-align:center">
                                      <a href="monthly_bill.asp?id=<%=int(rs("id"))%>" target="_blank">打印账单</a>

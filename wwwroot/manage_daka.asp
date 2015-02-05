@@ -1,9 +1,6 @@
 <!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -57,13 +54,45 @@ end if
                        
                         <div class="control-group">
                             <label class="control-label">&nbsp;打卡时间:</label>
+                            <%
+                                        mon = 0
+                                      if month(now())>=10 then 
+                                        mon = month(now())
+                                      else 
+                                        mon = "0"&month(now())
+                                      end if 
+                                      nowtime = Year(now())&"-"&mon
+                             
+                              set rs=server.CreateObject("adodb.recordset")
+                             rs.Open "select * from setrest_worktime where setrest_year='"&nowtime&"' order by sid desc",conn,1,1
+                             if not rs.eof then 
+                             Sh = rs("start_worktime")/60 
+                             Sm = rs("start_worktime") mod 60
+                             Eh = rs("end_worktime")/60 
+                             Em = rs("end_worktime") mod 60
+                            %>
                             <div class="controls">
+                                上午:&nbsp;&nbsp;<input type="text" id="start_time1" name="start_time1" value="<%=Sh%>" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="start_time2" name="start_time2" class="span5" value="<%=Sm%>" style="width:50px;text-align:right"/>&nbsp;分&nbsp;&nbsp;下午:&nbsp;&nbsp;
+                                <input type="text" id="end_time1" name="end_time1" class="span5" value="<%=Eh%>" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="end_time2" name="end_tem2" class="span5" value="<%=Em%>" style="width:50px;text-align:right"/>&nbsp;分&nbsp;
+                                <span class="help-inline">格式：16:00分(24小时制)</span>
+                                <span id="star_time_err" class="err_text"></span>
+                                <span id="end_time_err" class="err_text"></span>
+                            </div>
+                            <%
+                            else 
+                            %>
+                               <div class="controls">
                                 上午:&nbsp;&nbsp;<input type="text" id="start_time1" name="start_time1" value="9" class="span5" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="start_time2" name="start_time2" class="span5" value="30" style="width:50px;text-align:right"/>&nbsp;分&nbsp;&nbsp;下午:&nbsp;&nbsp;
                                 <input type="text" id="end_time1" name="end_time1" class="span5" value="18" style="width:50px;text-align:right"/>&nbsp;时&nbsp;<input type="text" id="end_time2" name="end_tem2" class="span5" value="30" style="width:50px;text-align:right"/>&nbsp;分&nbsp;
                                 <span class="help-inline">格式：16:59分(24小时制)</span>
                                 <span id="star_time_err" class="err_text"></span>
                                 <span id="end_time_err" class="err_text"></span>
                             </div>
+                            <%
+                            end if 
+                            rs.close
+                            set rs = nothing
+                            %>
                         </div>
                       <div class="form-actions">
                           <label class="control-label"></label>

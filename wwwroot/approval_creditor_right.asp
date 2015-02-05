@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 
 %>
 <!--#include file="sidebar_menu.asp" -->
@@ -83,6 +80,26 @@ if not rs.eof then
                                 <input type="text" id="repayment_date" name="repayment_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" value="<%=rs("repayment_date")%>" disabled/>
                                 <span class="help-inline">格式：1970-01-01</span>
                                 <span id="repayment_date_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;身份证:</label>
+                            <div class="controls">
+                            <%
+                           set rs1=server.CreateObject("adodb.recordset")
+                            rs1.Open "select * from upload_files where table_name='creditor_right' and file_type='passport_img' and cid="&rs("id"),conn,1,1
+                            do while not rs1.eof
+                                passport_img=passport_img&"<a href='Upload_file/"&rs1("filename")&"' target='_blank'><img src='Upload_file/"&rs1("filename")&"' width='160'></a>&nbsp;&nbsp;"
+                                if passport_img_file<>"" then passport_img_file=passport_img_file&","
+                                passport_img_file=passport_img_file&rs1("filename")
+                            rs1.movenext
+                            loop
+                            rs1.close
+                            set rs1=nothing
+                            %>
+                            <div id="passport_img_show" style="display:inline;">
+                            <%=passport_img%>
+                            </div>
                             </div>
                         </div>
                         <div class="control-group">
@@ -185,6 +202,26 @@ if not rs.eof then
                             </div>
                             </div>
                         </div>
+                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;其他證件:</label>
+                            <div class="controls">
+                            <%
+                            set rs1=server.CreateObject("adodb.recordset")
+                            rs1.Open "select * from upload_files where table_name='creditor_right' and file_type='other_other' and cid="&rs("id"),conn,1,1
+                            do while not rs1.eof
+                                other_other_img=other_other_img&"<a href='Upload_file/"&rs1("filename")&"' target='_blank'><img src='Upload_file/"&rs1("filename")&"' width='160'></a>&nbsp;&nbsp;"
+                                if other_other_file<>"" then other_other_file=other_other_file&","
+                                other_other_file=other_other_file&rs1("filename")
+                            rs1.movenext
+                            loop
+                            rs1.close
+                            set rs1=nothing
+                            %>
+                            <div id="other_other_show" style="display:inline;">
+                            <%=other_other_img%>
+                             </div>
+                            </div>
+                        </div>
                     <div class="form-actions">
                           <label class="control-label"></label>
                           <button id="approval_creditor_right_submit" type="submit" class="btn btn-primary">审批</button>&nbsp;&nbsp;&nbsp;&nbsp;
@@ -228,14 +265,10 @@ else
                             </thead>
                             <tbody>
                           <%
-                        if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-                        if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-                        if trim(request("repayment_date"))<>"" then date1=" and datediff(d,'"&trim(request("repayment_date"))&"',repayment_date)>=0"
-                        if trim(request("repayment_date2"))<>"" then date2=" and datediff(d,repayment_date,'"&trim(request("repayment_date2"))&"')>=0"
-                        if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
+                       
 				err_txt="<tr><td colspan=""8"">没有待审批的债权</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from creditor_right where approval=0"&full_name&passportdate1&date2&status&" order by id",conn,1,1
+			rs.Open "select * from creditor_right where approval=0 order by id",conn,1,1
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if

@@ -99,7 +99,7 @@ if j>0 then
   <tr>
     <td><table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td height="60" colspan="2" align="center" style="font-size:20px; font-weight:bold;">债权转让及受让协议</td>
+        <td height="100" colspan="2" align="center" style="font-size:20px; font-weight:bold;">债权转让及受让协议</td>
       </tr>
       <tr>
         <td colspan="2" style="font-weight:bold;">尊敬的&nbsp;<%=trim(rs("full_name"))%>&nbsp;<%=sex%>，您好！<br>　　通过一明时代公司的评估与筛选，推荐您通过受让他人既有的个人间借贷合同的方式，出借资金给如下借款人，详见《债权列表》。<br></td>
@@ -260,18 +260,18 @@ if j>0 then
           本人特此签章证明。</td>
       </tr>
       <tr>
-        <td colspan="2"><table width="100%" border="0" cellspacing="0" cellpadding="4">
+        <td colspan="2"><table width="100%" Height="100%" border="0" cellspacing="0" cellpadding="4">
           <tr>
             <td style="font-size:11px">转让人：北京一明时代技术服务有限公司上海分公司</td>
             <td style="font-size:11px">见证人：天会（上海）投资有限公司</td>
             <td style="font-size:11px">受让人：</td>
             </tr>
-          <tr>
+          <tr height="60">
             <td style="font-size:11px">签&nbsp;&nbsp;章：</td>
             <td style="font-size:11px">签&nbsp;&nbsp;章：</td>
             <td>&nbsp;</td>
             </tr>
-          <tr>
+          <tr   >
             <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>
             <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>
             <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>

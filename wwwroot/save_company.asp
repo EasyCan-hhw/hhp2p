@@ -15,6 +15,7 @@ end if
 action=SafeRequest("action")
 company_code=Trim(SafeRequest("company_code"))
 company_name=Trim(SafeRequest("company_name"))
+company_count=Trim(SafeRequest("company_count"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
@@ -35,6 +36,7 @@ if action="add" then
 	rs.addnew
 	rs("company_code")=company_code
 	rs("company_name")=company_name
+	rs("company_count")=company_count
 	rs.update
 	rs.close
 	set rs=nothing

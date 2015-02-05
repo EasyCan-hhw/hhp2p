@@ -1,9 +1,6 @@
 ﻿<!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -101,6 +98,16 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;月金额数:</label>
+                            <div class="controls">
+                                <input type="text" id="advance_pay_creditorRight" class="span5" name="advance_pay_creditorRight" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" style="width:275px;"/>
+                                <span class="help-inline">元</span>&nbsp;&nbsp;
+                                <input type="text" id="month_pay_creditorRight" class="span5" name="month_pay_creditorRight" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)" style="width:275px;"/>
+                                <span class="help-inline">月</span>
+                                <span id="advance_pay_creditorRight_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;身份证:</label>
                             <div class="controls">
                             <input name="passport_img" id="passport_img" type="hidden" value="" />
@@ -121,7 +128,7 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;公证书:</label>
+                            <label class="control-label">&nbsp;公证书:</label>
                             <div class="controls">
                             <input name="notarization" id="notarization" type="hidden" value="" />
                              <input name="upload-notarization" id="upload-notarization" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
@@ -131,7 +138,7 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;借据、收据:</label>
+                            <label class="control-label">&nbsp;借据、收据:</label>
                             <div class="controls">
                             <input name="IOU_receipt" id="IOU_receipt" type="hidden" value="" />
                              <input name="upload-IOU_receipt" id="upload-IOU_receipt" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
@@ -141,7 +148,7 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;借款合同:</label>
+                            <label class="control-label">&nbsp;借款合同:</label>
                             <div class="controls">
                             <input name="contract" id="contract" type="hidden" value="" />
                              <input name="upload-contract" id="upload-contract" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
@@ -151,13 +158,23 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;他证:</label>
+                            <label class="control-label">&nbsp;他证:</label>
                             <div class="controls">
                             <input name="other_evidence" id="other_evidence" type="hidden" value="" />
                              <input name="upload-other_evidence" id="upload-other_evidence" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
                              <span class="help-inline">请上传他证照片，支持文件格式：JPG、GIF、PNG</span>
                                 <span id="other_evidence_err" class="err_text"></span>
                             <div id="other_evidence_show"></div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;其他证件:</label>
+                            <div class="controls">
+                            <input name="other_other" id="other_other" type="hidden" value="" />
+                             <input name="upload-other_other" id="upload-other_other" type="button" value="上传文件" class="btn btn-primary upload_imgs_submit">
+                             <span class="help-inline">请上传他证照片，支持文件格式：JPG、GIF、PNG</span>
+                                <span id="other_other_err" class="err_text"></span>
+                            <div id="other_other_show"></div>
                             </div>
                         </div>
                     <div class="form-actions">

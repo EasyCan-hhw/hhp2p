@@ -1,9 +1,6 @@
 <!--#include file="head.asp" -->
 <%
-if InStr(request.cookies("hhp2p_cookies")("quanxian"),"[1]")=0 then
-response.Write "<p align=center><font color=red>您没有此项目管理权限！</font></p>"
-response.End
-end if
+
 %>
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
@@ -188,7 +185,6 @@ else
                 <div class="widget-content nopadding">
                   <span id="product_name_err" class="err_text"></span>
                   <form action="" method="post" class="form-horizontal" >
-                        
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>选择日期:</label>
                             <div class="controls">
