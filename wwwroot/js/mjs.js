@@ -429,7 +429,9 @@ $("select").blur(function (){
 
 	//分公司传值给下属分公司
 	$("#company_id").change(function() {
-
+			$("#company_porportion ").get(0).selectedindex=1
+			//$("#company_porportion").empty();
+			//$("#company_porportion").find("option").remove()
 			var mcount = $("#company_id").val()
 		    companyVal = $("#companyId_"+mcount).attr("subregions")//得到选中的数组
 		    varlength = companyVal.split(";")//得到数组的长度

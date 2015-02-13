@@ -9,12 +9,16 @@ if not rs.eof then
 	username=rs("username")
 	job_number=rs("job_number")
 	full_name=rs("full_name")
+    user_code=rs("user_code")
 	company_id=rs("company_id")
+    add_insurance=rs("add_insurance")
 	job_id=rs("job_id")
     lead_user=rs("lead_user")
 	tel=rs("tel")
 	qq=rs("qq")
+    company_code=rs("company_code")
 	email=rs("email")
+    entry_date=rs("entry_date")
 	quanxian=rs("quanxian")
 end if
 rs.close
@@ -81,6 +85,22 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;员工状态:</label>
+                            <div class="controls">
+                                <div class="span5">
+                                <select id="user_code" name="user_code">
+                                        <option value=""></option>
+                                        <option value="0" <%if user_code=0 then%>selected<%end if%>>试用期</option>
+                                        <option value="1" <%if user_code=1 then%>selected<%end if%>>正式员工</option>
+                                        <option value="2" <%if user_code=2 then%>selected<%end if%>>离职</option>
+                                        <option value="3" <%if user_code=3 then%>selected<%end if%>>0000</option>
+                                </select>
+                                </div>
+                                <span class="help-inline">从下拉菜单中选择员工状态</span>
+                                <span id="user_code_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;所属分公司:</label>
                             <div class="controls">
                             	<div class="span5">
@@ -124,7 +144,18 @@ end if
                                 <div class="span5">
                                 <select id="company_porportion" name="company_porportion">  
                                         <option value="" ></option>
-                                        
+                                        <%
+                                        set rsc=server.CreateObject("adodb.recordset")
+                                        rsc.Open "select * from companys where company_code='"&company_code&"'" ,conn,1,1
+                                        if not rsc.eof then 
+                                        %>
+                                        <option value="<%=rsc("company_code")%>"  selected><%=rsc("company_name")%></option>
+                                        <%
+                                        else 
+                                        end if 
+                                        rsc.close
+                                         set rsc=nothing
+                                        %>
                                     </select>
                                 </div>
                                 <span class="help-inline">(没有请留空)请选择正确的下属分公司</span>
@@ -166,7 +197,7 @@ end if
                                         rs.Open "select * from users order by uid" ,conn,1,1
                                         do while not rs.eof
                                         %>
-                                        <option value="<%=rs("job_number")%>" <%if rs("job_number")=job_id then%>selected<%end if%>><%=rs("full_name")%></option>
+                                        <option value="<%=rs("job_number")%>" <%if rs("job_number")=lead_user then%>selected<%end if%>><%=rs("full_name")%></option>
                                         <%
                                          rs.movenext
                                          loop
@@ -203,7 +234,7 @@ end if
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;入职时间:</label>
                             <div class="controls">
-                                <input type="text" id="entry_date" name="entry_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5"/>
+                                <input type="text" id="entry_date" value="<%=entry_date%>"  name="entry_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5"/>
                                 <span class="help-inline">格式：1970-01-01</span>
                                 <span id="entry_date_err" class="err_text"></span>
                             </div>
@@ -244,16 +275,15 @@ end if
                                 <div class="span5">
                                 <select id="add_insurance" name="add_insurance">
                                         <option value=""></option>
-                                        <option value="1">交城镇保险</option>
-                                        <option value="2">交农村保险</option>
-                                        <option value="3">不交保险</option>
+                                        <option value="1" <%if add_insurance=1 then%>selected<%end if%>>交城镇保险</option>
+                                        <option value="2" <%if add_insurance=2 then%>selected<%end if%>>交农村保险</option>
+                                        <option value="3" <%if add_insurance=3 then%>selected<%end if%>>不交保险</option>
                                 </select>
                                 </div>
                                 <span class="help-inline">从下拉菜单中选择保险状况</span>
                                 <span id="add_insurance_err" class="err_text"></span>
                             </div>
                         </div>
-
                         <%
                              quanxianString = request.cookies("hhp2p_cookies")("quanxian")
                                 splitvalue = split(quanxianString,",")
@@ -269,7 +299,7 @@ end if
                           <table>
                           <tr>
                             <td><input name="checkbox_all" type="checkbox" id="checkbox_all" onClick="check_all('checkbox_all','quanxian')"> 全选&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[1]" <%if InStr(quanxian,"[1]")>0 then%>checked<%end if%>> 目标客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[2]" <%if InStr(quanxian,"[2]")>0 then%>checked<%end if%>> 正式客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[3]" <%if InStr(quanxian,"[3]")>0 then%>checked<%end if%>> 客户查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[4]" <%if InStr(quanxian,"[4]")>0 then%>checked<%end if%>> 一般借贷申请&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -312,6 +342,7 @@ end if
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[30]" <%if InStr(quanxian,"[30]")>0 then%>checked<%end if%>> 财务请款&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[31]" <%if InStr(quanxian,"[31]")>0 then%>checked<%end if%>> 财务请款审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[29]" <%if InStr(quanxian,"[29]")>0 then%>checked<%end if%>> 员工权限管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[32]" <%if InStr(quanxian,"[32]")>0 then%>checked<%end if%>> 正式客户资料&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         </tr>
                             </table>
                             <span class="help-inline"></span>
@@ -348,8 +379,8 @@ end if
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th nowrap="nowrap">用户名</th>
-                                <th>工号</th>
+                                <th  width="10%">用户名</th>
+                                <th nowrap="nowrap">工号</th>
                                 <th>姓名</th>
                                 <th>分公司</th>
                                 <th>职位</th>
@@ -357,7 +388,7 @@ end if
                                 <th>电话</th>
                                <th>QQ</th>
                                <th>E-mail</th>
-                                <th width="20%">操作</th>
+                                <th width="15%">操作</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -456,16 +487,16 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
 								%></td>
                                 <td style="vertical-align: middle;text-align:center">
                                     <%
-                                    if rs("lead_user")="" Or IsNull(rs("lead_user")) Or IsEmpty(rs("lead_user")) or rs("lead_user")=0 then 
+                                    if rs("lead_user")="" Or IsNull(rs("lead_user")) Or IsEmpty(rs("lead_user"))then 
                                         response.write("无")
                                     else
                                         
                                         set rs2=server.CreateObject("adodb.recordset")
-                                        rs2.Open "select * from users where job_number="&rs("lead_user"),conn,1,1
+                                        rs2.Open "select * from users where job_number='"&rs("lead_user")&"'",conn,1,1
                                         if not rs2.eof then 
                                          response.write rs2("full_name")
                                          else 
-                                         response.write "该上级缺失"
+                                         response.write "无"
                                          end if 
                                         rs2.close
                                         

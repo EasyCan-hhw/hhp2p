@@ -30,10 +30,10 @@
                                       <option value="" ></option>
                                         <%
                                       set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from position where identification=1 order by id" ,conn,1,1
+                                      rs.Open "select * from jobs  order by id" ,conn,1,1
                                       do while not rs.eof
                                       %>
-                                      <option value="<%=rs("position")%>" <%if rs("id")=position_id then%>selected<%end if%>><%=rs("position")%></option>
+                                      <option value="<%=rs("id")%>" ><%=rs("job_name")%></option>
                                       <%
                                        rs.movenext
                                        loop
@@ -82,6 +82,16 @@
                                 <span id="b_bscale_err" class="err_text"></span>
                             </div>
                         </div>
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;标识:</label>
+                            <div class="controls">
+                              
+                                <input name="special" type="checkbox" id="special" value="1" >&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;<span class="help-inline">是否为理财顾问</span>
+                                </tr>
+                            
+                                <span id="b_bscale_err" class="err_text"></span>
+                            </div>
+                        </div>
                          
                      <div class="form-actions">
                           <label class="control-label"></label>
@@ -103,10 +113,10 @@
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th nowrap="nowrap">职位</th>
-                                <th>区间</th>
-                                <th>提佣比例</th>
-                                <th>档位</th>
+                                <th nowrap="nowrap" width="20%">职位</th>
+                                <th width="20%">区间</th>
+                                <th width="20%">提佣比例</th>
+                                <th width="20%">档位</th>
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
@@ -154,8 +164,19 @@
 			%>
                             <tr>
                                 <td style="vertical-align: middle;text-align:center">
+                                  <%
+                                      set rsjob=server.CreateObject("adodb.recordset")
+                                     rsjob.Open "select * from jobs where id="&rs("job_id")&" ",conn,1,1
 
-                                  <input name="b_jobs_<%=int(rs("bid"))%>" id="b_jobs_<%=int(rs("bid"))%>" class="half" type="text" value="<%=trim(rs("bjobs"))%>"  disabled>
+                                     job_name = rsjob("job_name")
+                                     %>
+                                     <input name="b_jobs_<%=int(rs("bid"))%>" id="b_jobs_<%=int(rs("bid"))%>" class="half" type="text" value="<%=trim(rsjob("job_name"))%>"  disabled>
+                                     <%
+                                     rsjob.close
+                                     set rsjob = nothing
+                                  %>
+
+                                  
                                 
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">

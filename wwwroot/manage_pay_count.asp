@@ -1,4 +1,5 @@
 <!--#include file="head.asp" -->
+<!--#include file="calculate_performance.asp" -->
 <%
 
       class valMy
@@ -192,7 +193,7 @@ else
                       </div>
                       
                       <div class="control-group">
-                          <label class="control-label">&nbsp;月份:</label>
+                          <label class="control-label"><font color="red">*</font>&nbsp;月份:</label>
                           <div class="controls" style="width:500px">
                               <input type="text" id="pay_usermonth" name="pay_usermonth" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" />
                               <span class="help-inline">格式：1970-01-01</span>
@@ -245,6 +246,8 @@ else
                           </thead>
                           <tbody>
                         <%
+
+
                       if trim(request("pay_usernumber"))<>"" then pay_usernumber=" and job_number='"&trim(request("pay_usernumber"))&"'"
                      '' if trim(request("pay_usermonth"))<>"" then pay_usermonth=" and mwork_name='"&trim(request("pay_usermonth"))&"'"
                      
@@ -293,13 +296,21 @@ else
                               <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("full_name"))%></td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
-                                    intdatemonth="2015-02"'工资核算日期int依据'
-                                    datemonth="'"+"2015-02%"+"'"'工资核算日期依据'
+                                    intdatemonth="2015-01"'工资核算日期int依据'
+                                    datemonth="'"+"2015-01%"+"'"'工资核算日期依据'
                                     forget_attendance = 0 '漏打卡'
                                     set rsjob=server.CreateObject("adodb.recordset")
                                    rsjob.Open "select * from jobs where id="&rs("job_id")&" order by id",conn,1,1
+                                   if not rsjob("least_money")=0 then '拿到绩效低金'
                                    least_money=rsjob("least_money")
+                                   else 
+                                   least_money = 0
+                                   end if 
+                                   if not rsjob("month_money") then '拿到月考核绩效'
                                    month_money=rsjob("month_money")
+                                   else 
+                                   month_money=0
+                                   end if 
                                    response.write rsjob("job_name")
                                  %>
                               </td>
@@ -308,46 +319,42 @@ else
                               <td style="vertical-align: middle;text-align:center">2015-01</td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
+
+                                
                                 '绩效奖金'
-                                  set buttomMoney=server.CreateObject("adodb.recordset")
-                                  buttomMoney.Open "select * from jobs where id="&rs("job_id")&" ",conn,1,1
-                                  BMoney = buttomMoney("month_money")*10000 '月考核数'
-                                  leastMoney = buttomMoney("least_money")   '绩效低金'
-                                  buttomMoney.close
-                                  buttomMoney.Open "select * from contracts where add_uid="&rs("uid")&" and approval=1 and approval_redeem=0 and Convert(varchar,approval_date,120) like "&datemonth&"",conn,1,1
-                                  if not buttomMoney.eof then 
-                                  test = buttomMoney("capital")
-                                    'response.write buttomMoney.fields("capital").value
-                                    dim uidMoney
-                                      for bm=0 to buttomMoney.recordcount -1
-                                        uidMoney = uidMoney + buttomMoney.fields("capital").value
-                                        buttomMoney.movenext
-                                      next
-                                      buttomMoney.close
-                                      set buttomMoney = nothing
-                                      if not leastMoney = 0 then  
-                                        overMoney1 = leastMoney * uidMoney
-                                        overMoney = overMoney1/BMoney
-                                        response.write int(overMoney*100)/100
+                                testString = "2015-01%"
+                                testPerformence = performence(testString)
+                                if month_money=0 or least_money=0 then 
+                                
+                                else 
+                                    BMoney = month_money*10000 '月考核数'
+                                    leastMoney = least_money  '绩效低金'
+
+                                    for h=0 to Ubound(testPerformence) 
+                                      test = testPerformence(h)
+                                      if test(0) = rs("job_number") then 
+                                        money_performence=leastMoney*test(1)/BMoney
+                                         Response.write round(money_performence,2)
+                                         Exit for
                                       else 
-                                      response.write "没有低金"
-                                      end if 
-                                  else 
-                                  response.write "没有绩效"
-                                  end if 
+                                        'response.write "无绩效"
+                                      end if
+                                    next
+                                end if 
+                                
                                 %>
                               </td>
                               <td style="vertical-align: middle;text-align:center">
                                   <%
+                                
                                     set rscommission=server.CreateObject("adodb.recordset")
-                                     rscommission.Open "select * from Commission_manage where Cjob_number="&rs("job_number")&" ",conn,1,1
+                                    rscommission.Open "select * from Commission_manage where Cjob_number='" & rs("job_number") & "'",conn,1,1
                                       if not rscommission.eof then
                                         if rscommission("Cjixiao") <> 0 then
                                             response.write rscommission("Cjixiao")
                                         else
                                           response.write "无"
                                         end if 
-
                                       else
                                         response.write "无"
                                       end if 
@@ -366,13 +373,27 @@ else
                                       else
                                         response.write "无"
                                       end if 
+                                    rscommission.close
+                                    set rscommission = nothing
                                 %>
                               </td>
-                              <td style="vertical-align: middle;text-align:center">提成</td>
+                              <td style="vertical-align: middle;text-align:center">
+                                <%
+                                  '提成'
+
+                                  selfPerformence =  getmySelfPerformence(rs("job_number"))
+                                  SubordinatesPerformence = ordinatesPerformence(rs("job_number"))-selfPerformence
+                                 
+                                  self = sumSection(rs("job_id"),selfPerformence,1)
+                                  subordinates = sumSection(rs("job_id"),SubordinatesPerformence,0)
+                                  response.write round(self+subordinates,2)
+                                %>
+
+                              </td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
                                    set rsInsurance=server.CreateObject("adodb.recordset")
-                                   rsInsurance.Open "select * from users where job_number="&rs("job_number")&" ",conn,1,1
+                                   rsInsurance.Open "select * from users where job_number='"&rs("job_number")&"' ",conn,1,1
                                    if rsInsurance("add_insurance")=1 then
                                       oneInsurance=317'城镇保险
                                       response.write oneInsurance&"/元"
@@ -402,7 +423,7 @@ else
                               <td style="vertical-align: middle;text-align:center">
                                 <%
                                     set rsworkApplication=server.CreateObject("adodb.recordset")
-                                   rsWorkApplication.Open "select * from work_application_message where mwork_number="&rs("job_number")&" and mwork_tody like "&datemonth&" ",conn,1,1
+                                   rsWorkApplication.Open "select * from work_application_message where mwork_number='"&rs("job_number")&"' and mwork_tody like "&datemonth&" ",conn,1,1
                                    if rsWorkApplication.recordcount = 0 then 
                                    response.write "无"
                                    else
@@ -416,7 +437,6 @@ else
                                         hnumber = 0
                                         for  r=1 to rsWorkApplication.recordcount
                                          hnumber = hnumber + rsWorkApplication("mwork_input_hour")
-
                                         next
                                         Difference = hours * hnumber
                                       'for r=1 to rsWorkApplication.recordcount
@@ -441,7 +461,7 @@ else
                                        start_worktime=rssetrest("start_worktime")'规定的上班作息时间'
                                        end_worktime=rssetrest("end_worktime")'规定的下班作息时间'
                                        rssetrest.close
-                                      rssetrest.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                      rssetrest.Open "select * from work_attendance where job_number='"&rs("job_number")&"' and work_date like "&datemonth&" ",conn,1,1
                                       if rssetrest.eof then 
                                           response.write "无"
                                       else 
@@ -625,14 +645,13 @@ else
                                        forget_attendance = forget_attendance +workDateNumber
                                        response.write workDateNumber
                                        set vacationDate = nothing
-                                       
                                 %>
                               </td>
                               <td style="vertical-align: middle;text-align:center">其他</td>
                               <td style="vertical-align: middle;text-align:center">
                                 <%
                                  set rstody=server.CreateObject("adodb.recordset")
-                                   rstody.Open "select * from work_attendance where job_number="&rs("job_number")&" and work_date like "&datemonth&" ",conn,1,1
+                                   rstody.Open "select * from work_attendance where job_number='"&rs("job_number")&"' and work_date like "&datemonth&" ",conn,1,1
                                   response.write rstody.recordcount 
                                     rstody.close
                                 %>

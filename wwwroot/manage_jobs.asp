@@ -23,29 +23,7 @@
                 <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
                   
-                        <div class="control-group">
-                          <label class="control-label"><font color="red">*</font>&nbsp;职位:</label>
-                             <div class="controls">
-                              <div class="span5" style="width:220px">
-                                <select id="position_id" name="position_id">
-                                      <option value="" ></option>
-                                        <%
-                                      set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from position order by id" ,conn,1,1
-                                      do while not rs.eof
-                                      %>
-                                      <option value="<%=rs("position")%>" <%if rs("id")=position_id then%>selected<%end if%>><%=rs("position")%></option>
-                                      <%
-                                       rs.movenext
-                                       loop
-                                       rs.close
-                                       set rs=nothing
-                                      %>
-                                    </select>
-                                </div>
-                                <span id="err_position_id" class="err_text"></span>
-                              </div>
-                        </div>
+                      
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;职位名称:</label>
                             <div class="controls">
@@ -111,11 +89,11 @@
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th nowrap="nowrap"width="15%">职位</th>
-                                <th width="15%">职位名称</th>
-                                <th width="15%">基本工资</th>
-                                 <th width="15%">绩效低金</th>
-                                 <th width="15%">月考核绩效</th>
+                               
+                                <th width="20%">职位名称</th>
+                                <th width="20%">基本工资</th>
+                                 <th width="20%">绩效低金</th>
+                                 <th width="20%">月考核绩效</th>
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
@@ -162,11 +140,7 @@
                   			do while not rs.eof
             			 %>
                    <tr>
-                          <td style="vertical-align: middle;text-align:center">
-
-                            <input name="position_id<%=int(rs("id"))%>" id="position_id<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("position_id"))%>" disabled>
-
-                          </td>
+                          
                           <td style="vertical-align: middle;text-align:center">
 
                             <input name="job_name<%=int(rs("id"))%>" id="job_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("job_name"))%>">

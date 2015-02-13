@@ -85,27 +85,27 @@ if not rs.eof then
                                     <th style="width:100px; height:26px;">支付对价</td>
                                   </tr>
                                 <%
-								set rs1=server.createobject("adodb.recordset")
-								rs1.Open "select * from creditor_right_allot where c_id="&rs("id")&" order by id",conn,1,1
-								do while not rs1.eof
-									set rs2=server.createobject("adodb.recordset")
-									rs2.Open "select * from creditor_right where id="&rs1("cr_id"),conn,1,1
-									if not rs2.eof then
-								%>
-                                  <tr class="old_creditor_right_detailed">
-                                	<td align="center"><%=rs2("full_name")%></td>
-                                    <td align="center"><%=rs2("passport")%></td>
-                                	<td align="center"><%=rs1("amount")%></td>
-                                  </tr>
-                                <%
-									end if
-									rs2.close
-									set rs2=nothing
-								rs1.movenext
-								loop
-								rs1.close
-								set rs1=nothing
-								%>
+                  								set rs1=server.createobject("adodb.recordset")
+                  								rs1.Open "select * from creditor_right_allot where c_id="&rs("id")&" order by id",conn,1,1
+                  								do while not rs1.eof
+                  									set rs2=server.createobject("adodb.recordset")
+                  									rs2.Open "select * from creditor_right where id="&rs1("cr_id"),conn,1,1
+                  									if not rs2.eof then
+                  								%>
+                                                    <tr class="old_creditor_right_detailed">
+                                                  	<td align="center"><%=rs2("full_name")%></td>
+                                                      <td align="center"><%=rs2("passport")%></td>
+                                                  	<td align="center"><%=rs1("amount")%></td>
+                                                    </tr>
+                                                  <%
+                  									end if
+                  									rs2.close
+                  									set rs2=nothing
+                  								rs1.movenext
+                  								loop
+                  								rs1.close
+                  								set rs1=nothing
+                								%>
                                 </table>
                             </div>
                         </div>

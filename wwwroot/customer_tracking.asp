@@ -127,8 +127,9 @@ if trim(request("custome_source"))<>"" then
 end if
 
 				err_txt="<tr><td colspan=""10"">没有目标客户</td></tr>"
+         myself = request.cookies("hhp2p_cookies")("uid") '从cookies拿到登陆uid用以作为查询正式客户的条件'
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from target_customers where id>0"&full_name&mobile&custome_source&follow_up_uid&" order by id desc",conn,1,1
+			rs.Open "select * from target_customers where id>0"&full_name&mobile&custome_source&follow_up_uid&" and add_uid="&myself&" order by id desc",conn,1,1
 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt

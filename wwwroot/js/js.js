@@ -300,26 +300,14 @@ $(document).ready(function() {
 
 	$("#add_job_submit").click(function() {
 		var tosubmit = true;
-		var query = new Object();
-		query.job_name = escape($("#job_name").val());
-		/*query.quanxian=quanxian;*/
-		query.position_id = escape($("#position_id").val());
-		query.base_pay = escape($("#base_pay").val());
-		query.least_money = escape($("#least_money").val());
-		query.month_money = escape($("#month_money").val());
-		query.action = "add";
-
+		
 		$(".err_text").html("");
 		if ($.trim($("#job_name").val()).length == 0) {
 			tosubmit = false;
 			$("#job_name_err").html("请填写职位名称");
 		}
-		if ($.trim($("#position_id").val()).length == 0) {
-			tosubmit = false
-			$("#err_position_id").html("请选择职位")
-		}
+		
 		if ($.trim($("#base_pay").val()).length == 0) {
-
 			tosubmit = false
 			$("#err_base_pay").html("请填写基本工资")
 		}
@@ -338,6 +326,15 @@ $(document).ready(function() {
 		$('input[name="quanxian"]:checked').each(function(){    
 		   quanxian+=$(this).val()+",";     
 		}); */
+		var query = new Object();
+		query.job_name = escape($("#job_name").val());
+		/*query.quanxian=quanxian;*/
+	
+		query.base_pay = escape($("#base_pay").val());
+		query.least_money = escape($("#least_money").val());
+		query.month_money = escape($("#month_money").val());
+		
+		query.action = "add";
 		if (tosubmit) {
 			$("#add_job_submit").attr("disabled", true);
 			$.ajax({
@@ -372,10 +369,7 @@ $(document).ready(function() {
 	$(".job_edit").click(function() {
 		var id = this.id.split("_")[2];
 		var tosubmit = true;
-		if ($.trim($("#position_id" + id).val()).length == 0) {
-			alert("请输入选择职位");
-			tosubmit = false;
-		}
+		
 		/*var quanxian="";
 		$("input[name='quanxian"+id+"']:checked").each(function(){    
 		   quanxian+=$(this).val()+",";     
@@ -401,7 +395,7 @@ $(document).ready(function() {
 			query.id = id;
 			query.job_name = escape($("#job_name" + id).val());
 			/*query.quanxian=quanxian;*/
-			query.position_id = escape($("#position_id" + id).val());
+			
 			query.base_pay = escape($("#base_pay" + id).val());
 			query.least_money = escape($("#least_money" + id).val());
 			query.month_money = escape($("#month_money" + id).val());
@@ -560,6 +554,13 @@ $(document).ready(function() {
 	//提佣区间添加
 	$("#add_brokerage_section_submit").click(function() {
 		var tosubmit = true;
+		var special = 0;
+		if($("#special").attr("checked")==true){
+   			
+   			special  = 1;
+		}else{
+			special = 0;
+		}
 		if ($.trim($("#b_jobs").val()).length == 0) {
 			tosubmit = false;
 			$("#b_jobs_err").html("请选择职位");
@@ -579,11 +580,12 @@ $(document).ready(function() {
 		if (tosubmit) {
 			$("#add_brokerage_section_submit").attr("disabled", true);
 			var query = new Object();
-			query.b_jobs = escape($("#b_jobs").val());
+			query.b_id = escape($("#b_jobs").val());
 			query.b_min = escape($("#b_min").val());
 			query.b_max = escape($("#b_max").val());
 			query.b_ladder = escape($("#b_ladder").val());
 			query.b_bscale = escape($("#b_bscale").val());
+			query.special = escape(special);
 			query.action = "add";
 			$.ajax({
 				url: "save_brokerage_section.asp",
@@ -860,6 +862,10 @@ $(document).ready(function() {
 			tosubmit = false;
 			$("#full_name_err").html("请输入姓名");
 		}
+		if ($.trim($("#user_code").val()).length == 0) {
+			tosubmit = false;
+			$("#user_code_err").html("请选择员工状态");
+		}
 		if ($.trim($("#company_id").val()).length == 0) {
 			tosubmit = false;
 			$("#company_id_err").html("请选择所属分公司");
@@ -908,7 +914,7 @@ $(document).ready(function() {
 			query.job_number = escape($("#job_numberS").val());
 			query.full_name = escape($("#full_name").val());
 			query.company_id = escape($("#company_id").find("option:selected").attr("unval"));
-			
+			query.user_code = escape($("#user_code").val());
 			query.job_id = escape($("#job_id").val());
 			if (mylead_user) {
 				query.lead_user = escape($("#lead_user").val());
@@ -924,6 +930,7 @@ $(document).ready(function() {
 			query.tel = escape($("#tel").val());
 			query.qq = escape($("#qq").val());
 			query.email = escape($("#email").val());
+			query.entry_date = escape($("#entry_date").val());
 			query.insurance = escape(insurance);
 			query.quanxian = quanxian;
 			query.action = "add";
@@ -967,13 +974,17 @@ $(document).ready(function() {
 			tosubmit = false;
 			$("#job_number_err").html("请输入工号");
 		}
-		if ($.trim($("#password").val()).length == 0) {
+		/*if ($.trim($("#password").val()).length == 0) {
 			tosubmit = false;
-			$("#password_err").html("请输入姓名");
-		}
+			$("#password_err").html("请输入密码");
+		}*/
 		if ($.trim($("#full_name").val()).length == 0) {
 			tosubmit = false;
 			$("#full_name_err").html("请输入姓名");
+		}
+		if ($.trim($("#user_code").val()).length == 0) {
+			tosubmit = false;
+			$("#user_code_err").html("请选择人员状态");
 		}
 		if ($.trim($("#company_id").val()).length == 0) {
 			tosubmit = false;
@@ -1024,7 +1035,9 @@ $(document).ready(function() {
 			query.password = escape($("#password").val());
 			query.job_number = escape($("#job_numberS").val());
 			query.full_name = escape($("#full_name").val());
+			query.user_code = escape($("#user_code").val());
 			query.company_id = escape($("#company_id").val()); //所属公司
+			query.company_porportion = escape($("#company_id").val());
 			query.job_id = escape($("#job_id").val()); //职位
 			if ($.trim($("#lead_user").val()).length == 0) {
 				query.lead_user = escape(0); //上级
@@ -1040,12 +1053,7 @@ $(document).ready(function() {
 			query.tel = escape($("#tel").val());
 			query.qq = escape($("#qq").val());
 			query.email = escape($("#email").val());
-			if ($.trim($("#lead_user").val()).length == 0) {
-				query.insurance = escape(""); //保险
-			} else {
-				query.insurance = escape($("#add_insurance").val()); //保险
-			}
-
+			query.insurance = escape($("#add_insurance").val()); //保险
 			query.inputdate = escape($("#entry_date").val()); //入职时间
 			query.census_register = escape($("#census_register").val()); //户籍
 			query.add_gold = escape($("#add_gold").val()); //加金
@@ -1059,7 +1067,7 @@ $(document).ready(function() {
 				cache: false,
 				dataType: "text",
 				success: function(data) {
-
+						
 					if (parseInt(data.split("|")[0]) == 1) {
 						$("#" + data.split("|")[1] + "_err").html(data.split("|")[2]);
 						$("#edit_user_submit").attr("disabled", false);
@@ -1177,6 +1185,10 @@ $(document).ready(function() {
 		});
 
 	});
+
+
+
+	
 
 
 	$("#add_order_submit").click(function() {
@@ -2083,6 +2095,9 @@ $(document).ready(function() {
 						window.location.href = "login.asp";
 					} else if (parseInt(data.split("|")[0]) == 0) {
 						alert("删除成功！");
+						window.location.href = "manage_customers.asp";
+					} else if (parseInt(data.split("|")[0]) == 3) {
+						alert(data.split("|")[1]);
 						window.location.href = "manage_customers.asp";
 					}
 				}

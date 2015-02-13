@@ -131,7 +131,7 @@
                             <tr>
                                 <td style="vertical-align: middle;text-align:center">
 
-                                  <input name="product_name<%=int(rs("id"))%>" id="product_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("product_name"))%>" style="width:60px">
+                                  <input name="product_name<%=int(rs("id"))%>" id="product_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("product_name"))%>" style="width:60px" >
                                 
                                 </td>
                                 <td style="vertical-align: middle;text-align:center">

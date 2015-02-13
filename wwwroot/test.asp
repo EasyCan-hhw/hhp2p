@@ -1,5 +1,6 @@
 <%@LANGUAGE="VBSCRIPT" CODEPAGE="936"%>
 <!--#include file="conn.asp" -->
+<!--#include file="calculate_performance.asp" -->
 <%
 ' *** Validate request to log in to this site.
 MM_LoginAction = Request.ServerVariables("URL")
@@ -47,31 +48,39 @@ End If
 
 <body>
 <% 
- o_number=0120120123
-  set rs=server.createobject("adodb.recordset")
-  sql = "Select * from contracts"
-  rs.Open sql,conn,1,3
-  rs.addnew
-  rs("number")=o_number
-  rs("cid")=cid
-  rs("passport")=passport
-  rs("full_name")=full_name
-  rs("product_name")=product_name
-  rs("cycle")=cycle
-  rs("profit")=profit
-  rs("capital")=capital
-  rs("start_date")=start_date
-  rs("add_uid")=request.cookies("hhp2p_cookies")("uid")
-  rs("inputdate")=now()
-  rs.update
-  rs.close
-  'getIdSql = "Select * from contracts where number ="&o_number
-  rs.Open "Select * from contracts where number ="&o_number,conn,1,3
-  if not rs.eof then 
-  c_id=rs("id")
-  response.write c_id
-  end if 
-  rs.close
+  testString = "2015-01%"
+  testPerformence = performence(testString)
+ test1 = ordinatesPerformence(1474)
+ Response.write "<br>"
+ Response.write test1
+ Response.write "<br>"
+
+
+ for h=0 to Ubound(testPerformence) 
+     test = testPerformence(h)
+     for g=0 to 3
+      if g=0 then 
+        Response.write test(g)
+        Response.write "<br>"
+      elseif g=1 then 
+        Response.write test(g)
+        Response.write "<br>"
+      elseif g=2 then 
+      Response.write "subordinate_Job_Number:"
+        for t=0 to Ubound(test(g))
+          Response.write test(g)(t)
+          Response.write "^_"
+        next
+      elseif g=3 then 
+      Response.write "<br>"
+      Response.write "perpormence_Mark:"
+       Response.write test(g)
+       Response.write "<br>"
+      end if 
+     next
+     Response.write "<br><br>"
+ next
+
 %>
 </body>
 </html>

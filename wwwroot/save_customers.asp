@@ -93,11 +93,17 @@ if action="add" then
 elseif action="edit" then
 	conn.execute "update customers set full_name='"&full_name&"',sex="&sex&",birth_date='"&birth_date&"',passport='"&passport&"',lssue_date='"&lssue_date&"',expiry_date='"&expiry_date&"',marital="&marital&",mobile='"&mobile&"',city='"&city&"',industry='"&industry&"',postcodes='"&postcodes&"',email='"&email&"',address='"&address&"',bank_info='"&bank_info&"',bank_account='"&bank_account&"',notify="&notify&",remarks='"&remarks&"',emergency_name='"&emergency_name&"',emergency_title='"&emergency_title&"',emergency_sex="&emergency_sex&",emergency_birth_date='"&emergency_birth_date&"',emergency_passport='"&emergency_passport&"',emergency_mobile='"&emergency_mobile&"',emergency_tel='"&emergency_tel&"',emergency_email='"&emergency_email&"',emergency_address='"&emergency_address&"',custome_source='"&custome_source&"',channel_name='"&channel_name&"',recommend='"&recommend&"' where id="&id
 elseif action="del" then	
+ 	
+ 	set rs=server.createobject("adodb.recordset")
+	rs.Open "select * from contracts where cid='"&id&"'",conn,1,1
+	if  rs.eof then 
 	conn.execute "delete from customers where id="&id
+	else 
+	response.write "3|客户已有理财产品不允许删除"
+	end if 
 end if
 	response.write "0|"
 	response.end
-
 else
 response.write "非法提交!"
 end if

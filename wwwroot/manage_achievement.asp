@@ -29,9 +29,7 @@ end if
         <div id="breadcrumb"> <a href="####" class="tip-bottom"><i class="icon-th-list"></i> 员工业绩查询</a></div>
     </div>
     <!--End-breadcrumbs-->
-
     <div class="container-fluid">
-        
         <div class="row-fluid">
             <div class="span12">
               <div class="widget-box">
@@ -199,16 +197,31 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%
                                   
-                    								set rs1=server.CreateObject("adodb.recordset")
-                    								rs1.Open "select * from companys where company_code="&rs("company_id"),conn,1,1
-                    								if not rs1.eof then
-                    									response.write rs1("company_name")
-                    									company_bonus_proportion=rs1("bonus_proportion")
-                    								else
-                    									response.write "其他"
-                    								end if
-                    								rs1.close
-                    								set rs1=nothing
+                    								
+                                    if IsNull(rs("company_code")) or rs("company_code") = 0 then 
+                                        
+                                        set rs1=server.CreateObject("adodb.recordset")
+                                        rs1.Open "select * from companys where company_code="&rs("company_id"),conn,1,1
+                                        if not rs1.eof then
+                                            response.write "(一级)"&rs1("company_name")
+                                        else
+                                            response.write "其他"
+                                        end if
+                                        rs1.close
+                                        set rs1=nothing
+                                else 
+                                        
+                                        set rs3=server.CreateObject("adodb.recordset")
+                                        rs3.Open "select * from companys where company_code="&rs("company_code"),conn,1,1
+                                        if not rs3.eof then
+                                            response.write "(二级)"&rs3("company_name")
+                                        else
+                                            response.write "其他"
+                                        end if
+                                        rs3.close
+                                        set rs3=nothing
+                                      
+                                end if 
                     								%></td>
                                   <td style="vertical-align: middle;text-align:center"><%
                     								set rs1=server.CreateObject("adodb.recordset")
@@ -234,14 +247,41 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
                   								%>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center"><%
-                  								Set db=Conn.execute("select count(*) As db from contracts where approval=1 and add_uid="&rs("uid"))
-                  								response.write db("db")
+                  								'Set db=Conn.execute("select count(*) As db from contracts where approval=1 and add_uid="&rs("uid"))
+                  								'response.write db("db")
+                                  dbcount = 0
+                                  dbprice = 0
+                                  set rsdb=server.CreateObject("adodb.recordset")
+                                  rsdb.Open "select * from contracts where approval=1",conn,1,1
+                                  if not  rsdb.eof then 
+                                    for d=0 to rsdb.recordcount-1
+                                       
+                                        set rscdb=server.CreateObject("adodb.recordset")
+                                        rscdb.Open "select * from customers where id='"&rsdb("cid")&"'and uid='"&rs("uid")&"'",conn,1,1
+                                        
+                                        if not rscdb.eof then 
+                                        
+                                          dbcount = dbcount+1
+                                          dbprice = dbprice + rsdb("capital")
+                                         
+                                        else 
+                                        end if 
+                                         rscdb.close
+                                        set rscdb = nothing
+                                    rsdb.movenext
+                                    next 
+                                  rsdb.close
+                                  set rsdb = nothing
+                                  else 
+                                  end if 
+                                  response.write dbcount
                   								%>
                                 </td>
                                 <td style="vertical-align: middle;text-align:center"><%
-                  								Set db=Conn.execute("select isnull(sum(capital),0) As db from contracts where approval=1 and add_uid="&rs("uid"))
-                  								response.write db("db")
-                  								zongjine=db("db")
+                  								'Set db=Conn.execute("select isnull(sum(capital),0) As db from contracts where approval=1 and add_uid="&rs("uid"))
+                  								'response.write db("db")
+                  								'zongjine=db("db")
+                                  response.write dbprice
                   								%>
                                 </td>
                                <td style="vertical-align: middle;text-align:center"><%

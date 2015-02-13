@@ -68,7 +68,7 @@ $("#print").click(function(){
 for j=0 to ubound(idss)
 set rs=server.CreateObject("adodb.recordset")
 rs.Open "select * from monthly_bill where id="&idss(j),conn,1,1
-if rs.eof then
+if not rs.eof then
 	response.write "非法提交！"
 else
 	set rs1=server.CreateObject("adodb.recordset")

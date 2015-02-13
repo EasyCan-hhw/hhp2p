@@ -13,11 +13,12 @@ if request.cookies("hhp2p_cookies")("uid")="" then
 end if
 
 action=SafeRequest("action")
-b_jobs=Trim(SafeRequest("b_jobs"))
+b_id=Trim(SafeRequest("b_id"))
 b_min=Trim(SafeRequest("b_min"))
 b_max=Trim(SafeRequest("b_max"))
 b_ladder=Trim(SafeRequest("b_ladder"))
 b_bscale=Trim(SafeRequest("b_bscale"))
+special=Trim(SafeRequest("special"))
 bid=Trim(SafeRequest("id"))
 
 
@@ -36,7 +37,8 @@ if action="add" then
 	sql = "Select * from brokerage_section"
 	rs.Open sql,conn,1,3
 	rs.addnew
-	rs("bjobs")=b_jobs
+	rs("job_id")=b_id
+	rs("special")=special
 	rs("bmin")=b_min
 	rs("bmax")=b_max
 	rs("bscale")=b_bscale/100

@@ -7,24 +7,22 @@
 <div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
     <ul>
     	
-        <li><a href="javascript:;" id="sidebar_0" class="menu"><i class="icon <%if filename="customer_tracking" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>目标管理</span></a> 
-        	<div class="sidebar" id="menu0" <%if filename="customer_tracking" then%>style="display:inherit"<%end if%>>
-                <%
+        
+        
+    	
+        <li><a href="javascript:;" id="sidebar_1" class="menu"><i class="icon <%if filename="add_customers" or filename="customer_tracking" or filename="manage_customers" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>客户管理</span></a> 
+        	<div class="sidebar" id="menu1" <%if filename="add_customers" or filename="customer_tracking" or filename="manage_customers" then%>style="display:inherit"<%end if%>>
+
+                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[1]" then 
                 %>
-            	<a href="customer_tracking.asp" <%if filename="customer_tracking" then%>class="active1"<%end if %> ><i class="icon icon-edit"></i> <span>目标客户添加及跟踪</span></a>
+                <a href="customer_tracking.asp" <%if filename="customer_tracking" then%>class="active1"<%end if %> ><i class="icon icon-edit"></i> <span>目标客户添加及跟踪</span></a>
                 <%          exit for 
                         else 
                         end if 
                     next
                 %>
-            </di
-        </li>
-        
-    	
-        <li><a href="javascript:;" id="sidebar_1" class="menu"><i class="icon <%if filename="add_customers" or filename="manage_customers" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>客户管理</span></a> 
-        	<div class="sidebar" id="menu1" <%if filename="add_customers" or filename="manage_customers" then%>style="display:inherit"<%end if%>>
                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[2]" then 
@@ -49,8 +47,8 @@
         </li>
         
     	
-        <li><a href="javascript:;" id="sidebar_2" class="menu"><i class="icon <%if  filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="add_creditor_right" or filename="manage_attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>债权管理</span></a> 
-        	<div class="sidebar" id="menu2" <%if  filename="manage_creditor_right" or filename="attorn_creditor_right" or filename="add_creditor_right" or filename="manage_attorn_creditor_right" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_2" class="menu"><i class="icon <%if   filename="redeem_attorn_creditor_right" or filename="manage_redeem"  or filename="add_creditor_right" or filename="manage_attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>债权管理</span></a> 
+        	<div class="sidebar" id="menu2" <%if   filename="add_creditor_right" or filename="redeem_attorn_creditor_right" or filename="manage_redeem" or filename="manage_attorn_creditor_right" then%>style="display:inherit"<%end if%>>
                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[4]" then 
@@ -61,26 +59,8 @@
                         end if 
                     next
                 %>
-                <%
-                    for s=0 to splitlength 
-                        if splitvalue(s)="[5]" then 
-                %>
-            	<a href="manage_creditor_right.asp" <%if filename="manage_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权查询</span></a>
-                 <%          exit for 
-                        else 
-                        end if 
-                    next
-                %>
-                <%
-                    for s=0 to splitlength 
-                        if splitvalue(s)="[6]" then 
-                %>
-            	<a href="attorn_creditor_right.asp" <%if filename="attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让</span></a>
-                <%          exit for 
-                        else 
-                        end if 
-                    next
-                %>
+                
+               
                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[7]" then 
@@ -91,17 +71,11 @@
                         end if 
                     next
                 %>
-            </div>
-        </li>
-        
-    	
-        <li><a href="javascript:;" id="sidebar_3" class="menu"><i class="icon <%if filename="redeem_attorn_creditor_right" or filename="manage_redeem" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>赎回管理</span></a> 
-        	<div class="sidebar" id="menu3" <%if filename="redeem_attorn_creditor_right" or filename="manage_redeem" then%>style="display:inherit"<%end if%>>
-                 <%
+                <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[25]" then 
                 %>
-            	<a href="redeem_attorn_creditor_right.asp" <%if filename="redeem_attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让赎回</span></a>
+                <a href="redeem_attorn_creditor_right.asp" <%if filename="redeem_attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让赎回</span></a>
                 <%          exit for 
                         else 
                         end if 
@@ -111,7 +85,43 @@
                     for s=0 to splitlength 
                         if splitvalue(s)="[26]" then 
                 %>
-            	<a href="manage_redeem.asp" <%if filename="manage_redeem" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>赎回查询</span></a>
+                <a href="manage_redeem.asp" <%if filename="manage_redeem" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>赎回查询</span></a>
+                <%          exit for 
+                        else 
+                        end if 
+                    next
+                %>
+            </div>
+        </li>
+        
+    	
+        <li><a href="javascript:;" id="sidebar_3" class="menu"><i class="icon <%if filename="manage_products" or filename="manage_creditor_right" or filename="attorn_creditor_right" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>客服管理</span></a> 
+        	<div class="sidebar" id="menu3" <%if filename="manage_products" or filename="manage_creditor_right" or filename="attorn_creditor_right"  then%>style="display:inherit"<%end if%>>
+                 <%
+                    for s=0 to splitlength 
+                        if splitvalue(s)="[5]" then 
+                %>
+                <a href="manage_creditor_right.asp" <%if filename="manage_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权查询</span></a>
+                 <%          exit for 
+                        else 
+                        end if 
+                    next
+                %>
+                <%
+                    for s=0 to splitlength 
+                        if splitvalue(s)="[6]" then 
+                %>
+                <a href="attorn_creditor_right.asp" <%if filename="attorn_creditor_right" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>债权转让</span></a>
+                <%          exit for 
+                        else 
+                        end if 
+                    next
+                %>
+                <%
+                    for s=0 to splitlength 
+                        if splitvalue(s)="[13]" then 
+                %>
+                <a href="manage_products.asp" <%if filename="manage_products" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>投资产品管理</span></a>
                 <%          exit for 
                         else 
                         end if 
@@ -177,8 +187,8 @@
         </li>
         
     	
-        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if filename="manage_products" or filename="manage_brokerage_section"  or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_pay_count" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_add_Results" or filename="manage_request_money" or filename="manage_commission_set" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
-        	<div class="sidebar" id="menu4" <%if filename="manage_products" or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_brokerage_section" or filename="manage_companys_bonus_proportion" or filename="manage_pay_count" or filename="manage_achievement" or filename="manage_commission_set" or filename="manage_request_money" or filename="manage_add_Results"  then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_4" class="menu"><i class="icon <%if  filename="manage_brokerage_section"  or filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_jobs_bonus_proportion" or filename="manage_pay_count" or filename="manage_companys_bonus_proportion" or filename="manage_achievement" or filename="manage_add_Results" or filename="manage_request_money" or filename="manage_commission_set" or filename="manage_PaiXiTiXing"  then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>财务管理</span></a> 
+        	<div class="sidebar" id="menu4" <%if  filename="manage_monthly_bill" or filename="manage_user_bonus_proportion" or filename="manage_PaiXiTiXing" or filename="manage_jobs_bonus_proportion" or filename="manage_brokerage_section" or filename="manage_companys_bonus_proportion" or filename="manage_pay_count" or filename="manage_achievement" or filename="manage_commission_set" or filename="manage_request_money" or filename="manage_add_Results"  then%>style="display:inherit"<%end if%>>
                  <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[30]" then 
@@ -189,16 +199,7 @@
                         end if 
                     next
                 %>
-                <%
-                    for s=0 to splitlength 
-                        if splitvalue(s)="[13]" then 
-                %>
-            	<a href="manage_products.asp" <%if filename="manage_products" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>投资产品管理</span></a>
-                <%          exit for 
-                        else 
-                        end if 
-                    next
-                %>
+                
                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[27]" then 

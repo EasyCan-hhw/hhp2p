@@ -16,6 +16,20 @@
     <div class="container-fluid">
 
 <%
+
+cookqx =  request.cookies("hhp2p_cookies")("quanxian")'得到登陆账号的权限'
+splitvalue = split(cookqx,",") '得到权限object'
+splitlength = ubound(splitvalue)'得到权限count'
+qxBoolean = false
+for s=0 to splitlength 
+         if splitvalue(s)="[32]" then 
+            qxBoolean = true
+
+                  exit for 
+         else 
+         end if 
+next
+
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
 rs.Open "select * from customers where id="&id,conn,1,1
@@ -342,30 +356,30 @@ if not rs.eof then
                                 <span id="custome_source_err" class="err_text"></span>
                             </div>
                         </div>
-                        <div class="control-group" style="display: block;" >
+                        <!--<div class="control-group" style="display: block;" >
                             <label class="control-label">&nbsp;员工工号:</label>
                             <div class="controls">
                                 <div class="span5">
-                                <!--<input type="text" id="select_jobNumber" class="span5" name="select_jobNumber"/>-->
                                 <select id="select_jobNumber" name="select_jobNumber" value="">
                                       <option value="" ></option>
-                                        <%
-                                      set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from users order by uid" ,conn,1,1
-                                      do while not rs.eof
-                                      %>
-                                      <option  value="<%=rs("uid")%>" <%if rs("uid")=work_application then%>selected<%end if%>><%=rs("job_number")%></option>
-                                      <%
-                                       rs.movenext
-                                       loop
-                                       rs.close
-                                       set rs=nothing
-                                      %>  
-                                    </select>
+                                       
                                  </div>
                                 <span id="select_jobNumber_err" class="err_text"></span>
                             </div>
-                        </div>
+                        </div>-->
+                         <%
+                                     '' set rs=server.CreateObject("adodb.recordset")
+                                     '' rs.Open "select * from users order by uid" ,conn,1,1
+                                     '' do while not rs.eof
+                                      %>
+                                      
+                                      <%
+                                      '' rs.movenext
+                                       'loop
+                                       'rs.close
+                                      '' set rs=nothing
+                                      %>  
+                                    </select>
                       <div class="form-actions" >
                           <label class="control-label"></label>
                           <button id="search_custome_submit" type="submit" class="btn btn-primary">组合查询</button>
@@ -392,6 +406,7 @@ if not rs.eof then
                                 <th>电子邮箱</th>
                                 <th>工作城市</th>
                                <th>客户来源</th>
+                               <th>业务员</th>
                                 <th width="20%">操作</th>
                             </tr>
                             </thead>
@@ -412,9 +427,14 @@ if trim(request("c_type"))<>"" then c_type=" and c_type="&trim(request("c_type")
 if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(request("select_jobNumber"))
 
 				err_txt="<tr><td colspan=""8"">没有客户</td></tr>"
+                myself = request.cookies("hhp2p_cookies")("uid") '从cookies拿到登陆uid用以作为查询正式客户的条件'
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" order by id desc",conn,1,1
 
+            if qxBoolean then
+            rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" order by id desc",conn,1,1
+            else 
+			rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" and uid="&myself&" order by id desc",conn,1,1
+            end if 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
@@ -459,6 +479,16 @@ if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("email"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("city"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("custome_source"))%></td>
+
+                                <td style="vertical-align: middle;text-align:center">
+                                    <%  
+                                        set rs1=server.CreateObject("adodb.recordset")
+                                        rs1.Open "select * from users where uid="&rs("uid")&" ",conn,1,1
+                                        response.write rs1("job_number")&"--"&rs1("full_name")
+                                        rs1.close
+                                        set rs1=nothing
+                                     %>
+                                </td>
                                <td style="vertical-align: middle; text-align:center">
                                     <a href="manage_customers.asp?id=<%=int(rs("id"))%>">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
                                     <a href="javascript:;" id="custome_del_<%=int(rs("id"))%>" class="custome_del">删除</a>

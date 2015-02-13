@@ -191,7 +191,12 @@ if j>0 then
             <td align="center" class="border-top border-right"><%=cdbl(rs1("amount"))/10000%>万</td>
             <td align="center" class="border-top border-right"><%=rs2("job")%></td>
             <td align="center" class="border-top border-right"><%=rs2("collateral")%></td>
-            <td align="center" class="border-top border-right"><%=next_date(trim(rs("start_date")),ForMatDate(DateAdd("d", 30, rs("start_date")),2))%></td>
+            <td align="center" class="border-top border-right">
+              <%
+              '=next_date(trim(rs("start_date")),ForMatDate(DateAdd("d", 30, rs("start_date")),2))
+            startD =  ForMatDate(trim(rs("start_date")),2)
+             response.write startD
+              %></td>
             <td align="center" class="border-top border-right"><%=round(rs("cycle")/30,0)%></td>
             <td align="center" class="border-top border-right"><%=round(rs("cycle")/30,0)%></td>
             <td align="center" class="border-top border-right"><%=cdbl(rs("profit"))*100%>%</td>
@@ -272,9 +277,9 @@ if j>0 then
             <td>&nbsp;</td>
             </tr>
           <tr   >
-            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>
-            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>
-            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(now(),4)%></td>
+            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(rs("start_date"),4)%></td>
+            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(rs("start_date"),4)%></td>
+            <td style="font-size:11px">日&nbsp;&nbsp;期：<%=ForMatDate(rs("start_date"),4)%></td>
             </tr>
           </table></td>
       </tr>
