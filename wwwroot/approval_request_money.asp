@@ -76,7 +76,7 @@ if not rs.eof then
                             </div>
                             </div>
                         </div>
-                        >
+                        
                     <div class="form-actions">
                           <label class="control-label"></label>
                           <button id="request_money_approval" type="submit" class="btn btn-primary">审批</button>&nbsp;&nbsp;&nbsp;&nbsp;

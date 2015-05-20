@@ -54,7 +54,7 @@ elseif action="edit" then
 		response.end
 	end if
 	rs.close
-	conn.execute "update companys set company_code='"&company_code&"',company_name='"&company_name&"' where id="&id
+	conn.execute "update companys set company_code='"&company_code&"',company_name='"&company_name&"',company_count='"&company_count&"' where id="&id
 elseif action="del" then	
 	conn.execute "delete from companys where id="&id
 end if

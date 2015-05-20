@@ -17,15 +17,16 @@ setrest_starttime=Trim(SafeRequest("setrest_starttime"))
 setrest_endtime=Trim(SafeRequest("setrest_endtime"))
 setrest_cause=Trim(SafeRequest("setrest_cause"))
 sid=Trim(SafeRequest("sid"))
+company_number=Trim(SafeRequest("company_number"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
-	rs.Open "select * from setrest_worktime where setrest_year='"&setrest_year&"'",conn,1,1
-	if not rs.eof then
-		response.write "1|setrest_year|该日期已存在"
-		response.end
-	end if
-	rs.close
+	'rs.Open "select * from setrest_worktime where setrest_year='"&setrest_year&"'",conn,1,1
+	'if not rs.eof then
+	''	response.write "1|setrest_year|该日期已存在"
+	''	response.end
+	'end if
+	'rs.close
 	sql = "Select * from setrest_worktime"
 	rs.Open sql,conn,1,3
 	rs.addnew
@@ -33,6 +34,7 @@ if action="add" then
 	rs("start_worktime")=setrest_starttime
 	rs("end_worktime")=setrest_endtime
 	rs("setrest_cause")=setrest_cause
+	rs("company_number")=company_number
 	rs.update
 	rs.close
 	set rs=nothing

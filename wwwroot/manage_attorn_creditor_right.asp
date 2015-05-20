@@ -1,9 +1,7 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
+<!--#include file="getunderling_function.asp"-->
 <!--main-container-part-->
 
 <div id="content">
@@ -255,7 +253,7 @@ else
                             <label class="control-label">&nbsp;状态:</label>
                             <div class="controls">
                             	<div class="span5">
-                                <select id="status" name="status">
+                                <select id="approve_status" name="approve_status">
                                     	<option value="" ></option>
                                     	<option value="0" >待审批</option>
                                         <option value="1" >已审批</option>
@@ -279,11 +277,13 @@ else
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"> <i class="icon-list"></i> </span>
                         <h5>债权转让列表</h5>
+
                     </div>
                     <div class="widget-content">
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
+                               
                             	 <th><input type="checkbox" id="check_all" name="title-table-checkbox"/></th>
                                 <th nowrap="nowrap">合同编号</th>
                                 <th>客户姓名</th>
@@ -297,17 +297,26 @@ else
                             </thead>
                             <tbody>
             <%
-            if trim(request("number"))<>"" then numbers=" and number='"&trim(request("number"))&"'"
-            if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-            if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-            if trim(request("start_date"))<>"" then date1=" and datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
-            if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
-            if trim(request("status"))<>"" then status=" and approval="&trim(request("status"))
-            if trim(request("product_name"))<>"" then product_name=" and product_name='"&trim(request("product_name"))&"'"
+            if trim(request.form("number"))<>"" then numbers=" and number='"&trim(request.form("number"))&"'"
+            if trim(request.form("full_name"))<>"" then full_name=" and c_name='"&trim(request.form("full_name"))&"'"
+            if trim(request.form("passport"))<>"" then passport=" and passport='"&trim(request.form("passport"))&"'"
+            if trim(request.form("start_date"))<>"" then date1=" and datediff(d,'"&trim(request.form("start_date"))&"',start_date)>=0"
+            if trim(request.form("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request.form("start_date2"))&"')>=0"
+            if trim(request.form("approve_status"))<>"" then approve_status=" and approval="&trim(request.form("approve_status"))
+            if trim(request.form("product_name"))<>"" then product_name=" and product_name='"&trim(request.form("product_name"))&"'"
+          
 
 				err_txt="<tr><td colspan=""9"">没有债权转让信息</td></tr>"
-			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from contracts where id>0 and redeem=0"&numbers&full_name&passport&product_name&date1&date2&status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
+			 set rs=server.CreateObject("adodb.recordset")
+
+            if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then
+			    rs.Open "select * from contracts where id>0 and redeem=0"&numbers&full_name&passport&product_name&date1&date2&approve_status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
+            else 
+            
+                rs.Open "select * from contracts where id>0 and redeem=0"&numbers&full_name&passport&product_name&date1&date2&approve_status&" and job_number in ("&requestUnderlingjobnumber(request.cookies("hhp2p_cookies")("job_number"))&"'"&request.cookies("hhp2p_cookies")("job_number")&"') order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1 '只允许查看自己下级包括自己的债权转让信息'
+
+            end if 
+            
 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
@@ -327,18 +336,18 @@ else
       				end if
        				if currentPage=1 then
             			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&status="&trim(request("status")))
+            			showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&approve_status="&trim(request("approve_status")))
        				else
           				if (currentPage-1)*MaxPerPage<totalPut then
             				rs.move  (currentPage-1)*MaxPerPage
             				dim bookmark
             				bookmark=rs.bookmark
             				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&status="&trim(request("status")))
+             				showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&approve_status="&trim(request("approve_status")))
         				else
 	        				currentPage=1
            					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&status="&trim(request("status")))
+           					showpage1=showpage(totalput,MaxPerPage,"manage_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name"))&"&approve_status="&trim(request("approve_status")))
 						end if
 	   				end if
 			end if
@@ -350,7 +359,7 @@ else
                                                        
                                 <td><%if rs("approval")=1 then%><input type="checkbox" name="subBox" value="<%=rs("id")%>"/><%end if%></td>
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("number"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
+                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("c_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>

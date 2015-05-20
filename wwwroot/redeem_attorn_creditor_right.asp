@@ -1,7 +1,5 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -110,17 +108,17 @@
                             </thead>
                             <tbody>
             <%
-if trim(request("number"))<>"" then numbers=" and number='"&trim(request("number"))&"'"
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-if trim(request("start_date"))<>"" then date1=" and datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
-if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
-if trim(request("product_name"))<>"" then product_name=" and product_name='"&trim(request("product_name"))&"'"
+if trim(request("number"))<>"" then numbers=" and contracts.number='"&trim(request("number"))&"'"
+if trim(request("full_name"))<>"" then full_name=" and contracts.full_name='"&trim(request("full_name"))&"'"
+if trim(request("passport"))<>"" then passport=" and contracts.passport='"&trim(request("passport"))&"'"
+if trim(request("start_date"))<>"" then date1=" and contracts.datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
+if trim(request("start_date2"))<>"" then date2=" and contracts.datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
+if trim(request("product_name"))<>"" then product_name=" and contracts.product_name='"&trim(request("product_name"))&"'"
 
 				err_txt="<tr><td colspan=""9"">没有债权转让信息</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from contracts where id>0 and approval=1 and redeem=0"&numbers&full_name&passport&product_name&date1&date2&status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
-
+			'rs.Open "select * from contracts where id>0 and approval=1 and redeem=0"&numbers&full_name&passport&product_name&date1&date2&status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
+            rs.Open "select * from contracts inner join users on contracts.job_number = users.job_number and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" ) and contracts.approval=1 "&numbers&full_name&passport&date1&date2&product_name&" order by id desc",conn,1,1 '直允许查看自己所属公司的所有债权转让信息'
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
@@ -139,18 +137,18 @@ if trim(request("product_name"))<>"" then product_name=" and product_name='"&tri
       				end if
        				if currentPage=1 then
             			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
+            			showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
        				else
           				if (currentPage-1)*MaxPerPage<totalPut then
             				rs.move  (currentPage-1)*MaxPerPage
             				dim bookmark
             				bookmark=rs.bookmark
             				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
+             				showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
         				else
 	        				currentPage=1
            					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
+           					showpage1=showpage(totalput,MaxPerPage,"redeem_attorn_creditor_right.asp","&number="&trim(request("number"))&"&c_name="&trim(request("c_name"))&"&passport="&trim(request("passport"))&"&start_date="&trim(request("start_date"))&"&start_date2="&trim(request("start_date2"))&"&product_name="&trim(request("product_name")))
 						end if
 	   				end if
 			end if
@@ -162,7 +160,7 @@ if trim(request("product_name"))<>"" then product_name=" and product_name='"&tri
                                                        
                                 <td><%if rs("approval")=1 then%><input type="checkbox" name="subBox" value="<%=rs("id")%>"/><%end if%></td>
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("number"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
+                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("c_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>

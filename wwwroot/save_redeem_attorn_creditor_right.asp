@@ -23,9 +23,13 @@ Function approval(my_id)
 			periods=1
 		else
 			if (datediff("d",rs("start_date"),now())/30)=int(datediff("d",rs("start_date"),now())/30) then
+
 				periods=datediff("d",rs("start_date"),now())/30
+
 			else
+
 				periods=int(datediff("d",rs("start_date"),now())/30)+1
+
 			end if
 		end if
 		if periods>1 then
@@ -33,6 +37,7 @@ Function approval(my_id)
 		else
 			periods_start_date=rs("start_date")
 		end if
+		
 		set rs1=server.CreateObject("adodb.recordset")
 		rs1.Open "select penalty from products where product_name='"&rs("product_name")&"'",conn,1,1
 		if not rs1.eof then

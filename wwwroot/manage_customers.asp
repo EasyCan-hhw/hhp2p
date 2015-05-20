@@ -1,10 +1,8 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
+<!--#include file="getunderling_function.asp"-->
 
 <div id="content">
     <!--breadcrumbs-->
@@ -17,18 +15,36 @@
 
 <%
 
+    quanxianString = request.cookies("hhp2p_cookies")("quanxian")
+    splitvalue = split(quanxianString,",")
+    splitlength = ubound(splitvalue)
+
+    selectbollean = false
+    
+     for s=0 to splitlength 
+      
+        if splitvalue(s)="[33]" then 
+            selectbollean = true
+           
+            exit for 
+        else 
+
+        end if 
+    next
+
+
 cookqx =  request.cookies("hhp2p_cookies")("quanxian")'得到登陆账号的权限'
 splitvalue = split(cookqx,",") '得到权限object'
 splitlength = ubound(splitvalue)'得到权限count'
-qxBoolean = false
-for s=0 to splitlength 
-         if splitvalue(s)="[32]" then 
-            qxBoolean = true
+   '' qxBoolean = false
+   '' for s=0 to splitlength 
+    ''         if splitvalue(s)="[32]" then 
+    ''            qxBoolean = true
 
-                  exit for 
-         else 
-         end if 
-next
+    ''                  exit for 
+     ''        else 
+    ''         end if 
+   '' next
 
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
@@ -399,6 +415,7 @@ if not rs.eof then
                     <div class="widget-content">
                         <table class="table table-bordered table-striped with-check">
                             <thead>
+                                
                             <tr>
                                 <th nowrap="nowrap">姓名</th>
                                 <th>身份证</th>
@@ -412,31 +429,44 @@ if not rs.eof then
                             </thead>
                             <tbody>
             <%
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
-if trim(request("mobile"))<>"" then mobile=" and mobile='"&trim(request("mobile"))&"'"
-if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"'"
-if trim(request("custome_source"))<>"" then
-	if trim(request("custome_source"))="other" then
-		custome_source=" and (custome_source<>'' and custome_source<>'市场活动' and custome_source<>'老客户推荐' and custome_source<>'自有资源' and custome_source<>'渠道')"
-	else
-		custome_source=" and custome_source='"&trim(request("custome_source"))&"'"
-	end if
-end if
-if trim(request("c_type"))<>"" then c_type=" and c_type="&trim(request("c_type"))
-if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(request("select_jobNumber"))
+           
+            if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
+            if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
+            if trim(request("mobile"))<>"" then mobile=" and mobile='"&trim(request("mobile"))&"'"
+            if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"'"
+            if trim(request("custome_source"))<>"" then
+            	if trim(request("custome_source"))="other" then
+            		custome_source=" and (custome_source<>'' and custome_source<>'市场活动' and custome_source<>'老客户推荐' and custome_source<>'自有资源' and custome_source<>'渠道')"
+            	else
+            		custome_source=" and custome_source='"&trim(request("custome_source"))&"'"
+            	end if
+            end if
+            if trim(request("c_type"))<>"" then c_type=" and c_type="&trim(request("c_type"))
+            if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(request("select_jobNumber"))
 
 				err_txt="<tr><td colspan=""8"">没有客户</td></tr>"
                 myself = request.cookies("hhp2p_cookies")("uid") '从cookies拿到登陆uid用以作为查询正式客户的条件'
 			set rs=server.CreateObject("adodb.recordset")
-
-            if qxBoolean then
-            rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" order by id desc",conn,1,1
+           
+            if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then'if company_id = 1 视为超级管理员
+                rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" order by id desc",conn,1,1
             else 
-			rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" and uid="&myself&" order by id desc",conn,1,1
+                if selectbollean then 
+                
+                    rs.Open "select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" and uid in ("&requestUnderlingUid(request.cookies("hhp2p_cookies")("uid"))&request.cookies("hhp2p_cookies")("uid")&") and uid="&request.cookies("hhp2p_cookies")("uid")&" order by id desc",conn,1,1 '只允许查看自己的客户信息'
+                    response.write "true"
+                else
+                   'response.write "false"&"select * from customers where id>0"&full_name&passport&mobile&email&select_jobNumber&custome_source&c_type&" and uid in ("&requestUnderlingUid(request.cookies("hhp2p_cookies")("uid"))&request.cookies("hhp2p_cookies")("uid")&") order by id desc"
+                    rs.Open "select * from customers inner join users on customers.uid = users.uid and (users.company_code='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&") ",conn,1,1 '只允许查看自己所属公司的客户信息'
+                                        
+                end if  
+			
             end if 
+
 		   	if err.number<>0 or rs.eof then
+
 				response.write err_txt
+                
 			end if
 			if not rs.eof then
 				
@@ -482,11 +512,19 @@ if trim(request("select_jobNumber"))<>"" then select_jobNumber=" and uid="&trim(
 
                                 <td style="vertical-align: middle;text-align:center">
                                     <%  
-                                        set rs1=server.CreateObject("adodb.recordset")
-                                        rs1.Open "select * from users where uid="&rs("uid")&" ",conn,1,1
-                                        response.write rs1("job_number")&"--"&rs1("full_name")
-                                        rs1.close
-                                        set rs1=nothing
+                                        if isnull(rs("uid")) then 
+                                             response.write "无"
+                                        else 
+                                            set rs1=server.CreateObject("adodb.recordset")
+                                            rs1.Open "select * from users where uid="&rs("uid")&" ",conn,1,1
+                                            if not rs1.eof then 
+                                                response.write rs1("job_number")&"--"&rs1("full_name")
+                                            else 
+                                                response.write "无"
+                                            end if 
+                                            rs1.close
+                                            set rs1=nothing
+                                        end if 
                                      %>
                                 </td>
                                <td style="vertical-align: middle; text-align:center">

@@ -3,6 +3,8 @@
   connstr="Driver={SQL Server};Server=127.0.0.1;UID=hhp2p_admin;PWD=HHp2p_Admin;Database=hhp2p_erp"   
   set   conn=server.createobject("ADODB.CONNECTION")   
   conn.open connstr 
+  
+ 
   If Err Then
 		err.Clear
 		Set Conn = Nothing

@@ -35,7 +35,7 @@
                 %>
                  <%
                     for s=0 to splitlength 
-                        if splitvalue(s)="[3]" then 
+                        if splitvalue(s)="[3]" or splitvalue(s)="[33]" then 
                 %>
             	<a href="manage_customers.asp" <%if filename="manage_customers" then%>class="active1"<%end if%>><i class="icon icon-th-list"></i> <span>客户查询</span></a>
                 <%          exit for 
@@ -131,8 +131,8 @@
         </li>
         
     	
-        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_work_setrest" or filename="manage_daka" or filename="manage_work" or filename="manage_add_vacation" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
-        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_daka" or filename="manage_work" or filename="manage_work_setrest" or filename="manage_add_vacation" then%>style="display:inherit"<%end if%>>
+        <li><a href="javascript:;" id="sidebar_6" class="menu"><i class="icon <%if filename="manage_users" or filename="manage_Insurance_set" or filename="manage_work_setrest" or filename="manage_daka" or filename="manage_work" or filename="manage_add_vacation" then%>icon-chevron-up<%else%>icon-chevron-down<%end if%>"></i> <span>行政人事</span></a> 
+        	<div class="sidebar" id="menu6" <%if filename="manage_users" or filename="manage_Insurance_set" or filename="manage_daka" or filename="manage_work" or filename="manage_work_setrest" or filename="manage_add_vacation" then%>style="display:inherit"<%end if%>>
                 <%
                     for s=0 to splitlength 
                         if splitvalue(s)="[8]" then 
@@ -183,6 +183,7 @@
                         end if 
                     next
                 %>
+                <a href="manage_Insurance_set.asp" <%if filename="manage_Insurance_set" then%>class="active1"<%end if%>><i class="icon icon-user"></i> <span>员工保险设置</span></a>
             </div>
         </li>
         

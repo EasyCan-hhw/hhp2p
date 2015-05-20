@@ -35,16 +35,16 @@
                           <label class="control-label"><font color="red">*</font>&nbsp;员工工号:</label>
                              <div class="controls">
                               <% 
-                               'value="<%=request.cookies("hhp2p_cookies")("full_name")" disabled
+                               
                               %>
-                              <input type="text" id="work_number" class="half" name="work_number" />
+                              <input type="text" id="work_number" class="half" name="work_number" value="<%=request.cookies("hhp2p_cookies")("job_number")%>" disabled />
                                 <span id="work_number_err" class="err_text"></span>
                               </div>
                         </div>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;员工姓名:</label>
                             <div class="controls">
-                                <input type="text" id="work_name" class="half" name="work_name" />
+                                <input type="text" id="work_name" class="half" name="work_name" value="<%=request.cookies("hhp2p_cookies")("full_name")%>" disabled />
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                           </div>
                         </div>
                         <div id="dateSelect" style="display: none;" class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;日期选择:</label> 
+                            <label class="control-label"><font color="red"></font>&nbsp;日期选择:</label> 
                             <div class="controls">
                                 <input type="text" id="start_date" name="start_date" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" style="width:100px;"/>
                                 &nbsp;至&nbsp;
@@ -91,9 +91,8 @@
                             </div>
                         </div>-->
                         <div id="timeSelectEnd" style="display: none;" class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;日期选择:</label> 
+                            <label class="control-label"><font color="red"></font>&nbsp;日期选择:</label> 
                             <div class="controls">
-                                
                                 
                                 <input type="text" id="work_time_my" name="work_time_my" onFocus="WdatePicker({el:this})" autocomplete="off" class="span5" style="width:220px;"/>
                                 <span class="help-inline">格式：1970-01-01</span>
@@ -101,7 +100,7 @@
                             </div>
                         </div> 
                          <div id="hSelect" style="display: none;" class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;小&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时:</label> 
+                            <label class="control-label"><font color="red"></font>&nbsp;小&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;时:</label> 
                             <div class="controls">
                                 <input type="text" id="input_hour" name="input_hour" class="span5" style="width:220px;text-align:lift" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
                                 <span class="help-inline">只能填写整数</span>
@@ -109,13 +108,17 @@
                             </div>
                         </div> 
                         <div id="causeSelect" style="display: none;" class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</label> 
+                            <label class="control-label"><font color="red"></font>&nbsp;备&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;注:</label> 
                             <div class="controls">
                                 <input type="text" id="input_txt" name="input_txt" class="span5" style="width:220px;text-align:lift"/>
                                 <span class="help-inline">填写原因</span>
                                 <span id="work_name_err" class="err_text"></span>
                             </div>
                         </div> 
+                        <div style="display: none;">
+                             <input type="text" id="dateVlaur" name="dateVlaur" class="span5" value="<%=Year(now())&"-"&month(now())&"-"&day(now())&""%>"/>
+                        </div>
+                        
                         
                    <!-- <div class="control-group">
                       <label class="control-label">权限:</label>

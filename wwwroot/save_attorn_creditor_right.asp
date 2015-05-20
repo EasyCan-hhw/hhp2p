@@ -27,6 +27,7 @@ rs.Open "select * from customers where id="&cid,conn,1,1
 if not rs.eof then
 	passport=rs("passport")
 	full_name=rs("full_name")
+
 end if
 rs.close
 rs.Open "select * from products where product_name='"&product_name&"'",conn,1,1
@@ -58,6 +59,8 @@ if action="add" then
 			if rs(0)>=cdbl(capital) then
 				isample=1
 				creditor_right_id1=rs(1)
+				
+
 				exit do
 			end if
 		rs.movenext
@@ -76,6 +79,7 @@ if action="add" then
 						remaining_amount2=rs1(0)
 						creditor_right_id1=rs(1)
 						creditor_right_id2=rs1(2)
+						
 						exit for
 					end if
 				next
@@ -97,13 +101,18 @@ if action="add" then
 			response.write "3|根据所选匹配债权数计算，可匹配金额不足，无法完成债权分配。"
 			response.end
 	end if
+
+'response.write o_number&"*"&cid&"*"&passport&"*"&full_name&"*"&product_name&"*"&cycle&"*"&profit&"*"&start_date&"*"&request.cookies("hhp2p_cookies")("uid")&"*"&now()
+'response.end
+
+
 	sql = "Select * from contracts"
 	rs.Open sql,conn,1,3
 	rs.addnew
 	rs("number")=o_number
 	rs("cid")=cid
 	rs("passport")=passport
-	rs("full_name")=full_name
+	rs("c_name")=full_name
 	rs("product_name")=product_name
 	rs("cycle")=cycle
 	rs("profit")=profit
@@ -116,8 +125,9 @@ if action="add" then
 	'rs.bookmark = temp
 	rs.close
 	'getIdSql = "Select * from contracts where number ="&o_number
-	rs.Open "Select * from contracts where number ="&o_number,conn,1,3
+	rs.Open "Select * from contracts where number='"&o_number&"'",conn,1,3
 	if not rs.eof then
+
 	c_id=rs("id")
 	'response.write c_id
 	end if 
@@ -409,6 +419,40 @@ elseif action="approvals" then
 		next
 	end if
 end if
+
+
+if action="addhistory" then 
+			set rshistory=server.createobject("adodb.recordset")
+			rshistory.Open "select * from products where product_name='"&product_name&"' ",conn,1,1
+				historycycle=rshistory("cycle")
+				historyprofit=rshistory("profit")
+			rshistory.close
+			rshistory.Open "select * from customers where id="&cid&" ",conn,1,1
+				historypassport = rshistory("passport")
+				historyfull_name = rshistory("full_name")
+			rshistory.close
+			sql = "Select * from contracts"
+			rshistory.Open sql,conn,1,3
+			rshistory.addnew
+			rshistory("approval")=1
+			rshistory("approval_uid")=request.cookies("hhp2p_cookies")("uid")
+			rshistory("approval_date")=now()
+			rshistory("number")=o_number
+			rshistory("cid")=cid
+			rshistory("passport")=historypassport
+			rshistory("full_name")=historyfull_name
+			rshistory("product_name")=product_name
+			rshistory("cycle")=historycycle
+			rshistory("profit")=historyprofit
+			rshistory("capital")=capital
+			rshistory("start_date")=start_date
+			rshistory("add_uid")=request.cookies("hhp2p_cookies")("uid")
+			rshistory("inputdate")=now()
+			rshistory.update
+			rshistory.close
+			set rshistory=nothing
+			
+end if 
 	response.write "0|"
 	response.end
 

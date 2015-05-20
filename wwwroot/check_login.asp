@@ -10,6 +10,8 @@ if Request.Servervariables("REQUEST_METHOD")="POST" then
 
 username=Trim(SafeRequest("username"))
 password=md5(Trim(SafeRequest("password")))
+
+
 'remember=Trim(SafeRequest("remember"))
 
 'getcode=cstr(session("login_getcode"))
@@ -20,6 +22,7 @@ password=md5(Trim(SafeRequest("password")))
 	set rs=server.createobject("adodb.recordset")
 	sql = "Select * from users where username='"&username&"' and password='"&password&"'"
 	rs.Open sql,conn,1,1
+	
 	if rs.eof then
 		response.write "1|username|用户名或密码错误"
 	elseif rs("ifshow")=1 then
@@ -32,6 +35,8 @@ password=md5(Trim(SafeRequest("password")))
 		response.cookies("hhp2p_cookies")("job_number")=rs("job_number")
 		response.cookies("hhp2p_cookies")("job_id")=rs("job_id")
 		response.cookies("hhp2p_cookies")("company_id")=rs("company_id")
+		response.cookies("hhp2p_cookies")("company_code")=rs("company_code")
+		
 		response.write "0|index.asp"
 	end if
 	rs.close

@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -26,6 +24,14 @@
                 <div class="widget-content nopadding">
                   <span id="product_name_err" class="err_text"></span>
                   <form action="" method="post" class="form-horizontal" >
+                     <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>所属公司代码:</label>
+                            <div class="controls">
+                                <input type="text" id="company_id" name="company_id"  value="<%=requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))%>" class="span5" style="width:220px;" disabled/>
+                                
+                                <span id="vacation_date_err" class="err_text"></span>
+                            </div>
+                        </div>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>日期:</label>
                             <div class="controls">
@@ -183,9 +189,7 @@
             %>
                  </tbody>
                         </table> 
-                        <div style="margin-bottom: 20px;">
-                            <!--<span class="icon" style="cursor: pointer;" id="print_monthly_bill"> <i class="icon-print"></i> 批量打印</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                        </div>
+                        
       <%=showpage1%>
                   
                 </div>

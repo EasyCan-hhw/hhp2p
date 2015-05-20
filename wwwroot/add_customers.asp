@@ -162,7 +162,7 @@
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;银行账号:</label>
                             <div class="controls">
-                                <input type="text" id="bank_account" class="span5" name="bank_account"/>
+                                <input type="text" id="bank_account" class="span5" name="bank_account" name="creditor_right_value" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
                                 <span id="bank_account_err" class="err_text"></span>
                             </div>
                         </div>

@@ -1,6 +1,9 @@
 ﻿<!--#include file="head.asp" -->
+<!--#include file="company_function.asp"-->
 <%
+companyId = request.cookies("hhp2p_cookies")("company_id")
 
+companyCode = request.cookies("hhp2p_cookies")("company_code")
 
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
@@ -11,7 +14,7 @@ if not rs.eof then
 	full_name=rs("full_name")
     user_code=rs("user_code")
 	company_id=rs("company_id")
-    add_insurance=rs("add_insurance")
+    'add_insurance=rs("add_insurance")
 	job_id=rs("job_id")
     lead_user=rs("lead_user")
 	tel=rs("tel")
@@ -20,6 +23,8 @@ if not rs.eof then
 	email=rs("email")
     entry_date=rs("entry_date")
 	quanxian=rs("quanxian")
+    insurance_value=rs("add_insurance")
+    meal_value=rs("add_meal")
 end if
 rs.close
 set rs=nothing
@@ -101,6 +106,9 @@ end if
                             </div>
                         </div>
                         <div class="control-group">
+                        <%
+                              'response.write "select * from companys where company_code='"&request.cookies("hhp2p_cookies")("company_id")&"'  and company_code like '1%' order by id" 
+                        %>
                             <label class="control-label"><font color="red">*</font>&nbsp;所属分公司:</label>
                             <div class="controls">
                             	<div class="span5">
@@ -108,7 +116,12 @@ end if
                                     	<option value="" ></option>
 									    <%
 										set rs=server.CreateObject("adodb.recordset")
-										rs.Open "select * from companys where company_code like '1%' and company_count='' order by id" ,conn,1,1
+                                        if companyId = 1 then 
+                                            rs.Open "select * from companys where company_code like '1%'  order by id" ,conn,1,1
+                                        else 
+										  rs.Open "select * from companys where company_code='"&request.cookies("hhp2p_cookies")("company_id")&"' and company_code like '1%' order by id" ,conn,1,1
+
+                                        end if 
 										do while not rs.eof
                                             set rsSubRegion = server.CreateObject("adodb.recordset")
                                             sqlQuery = "select * from companys where company_count='"&rs("company_code")&"'"
@@ -124,17 +137,17 @@ end if
                                                 subRegionsIdAndNames = "none"
                                             end if
 										%>
-										<option id="companyId_<%=rs("id")%>"  subregions=<%=subRegionsIdAndNames%> unval="<%=rs("company_code")%>" value="<%=rs("id")%>" <%if rs("id")=company_id then%>selected<%end if%>><%=rs("company_name")%></option>
+										<option id="companyId_<%=rs("id")%>"  subregions=<%=subRegionsIdAndNames%> unval="<%=rs("company_code")%>" value="<%=rs("id")%>" <%if rs("company_code")=company_id then%>selected<%end if%>><%=rs("company_name")%></option>
 										<%
+                                        response.write "123=="&subregions
 										 rs.movenext
 										 loop
 										 rs.close
 										 set rs=nothing
 										%>
                                     </select>
-                                    
                                 </div>
-                                <span class="help-inline">从下拉菜单中选择分公司</span>
+                                <span class="help-inline">从下拉菜单中选择分公司(修改密码时需要重新选择下分公司)</span>
                                 <span id="company_id_err" class="err_text"></span>
                             </div>
                         </div>
@@ -145,23 +158,24 @@ end if
                                 <select id="company_porportion" name="company_porportion">  
                                         <option value="" ></option>
                                         <%
-                                        set rsc=server.CreateObject("adodb.recordset")
-                                        rsc.Open "select * from companys where company_code='"&company_code&"'" ,conn,1,1
-                                        if not rsc.eof then 
+                                        'set rsc=server.CreateObject("adodb.recordset")
+                                        'rsc.Open "select * from companys where company_code='"&company_code&"'" ,conn,1,1
+                                        'if not rsc.eof then 
                                         %>
-                                        <option value="<%=rsc("company_code")%>"  selected><%=rsc("company_name")%></option>
+                                        
                                         <%
-                                        else 
-                                        end if 
-                                        rsc.close
-                                         set rsc=nothing
+                                        'else 
+                                        'end if 
+                                        'rsc.close
+                                        '' set rsc=nothing
                                         %>
                                     </select>
                                 </div>
-                                <span class="help-inline">(没有请留空)请选择正确的下属分公司</span>
+                                <span class="help-inline">请选择正确的下属分公司(修改密码时需要重新选择下分公司!可不填)</span>
                                 <span id="company_porportion_err" class="err_text"></span>
                             </div>
                         </div>
+
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;职位:</label>
                             <div class="controls">
@@ -170,10 +184,14 @@ end if
                                     	<option value="" ></option>
 									    <%
 										set rs=server.CreateObject("adodb.recordset")
-										rs.Open "select * from jobs order by id" ,conn,1,1
+                                        if companyId = 1 then
+                                        rs.Open "select * from jobs  order by id" ,conn,1,1
+                                        else 
+										rs.Open "select * from jobs where company_id='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' order by id" ,conn,1,1
+                                        end if 
 										do while not rs.eof
 										%>
-										<option value="<%=rs("id")%>" <%if rs("id")=job_id then%>selected<%end if%>><%=rs("job_name")%></option>
+										<option value="<%=rs("id")%>" <%if rs("id")=job_id then%>selected<%end if%>><%=rs("job_name")&"("&rs("company_id")&")"%></option>
 										<%
 										 rs.movenext
 										 loop
@@ -187,6 +205,9 @@ end if
                             </div>
                         </div>
                          <div class="control-group">
+                            <%
+                              'response.write   "select * from users where (company_id="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" or company_code='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"') order by uid"
+                            %>
                             <label class="control-label">&nbsp;上级:</label>
                             <div class="controls">
                                 <div class="span5">
@@ -194,10 +215,10 @@ end if
                                         <option value="" ></option>
                                         <%
                                         set rs=server.CreateObject("adodb.recordset")
-                                        rs.Open "select * from users order by uid" ,conn,1,1
+                                        rs.Open "select * from users where (company_id="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" or company_code='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"') order by uid" ,conn,1,1
                                         do while not rs.eof
                                         %>
-                                        <option value="<%=rs("job_number")%>" <%if rs("job_number")=lead_user then%>selected<%end if%>><%=rs("full_name")%></option>
+                                        <option value="<%=rs("job_number")%>" <%if rs("job_number")=lead_user then%>selected<%end if%>><%=rs("full_name")&"("&requestCompanyjudge(rs("job_number"))&")"%></option>
                                         <%
                                          rs.movenext
                                          loop
@@ -239,59 +260,70 @@ end if
                                 <span id="entry_date_err" class="err_text"></span>
                             </div>
                         </div>
+                       
                         <!--<div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;户籍:</label>
-                            <div class="controls">
-                            	<div class="span5">
-                                <select id="census_register" name="census_register">
-                                		<option value=""></option>
-                                    	<option value="本地城镇">本地城镇</option>
-                                        <option value="本地农村">本地农村</option>
-                                        <option value="外地城镇">外地城镇</option>
-                                        <option value="外地农村">外地农村</option>
-                                </select>
-                                </div>
-                                <span class="help-inline">从下拉菜单中选择户籍状况</span>
-                                <span id="census_register_err" class="err_text"></span>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label class="control-label"><font color="red">*</font>&nbsp;加金:</label>
-                            <div class="controls">
-                            	<div class="span5">
-                                <select id="add_gold" name="add_gold">
-                                		<option value=""></option>
-                                    	<option value="0">非农业</option>
-                                        <option value="1">农业</option>
-                                </select>
-                                </div>
-                                <span class="help-inline">从下拉菜单中选择加金状况</span>
-                                <span id="add_gold_err" class="err_text"></span>
-                            </div>
-                        </div>-->
-                        <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;保险:</label>
                             <div class="controls">
                                 <div class="span5">
                                 <select id="add_insurance" name="add_insurance">
                                         <option value=""></option>
-                                        <option value="1" <%if add_insurance=1 then%>selected<%end if%>>交城镇保险</option>
-                                        <option value="2" <%if add_insurance=2 then%>selected<%end if%>>交农村保险</option>
-                                        <option value="3" <%if add_insurance=3 then%>selected<%end if%>>不交保险</option>
+                                        <option value="1" >交城镇保险</option>
+                                        <option value="2" >交农村保险</option>
+                                        <option value="3" >不交保险</option>
                                 </select>
                                 </div>
                                 <span class="help-inline">从下拉菜单中选择保险状况</span>
                                 <span id="add_insurance_err" class="err_text"></span>
                             </div>
+                        </div>-->
+                        <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;餐补:</label>
+                            <div class="controls">
+                                <div class="span5">
+                                <select id="add_meal" name="add_meal">
+                                        <option value=""></option>
+                                        <option value="1" <%if meal_value=1 then%>selected<%end if%>>没有餐补</option>
+                                        <option value="2" <%if meal_value=2 then%>selected<%end if%>>有餐补</option>
+                                </select>
+                                </div>
+                                <span class="help-inline">从下拉菜单中选择餐补状况</span>
+                                <span id="add_meal_err" class="err_text"></span>
+                            </div>
                         </div>
+                         <div class="control-group">
+                            <label class="control-label">保险:</label>
+                            <div class="controls">
+                                <table>
+                                    <tr><td><input name="checkbox_all_insurance" type="checkbox" id="checkbox_all_insurance" onClick="check_all('checkbox_all_insurance','insurance')">&nbsp;&nbsp; 全选&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
+                                    <tr >
+                                    <%  
+                                         set rs=server.CreateObject("adodb.recordset")
+                                        rs.Open "select * from insurance_set where insurance_company="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"  order by iid" ,conn,1,1
+                                        if rs.eof then
+                                        response.write "无保险信息"
+                                        else 
+                                        do while not rs.eof
+                                        iid = rs("iid")
+                                    %>
+                                     <td text-align="center"><input type="checkbox" id="insurance" name="insurance" value="<%=rs("iid")%>" <%if InStr(insurance_value,iid)>0 then%>checked<%end if%>/>&nbsp;&nbsp;<%=rs("insurance_name")%>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                    <%
+                                         rs.movenext
+                                         loop
+                                         end if 
+                                         rs.close
+                                         set rs=nothing
+                                    %>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                         
                         <%
                              quanxianString = request.cookies("hhp2p_cookies")("quanxian")
                                 splitvalue = split(quanxianString,",")
                                 splitlength = ubound(splitvalue)
-
                             for s=0 to splitlength 
                                 if splitvalue(s)="[29]" then 
-                
                         %>
                         <div class="control-group">
                           <label class="control-label">权限:</label>
@@ -299,12 +331,11 @@ end if
                           <table>
                           <tr>
                             <td><input name="checkbox_all" type="checkbox" id="checkbox_all" onClick="check_all('checkbox_all','quanxian')"> 全选&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td>
+                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[1]" <%if InStr(quanxian,"[1]")>0 then%>checked<%end if%>> 目标客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[2]" <%if InStr(quanxian,"[2]")>0 then%>checked<%end if%>> 正式客户添加&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[3]" <%if InStr(quanxian,"[3]")>0 then%>checked<%end if%>> 客户查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                            <td><input name="quanxian" type="checkbox" id="quanxian" value="[3]" <%if InStr(quanxian,"[3]")>0 then%>checked<%end if%>> 所在公司客户查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[4]" <%if InStr(quanxian,"[4]")>0 then%>checked<%end if%>> 一般借贷申请&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[5]" <%if InStr(quanxian,"[5]")>0 then%>checked<%end if%>> 债权查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
-
                         </tr>
                         <tr>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[6]" <%if InStr(quanxian,"[6]")>0 then%>checked<%end if%>> 债权转让&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -342,7 +373,7 @@ end if
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[30]" <%if InStr(quanxian,"[30]")>0 then%>checked<%end if%>> 财务请款&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[31]" <%if InStr(quanxian,"[31]")>0 then%>checked<%end if%>> 财务请款审批&nbsp;&nbsp;&nbsp;&nbsp;</td>
                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[29]" <%if InStr(quanxian,"[29]")>0 then%>checked<%end if%>> 员工权限管理&nbsp;&nbsp;&nbsp;&nbsp;</td>
-                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[32]" <%if InStr(quanxian,"[32]")>0 then%>checked<%end if%>> 正式客户资料&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                             <td><input name="quanxian" type="checkbox" id="quanxian" value="[33]" <%if InStr(quanxian,"[33]")>0 then%>checked<%end if%>> 自身客户查询&nbsp;&nbsp;&nbsp;&nbsp;</td>
                         </tr>
                             </table>
                             <span class="help-inline"></span>
@@ -379,8 +410,8 @@ end if
                         <table class="table table-bordered table-striped with-check">
                             <thead>
                             <tr>
-                                <th  width="10%">用户名</th>
-                                <th nowrap="nowrap">工号</th>
+                                <th nowrap="nowrap"   width="10%">用户名</th>
+                                <th >工号</th>
                                 <th>姓名</th>
                                 <th>分公司</th>
                                 <th>职位</th>
@@ -393,18 +424,24 @@ end if
                             </thead>
                             <tbody>
             <%
-if trim(request("username"))<>"" then username=" and username='"&trim(request("username"))&"'"
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
-if trim(request("company_id"))<>"" then company_id=" and company_id="&trim(request("company_id"))
-if trim(request("job_id"))<>"" then job_id=" and job_id="&trim(request("job_id"))
-if trim(request("lead_user"))<>"" then lead_user= " and lead_user="&trim(request("lead_user"))
-if trim(request("tel"))<>"" then tel=" and tel='"&trim(request("tel"))&"'"
-if trim(request("qq"))<>"" then qq=" and qq='"&trim(request("qq"))&"'"
-if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"'"
+                if trim(request("job_numberS"))<>"" then job_numberS=" and job_number='"&trim(request("job_numberS"))&"'"
+                if trim(request("username"))<>"" then username=" and username='"&trim(request("username"))&"'"
+                if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
+                if trim(request("company_id"))<>"" then company_id=" and company_id="&trim(request("company_id"))
+                if trim(request("job_id"))<>"" then job_id=" and job_id="&trim(request("job_id"))
+                if trim(request("lead_user"))<>"" then lead_user= " and lead_user="&trim(request("lead_user"))
+                if trim(request("tel"))<>"" then tel=" and tel='"&trim(request("tel"))&"'"
+                if trim(request("qq"))<>"" then qq=" and qq='"&trim(request("qq"))&"'"
+                if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"'"
 
 				err_txt="<tr><td colspan=""9"">没有员工</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from users where uid>0"&username&full_name&company_id&job_id&tel&qq&email&" order by uid desc",conn,1,1
+            
+            if companyId = 1 then 
+            rs.Open "select * from users where uid>0"&job_numberS&username&full_name&job_id&tel&qq&email&" order by uid desc",conn,1,1
+            else 
+			rs.Open "select * from users where uid>0"&job_numberS&username&full_name&job_id&tel&qq&email&" and (company_id="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" or company_code='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"')  order by uid desc",conn,1,1
+            end if 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if

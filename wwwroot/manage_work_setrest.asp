@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -36,14 +34,14 @@ if not rs.eof then
                             <div class="controls">
                             <%if rs("approval")=1 then%>
                             <input type="text" id="cid" class="span5" name="cid" value="<%
-                set rs1=server.createobject("adodb.recordset")
-                rs1.Open "select * from customers where id="&rs("cid"),conn,1,1
-                if not rs1.eof then
-                  response.Write rs1("passport")&"（"&rs1("full_name")&"）"
-                end if
-                rs1.close
-                set rs1=nothing
-                %>" disabled/>
+                            set rs1=server.createobject("adodb.recordset")
+                            rs1.Open "select * from customers where id="&rs("cid"),conn,1,1
+                            if not rs1.eof then
+                              response.Write rs1("passport")&"（"&rs1("full_name")&"）"
+                            end if
+                            rs1.close
+                            set rs1=nothing
+                            %>" disabled/>
                             <%else%>
                               <div class="span5">
                                 <select id="cid" name="cid">
@@ -167,14 +165,12 @@ if not rs.eof then
 
 
 
-
 <%
 end if
 rs.close
 set rs=nothing
 else
 %>
-
         
         <div class="row-fluid">
             <div class="span12">
@@ -185,7 +181,13 @@ else
                 <div class="widget-content nopadding">
                   <span id="product_name_err" class="err_text"></span>
                   <form action="" method="post" class="form-horizontal" >
-                        
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;所属分公司代码:</label>
+                            <div class="controls">
+                                <input type="text" id="company_number" value="<%=requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))%>" class="span5" name="company_number" style="width:220px;high:100px;" disabled/>
+                                <span id="vacation_cause_err" class="err_text"></span>
+                            </div>
+                        </div>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>填写月份:</label>
                             <div class="controls">
@@ -255,7 +257,7 @@ else
             <%
       err_txt="<tr><td colspan=""12"">没有作息信息</td></tr>"
       set rs=server.CreateObject("adodb.recordset")
-      rs.Open "select * from setrest_worktime order by sid",conn,1,1
+      rs.Open "select * from setrest_worktime where company_number="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" order by sid",conn,1,1
 
        if err.number<>0 or rs.eof then
           response.write err_txt
@@ -332,9 +334,7 @@ else
             %>
                  </tbody>
                         </table> 
-                        <div style="margin-bottom: 20px;">
-                            <!--<span class="icon" style="cursor: pointer;" id="print_monthly_bill"> <i class="icon-print"></i> 批量打印</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
-                        </div>
+                       
       <%=showpage1%>
                   
                 </div>

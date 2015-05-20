@@ -1,7 +1,6 @@
 ﻿<!--#include file="head.asp" -->
-<%
 
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -29,6 +28,30 @@
                             <div class="controls">
                                 <input type="text" id="job_name" class="half" name="job_name"/>
                                 <span id="job_name_err" class="err_text"></span>
+                            </div>
+                        </div>
+                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;公司代码:</label>
+                            <div class="controls">
+                              <div class="span5">
+                                <select id="company_id_jobs" name="company_id_jobs" style="width:220px">
+                                      <option value="" ></option>
+                                        <%
+                                        set rscompany=server.CreateObject("adodb.recordset")
+                                        rscompany.Open "select * from companys order by id" ,conn,1,1
+                                        do while not rscompany.eof
+                                        %>
+                                        <option value="<%=rscompany("company_code")%>" ><%=rscompany("company_name")&"（"&rscompany("company_code")&"）"%></option>
+                                        <%
+                                         rscompany.movenext
+                                         loop
+                                         rscompany.close
+                                         set rscompany=nothing
+                                        %>
+                                    </select>
+                                </div>
+                                
+                                <span id="company_id_jobs_err" class="err_text"></span>
                             </div>
                         </div>
                         <div class="control-group">
@@ -90,19 +113,28 @@
                             <thead>
                             <tr>
                                
-                                <th width="20%">职位名称</th>
-                                <th width="20%">基本工资</th>
-                                 <th width="20%">绩效低金</th>
-                                 <th width="20%">月考核绩效</th>
-                                <th width="20%">操作</th>
+                                <th >职位名称</th>
+                                <th >基本工资</th>
+                                 <th >绩效低金</th>
+                                 <th >月考核绩效</th>
+                                 <th >所属分公司代码</th>
+                                <th >操作</th>
                             </tr>
                             </thead>
                             <tbody>
                      <%
-
-                  				err_txt="<tr><td colspan=""3"">没有职位</td></tr>"
+                        requestCompanyID = request.cookies("hhp2p_cookies")("uid")
+                       requestCompanyparent =  requestCompany(requestCompanyID).parentCompany
+                       requestCompanybranch =  requestCompany(requestCompanyID).branchCompany
+                       dim CompanyCode 
+                       if cint(requestCompanybranch) = 0 then 
+                          CompanyCode = cint(requestCompanyparent)
+                       else 
+                          CompanyCode = cint(requestCompanybranch)
+                       end if 
+                  			err_txt="<tr><td colspan=""3"">没有职位</td></tr>"
                   			set rs=server.CreateObject("adodb.recordset")
-                  			rs.Open "select * from jobs order by month_money",conn,1,1
+                  			rs.Open "select * from jobs where company_id="&CompanyCode&" order by month_money",conn,1,1
                   		   	if err.number<>0 or rs.eof then
                   				response.write err_txt
                   			end if
@@ -162,6 +194,11 @@
                             <input name="month_money<%=int(rs("id"))%>" id="month_money<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("month_money"))%>">
                             &nbsp;<span class="help-inline">(单位:万)</span>
                           </td>
+                          <td style="vertical-align: middle;text-align:center">
+
+                            <input name="company_id<%=int(rs("id"))%>" id="company_id<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_id"))%>" disabled>
+                            &nbsp;<span class="help-inline">所属分公司代码</span>
+                          </td>
                         <!--  <td style="vertical-align: middle;">
                               <div style="float:left; width:140px;">
                                 <input name="checkbox_all< /=int(rs("id"))%>" type="checkbox" id="checkbox_all< /=int(rs("id"))%>" onClick="check_all('checkbox_all< /=int(rs("id"))%>','quanxian< /=int(rs("id"))%>')"> 
@@ -181,7 +218,7 @@
                         
                          <td style="vertical-align: middle; text-align:center">
                                <a href="javascript:;" id="job_edit_<%=int(rs("id"))%>" class="job_edit">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                              <a href="javascript:;" id="job_del_<%=int(rs("id"))%>" class="job_del">删除</a>
+                              <!--<a href="javascript:;" id="job_del_=int(rs("id"))" class="job_del">删除</a>-->
                         </td>
                    </tr>
             <%

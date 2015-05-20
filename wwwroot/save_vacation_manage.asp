@@ -18,21 +18,23 @@ vid=Trim(SafeRequest("vid"))
 vacation_date=Trim(SafeRequest("vacation_date"))
 vacation_type=Trim(SafeRequest("vacation_type"))
 vacation_cause=Trim(SafeRequest("vacation_cause"))
+company_number=Trim(SafeRequest("company_number"))
 
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
-	rs.Open "select * from vacation_manage where vacation_date='"&vacation_date&"'",conn,1,1
-	if not rs.eof then
-		response.write "1|vacation_date| 日期已存在"
-		response.end
-	end if 
-	rs.close
+	'rs.Open "select * from vacation_manage where vacation_date='"&vacation_date&"'",conn,1,1
+	'if not rs.eof then
+	''	response.write "1|vacation_date| 日期已存在"
+	''	response.end
+	'end if 
+	'rs.close
 	sql = "Select * from vacation_manage"
 	rs.Open sql,conn,1,3
 	rs.addnew
 	rs("vacation_date")=vacation_date
 	rs("vacation_type")=vacation_type
 	rs("vacation_cause")=vacation_cause
+	rs("company_number")=company_number
 	rs.update
 	rs.close
 	set rs=nothing

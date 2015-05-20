@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -185,6 +183,13 @@ else
                 <div class="widget-content nopadding">
                   <span id="product_name_err" class="err_text"></span>
                   <form action="" method="post" class="form-horizontal" >
+                         <div class="control-group">
+                            <label class="control-label">&nbsp;所属分公司代码:</label>
+                            <div class="controls">
+                                <input type="text" id="company_number1" class="span5" name="company_number1" value="<%=requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))%>" style="width:220px;high:100px;" disabled/>
+                                <span id="vacation_cause_err" class="err_text"></span>
+                            </div>
+                        </div>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>选择日期:</label>
                             <div class="controls">
@@ -245,7 +250,7 @@ else
             <%
       err_txt="<tr><td colspan=""12"">没有假期信息</td></tr>"
       set rs=server.CreateObject("adodb.recordset")
-      rs.Open "select * from vacation_manage order by vacation_date desc",conn,1,1
+      rs.Open "select * from vacation_manage where company_number="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"  order by vacation_date desc",conn,1,1
 
        if err.number<>0 or rs.eof then
           response.write err_txt
@@ -318,9 +323,7 @@ else
             %>
                  </tbody>
                         </table> 
-                        <div style="margin-bottom: 20px;">
-                            <span class="icon" style="cursor: pointer;" id="print_monthly_bill"> <i class="icon-print"></i> 批量打印</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </div>
+                        
       <%=showpage1%>
                   
                 </div>

@@ -11,45 +11,32 @@ if Request.Servervariables("REQUEST_METHOD")="POST" then
 		response.write "2|"
 		response.end
 	end if
-
 	action=SafeRequest("action")
-	myvalue=Trim(SafeRequest("myvalue"))
-	job_number=Trim(SafeRequest("job_number"))
-	username=Trim(SafeRequest("username"))
-	work_date=Trim(SafeRequest("work_date"))
-	start_time=Trim(SafeRequest("start_time"))
-	end_time=Trim(SafeRequest("end_time"))
-	work_id=Trim(SafeRequest("work_id"))
-	j_number=Trim(SafeRequest("j_number"))
+	insurance_name=SafeRequest("insurance_name")
+	insurance_money=Trim(SafeRequest("insurance_money"))
+	insurance_company=Trim(SafeRequest("insurance_company"))
+	id=Trim(SafeRequest("id"))
 
 	if action="add" then
+	response.write insurance_name&"-"&insurance_money&"-"&insurance_company
 		set rs=server.createobject("adodb.recordset")
-		rs.Open "select * from users where job_number='"&job_number&"'",conn,1,1
-		if rs.eof then
-			response.write "1|product_name|不存在该员工"
-			response.end
-		end if
-		rs.close
-
-		sql = "Select * from work_attendance"
+		sql = "Select * from insurance_set"
 		rs.Open sql,conn,1,3
 		rs.addnew
-		rs("job_number")=job_number
-		rs("username")=username
-		rs("work_date")=work_date
-		rs("start_time")=start_time
-		rs("end_time")=end_time
+		rs("insurance_name")=insurance_name
+		rs("insurance_money")=insurance_money
+		rs("insurance_company")=insurance_company
 		rs.update
 		rs.close
 		set rs=nothing
 
 	elseif action="edit" then
 
-	 	conn.execute "update work_attendance set username='"&username&"',work_date='"&work_date&"',start_time="&start_time&",end_time="&end_time&" where work_id="&work_id
+	 	conn.execute "update insurance_set set insurance_name='"&insurance_name&"',insurance_money='"&insurance_money&"',insurance_company="&insurance_company&" where iid="&id
 
 	elseif action="del" then
 
-		conn.execute "delete from work_attendance where work_id="&work_id
+		conn.execute "delete from insurance_set where iid="&id
 
 	elseif action ="sele" then
 		

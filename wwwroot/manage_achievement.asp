@@ -1,7 +1,6 @@
 ﻿<!--#include file="head.asp" -->
+<!--#include file="company_function.asp"-->
 <%
-
-
 if id<>"" then
 set rs=server.CreateObject("adodb.recordset")
 rs.Open "select * from users where uid="&id,conn,1,1
@@ -152,7 +151,7 @@ if trim(request("email"))<>"" then email=" and email='"&trim(request("email"))&"
 
 				err_txt="<tr><td colspan=""10"">没有员工</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from users where uid>0"&username&full_name&company_id&job_id&tel&qq&email&" order by uid desc",conn,1,1
+			rs.Open "select * from users where uid>0"&username&full_name&company_id&job_id&tel&qq&email&" and (company_id="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" or company_code='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"') order by uid desc",conn,1,1
 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt

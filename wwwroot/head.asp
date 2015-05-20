@@ -8,6 +8,7 @@ end if
 <!DOCTYPE html>
 <html lang="en">
 <head>
+ <head>
     <title>《行行贷》ERP管理系统</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -26,6 +27,10 @@ end if
 <script src="js/js.js"></script>
 <script src="js/mjs.js"></script>
 <script type="text/javascript" src="DatePicker/WdatePicker.js"></script>
+
+
+
+
 
 </head>
 
@@ -56,6 +61,8 @@ end if
         </li>
         <li class=""><a title="" href="#"><i class="icon icon-cog"></i> <span class="text">Settings</span></a></li> -->
         <li class=""><a title="" href="logout.asp"><i class="icon icon-share-alt"></i> <span class="text">退出</span></a></li>
+        <!--<li class=""><a target="_blank" href="tencent://message/?uin=501954747”+“QQ”+“&Site=www.qq.com.cn&Menu=yes"><img border="0" src="http://wpa.qq.com/pa?p=2:501954747:54" alt="点击联系我" title="点击联系我2"/></a></li>-->
+        <li class=""><a href="####" title="" onclick="_add()"> <span class="text">修改密码</span></a></li>
     </ul>
 </div>
 <!--close-top-Header-menu-->

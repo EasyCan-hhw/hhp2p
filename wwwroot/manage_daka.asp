@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -13,9 +11,6 @@
     <!--End-breadcrumbs-->
 
     <div class="container-fluid">
-
-
-
         
         <div class="row-fluid">
             <div class="span12">
@@ -50,7 +45,7 @@
                             </div>
                         </div>
                         
-                        
+                      
                        
                         <div class="control-group">
                             <label class="control-label">&nbsp;打卡时间:</label>
@@ -66,7 +61,7 @@
                               set rs=server.CreateObject("adodb.recordset")
                              rs.Open "select * from setrest_worktime where setrest_year='"&nowtime&"' order by sid desc",conn,1,1
                              if not rs.eof then 
-                             Sh = rs("start_worktime")/60 
+                             Sh = int(rs("start_worktime")/60) 
                              Sm = rs("start_worktime") mod 60
                              Eh = rs("end_worktime")/60 
                              Em = rs("end_worktime") mod 60
@@ -125,8 +120,11 @@
                             <tbody>
             <%
 			err_txt="<tr><td colspan=""12"">没有员工录入信息</td></tr>"
+      jobNumber = request.cookies("hhp2p_cookies")("job_number")
+      'requestCompanyjudge(jobNumber) 获取分公司代码
+      'response.write "select * from work_attendance inner join users on work_attendance.job_number = users.job_number and (users.company_code='"&requestCompanyjudge(jobNumber)&"' or users.company_id = "&requestCompanyjudge(jobNumber)&") order by work_id desc"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from work_attendance order by work_id desc",conn,1,1
+			rs.Open "select * from work_attendance inner join users on work_attendance.job_number = users.job_number and (users.company_code='"&requestCompanyjudge(jobNumber)&"' or users.company_id = "&requestCompanyjudge(jobNumber)&") order by work_id desc",conn,1,1
 
 		   if err.number<>0 or rs.eof then
   				response.write err_txt
@@ -169,7 +167,7 @@
 	                                  <%=trim(rs("job_number"))%>
 	                                </td>
 	                                <td style="vertical-align: middle;text-align:center">
-	                                  <input name="username<%=int(rs("work_id"))%>" id="username<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("username"))%>" style="text-align:center;width:60px"/> 
+	                                  <input name="username<%=int(rs("work_id"))%>" id="username<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("full_name"))%>" style="text-align:center;width:60px"/> 
 	                                  </td>
 	                                <td style="vertical-align: middle;text-align:center">
 	                                  <input name="work_date<%=int(rs("work_id"))%>" id="work_date<%=int(rs("work_id"))%>" class="half" type="text" value="<%=trim(rs("work_date"))%>" style="text-align:center;width:100px"/>
@@ -201,9 +199,7 @@
             %>
                  </tbody>
                         </table> 
-                        <div style="margin-bottom: 20px;">
-                            <span class="icon" style="cursor: pointer;" id="print_monthly_bill"> <i class="icon-print"></i> 批量打印</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        </div>
+                        
 			<%=showpage1%>
                   
                 </div>

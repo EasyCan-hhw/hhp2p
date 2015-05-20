@@ -1,6 +1,6 @@
 ﻿<!--#include file="head.asp" -->
-<%
-%>
+<!--#include file="getunderling_function.asp"-->
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -23,14 +23,24 @@
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
                   <input type="hidden" id="id" value="">
                         <div class="control-group">
+                           <%
+                           '' response.write "select * from customers where uid in ("&requestUnderlingUid(request.cookies("hhp2p_cookies")("uid"))&""&request.cookies("hhp2p_cookies")("uid")&") order by id"
+                           %>
                             <label class="control-label"><font color="red">*</font>&nbsp;客户身份证号(姓名):</label>
                             <div class="controls">
                             	<div class="span5">
                                 <select id="cid" name="cid">
                                     	<option value=""></option>
                                 <%
+
 								set rs=server.createobject("adodb.recordset")
-								rs.Open "select * from customers order by id",conn,1,1
+                                if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then 
+								    rs.Open "select * from customers order by id",conn,1,1
+                                else 
+                                    
+                                 'rs.Open "select * from customers where uid in ("&requestUnderlingUid(request.cookies("hhp2p_cookies")("uid"))&""&request.cookies("hhp2p_cookies")("uid")&") order by id",conn,1,1
+                                    rs.Open "select customers.full_name,customers.mobile,customers.id,customers.passport from customers inner join users  on customers.uid = users.uid and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" ) order by id desc",conn,1,1 '只允许查看自己所属公司的所有客户客户信息'
+                                end if 
 								do while not rs.eof
 								%>
                                     	<option value="<%=rs("id")%>"><%=rs("passport")&"（"&rs("full_name")&"）"%></option>
@@ -45,6 +55,9 @@
                                 <span id="cid_err" class="err_text"></span>
                             </div>
                         </div>
+                        <%
+                            'response.write "select * from customers inner join users  on customers.uid = users.uid and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" ) order by id desc"
+                        %>
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;合同编号:</label>
                             <div class="controls">
@@ -119,7 +132,8 @@
                     <div class="form-actions">
                           <label class="control-label"></label>
                           <button id="attorn_creditor_right_submit" type="submit" class="btn btn-primary">债权匹配</button>
-                          <button id="edit_attorn_creditor_right_submit" type="button" class="btn btn-primary" style="display:none">再次匹配债权</button>
+                         <!-- <button id="attorn_creditor_right_history_submit" type="submit" class="btn btn-primary">历史账单添加</button>-->
+                          <!--<button id="edit_attorn_creditor_right_submit" type="button" class="btn btn-primary" style="display:none">再次匹配债权</button>-->
                           <button id="confirm_attorn_creditor_right_submit" type="submit" class="btn btn-primary" style="display:none">债权确认</button>
                       </div>
                   </form>

@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -194,13 +192,16 @@ else
                             </thead>
                             <tbody>
                           <%
-                        if trim(request("sel_mwork_number"))<>"" then sel_mwork_number=" and mwork_number='"&trim(request("sel_mwork_number"))&"'"
-                        if trim(request("sel_mwork_name"))<>"" then sel_mwork_name=" and mwork_name='"&trim(request("sel_mwork_name"))&"'"
-                        if trim(request("sel_mwork_tody"))<>"" then sel_mwork_tody=" and mwork_tody='"&trim(request("sel_mwork_tody"))&"'"
-                        if trim(request("sel_mwork_type"))<>"" then sel_mwork_type=" and mwork_type='"&trim(request("sel_mwork_type"))&"'"
+                        if trim(request("sel_mwork_number"))<>"" then sel_mwork_number=" and work_application_message.mwork_number='"&trim(request("sel_mwork_number"))&"'"
+                        if trim(request("sel_mwork_name"))<>"" then sel_mwork_name=" and work_application_message.mwork_name='"&trim(request("sel_mwork_name"))&"'"
+                        if trim(request("sel_mwork_tody"))<>"" then sel_mwork_tody=" and work_application_message.mwork_tody='"&trim(request("sel_mwork_tody"))&"'"
+                        if trim(request("sel_mwork_type"))<>"" then sel_mwork_type=" and work_application_message.mwork_type='"&trim(request("sel_mwork_type"))&"'"
         err_txt="<tr><td colspan=""8"">没有待审批的债权</td></tr>"
+
       set rs=server.CreateObject("adodb.recordset")
-      rs.Open "select * from work_application_message where mwork_tody IS NOT NULL  "&sel_mwork_number&sel_mwork_name&sel_mwork_tody&sel_mwork_type&" order by wid",conn,1,1
+      rs.Open "select * from work_application_message inner join users on work_application_message.mwork_number = users.job_number and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&") "&sel_mwork_number&sel_mwork_name&sel_mwork_tody&sel_mwork_type&" order by wid ",conn,1,1
+      'rs.Open "select * from work_application_message where mwork_tody IS NOT NULL  "&sel_mwork_number&sel_mwork_name&sel_mwork_tody&sel_mwork_type&" order by wid",conn,1,1
+      'select * from work_application_message inner join users on work_attendance.mwork_number = users.job_number and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number")&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number")&") order by wid desc
 
         if err.number<>0 or rs.eof then
         response.write err_txt

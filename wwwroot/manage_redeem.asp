@@ -1,8 +1,6 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-
-%>
+<!--#include file="getunderling_function.asp"-->
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -135,8 +133,12 @@ if trim(request("status"))<>"" then status=" and approval_redeem="&trim(request(
 
 				err_txt="<tr><td colspan=""10"">没有债权转让赎回信息</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from contracts where redeem=1"&numbers&full_name&passport&product_name&date1&date2&status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
-
+      if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then 
+        rs.Open "select * from contracts where redeem=1"&numbers&full_name&passport&product_name&date1&date2&status&" order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
+      else 
+			 rs.Open "select * from contracts where redeem=1"&numbers&full_name&passport&product_name&date1&date2&status&" and job_number in ("&requestUnderlingjobnumber(request.cookies("hhp2p_cookies")("job_number"))&"'"&request.cookies("hhp2p_cookies")("job_number")&"') order by datediff(d,'"&now()&"',start_date),approval desc",conn,1,1
+      end if 
+    
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if

@@ -1,7 +1,5 @@
 <!--#include file="head.asp" -->
-<%
-
-%>
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -23,6 +21,13 @@
                 <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
                         <div class="control-group">
+                            <label class="control-label"><font color="red">*</font>&nbsp;所属公司:</label>
+                            <div class="controls">
+                                <input type="text" id="companyId" class="half" name="companyId" value="<%=requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))%>" style="width:320px" disabled/> 
+                                <span id="b_bscale_err" class="err_text"></span>
+                            </div>
+                        </div>
+                        <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;职位选择:</label>
                             <div class="controls">
                               <div class="span5" style="width:320px">
@@ -30,7 +35,7 @@
                                       <option value="" ></option>
                                         <%
                                       set rs=server.CreateObject("adodb.recordset")
-                                      rs.Open "select * from jobs  order by id" ,conn,1,1
+                                      rs.Open "select * from jobs where company_id="&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" order by id" ,conn,1,1
                                       do while not rs.eof
                                       %>
                                       <option value="<%=rs("id")%>" ><%=rs("job_name")%></option>
@@ -124,7 +129,7 @@
             <%
 				err_txt="<tr><td colspan=""5"">没有添加提佣区间</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from brokerage_section order by bid",conn,1,1
+			rs.Open "select * from brokerage_section where company_id='"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' order by bid",conn,1,1
 
   		  if err.number<>0 or rs.eof then
   				response.write err_txt

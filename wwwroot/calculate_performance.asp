@@ -14,7 +14,7 @@ function performence(selectDate)
      	redim onePerformance(4)
      	onePerformance(0) = rsUserJob("job_number")
      	
-	    onePerformance(1) = getSelfPerformance(rsUserJob("job_number"),rsUserJob("user_code")) '调用方法拿到自己的业绩'
+	    onePerformance(1) = getSelfPerformance(rsUserJob("job_number"),rsUserJob("user_code"),selectDate) '调用方法拿到自己的业绩'
 	    set rsUserList=server.createobject("adodb.recordset")
      	rsUserList.Open "select * from users where lead_user ="&rsUserJob("job_number"),conn,1,1
 	     	dim jobNumberArray
@@ -71,9 +71,9 @@ function performence(selectDate)
 end function
 
 	'计算自己业绩的function'
-function getSelfPerformance(jobNumber,user_code)
+function getSelfPerformance(jobNumber,user_code,inputdate)
 	set rsPerfomanceList=server.createobject("adodb.recordset")
-	rsPerfomanceList.Open "select * from contracts where job_number="&jobNumber,conn,1,1
+	rsPerfomanceList.Open "select * from contracts where job_number="&jobNumber&" and Convert(varchar,approval_date,120) like "&inputdate&"",conn,1,1
 	selfPerformance = 0
 	
 	for index = 0 to rsPerfomanceList.recordcount - 1
@@ -144,18 +144,18 @@ function sumSection(jobid,sumPerformence,jobBoolean)
 end function
 
 '计算下级业绩'
-function ordinatesPerformence(job_number)
+function ordinatesPerformence(job_number,inputdate)
 	sumPerformences = 0
-	sumPerformences =  sumPerformences + getmySelfPerformence(job_number)
+	sumPerformences =  sumPerformences + getmySelfPerformence(job_number,inputdate)
 	
 
 	set rsSubordinates=server.CreateObject("adodb.recordset")
-    rsSubordinates.Open "select * from users where lead_user ='"&job_number&"'",conn,1,1
+    rsSubordinates.Open "select * from users where lead_user ='"&job_number&"' ",conn,1,1
     
     if not rsSubordinates.eof then 
      	for r=0 to rsSubordinates.recordcount -1
 	     	
-	     	sumPerformences = sumPerformences +  ordinatesPerformence(rsSubordinates("job_number"))
+	     	sumPerformences = sumPerformences +  ordinatesPerformence(rsSubordinates("job_number"),inputdate)
 	     	rsSubordinates.movenext
      	next
      end if 
@@ -167,20 +167,23 @@ function ordinatesPerformence(job_number)
 end function
 
 '不考虑试用期计算员工业绩'
-function getmySelfPerformence(jobNumber)
+function getmySelfPerformence(jobNumber,inputdate)
 
 	set rsPerfomanceList=server.createobject("adodb.recordset")
-	rsPerfomanceList.Open "select * from contracts where approval=1 and job_number='"&jobNumber&"'",conn,1,1
+	sqlQueryString = "select * from contracts where approval=1 and job_number='"&jobNumber&"' and Convert(varchar,approval_date,120) like "&inputdate&""
+	
+	rsPerfomanceList.Open sqlQueryString,conn,1,1
 	selfPerformance = 0
-		for index = 0 to rsPerfomanceList.recordcount - 1
-			cycleNumber = 360/rsPerfomanceList("cycle")
-			yearlyPerformance  =  rsPerfomanceList("capital")/cycleNumber
-			selfPerformance = selfPerformance + yearlyPerformance
-			rsPerfomanceList.movenext
-		next
-		getmySelfPerformence = selfPerformance
-		
-		exit function
+	for index = 0 to rsPerfomanceList.recordcount - 1
+		cycleNumber = 360/rsPerfomanceList("cycle")
+		yearlyPerformance  =  rsPerfomanceList("capital")/cycleNumber
+		selfPerformance = selfPerformance + yearlyPerformance
+		rsPerfomanceList.movenext
+	next
+
+	getmySelfPerformence = selfPerformance
+	
+	exit function
 	rsPerfomanceList.close
 	set rsPerfomanceList=nothing
 end function

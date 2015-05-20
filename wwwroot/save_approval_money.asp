@@ -17,6 +17,7 @@ action=SafeRequest("action")
 approval_name=Trim(SafeRequest("approval_name"))
 approval_photo=Trim(SafeRequest("approval_photo"))
 approval_money_text=Trim(SafeRequest("approval_money_text"))
+company_id = Trim(SafeRequest("company_id"))
 aid=Trim(SafeRequest("id"))
 
 if action="add" then
@@ -35,6 +36,7 @@ if action="add" then
 	rs("request_text")=approval_money_text
 	rs("request_date")=now
 	rs("request_name")=approval_name
+	rs("companyid")=company_id
 	rs("approval_request")=0
 	rs.update 
 	response.write "0|提交"

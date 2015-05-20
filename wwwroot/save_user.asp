@@ -31,20 +31,21 @@ lead_user=Trim(SafeRequest("lead_user"))'上级'
 tel=Trim(SafeRequest("tel"))'D电话'
 qq=Trim(SafeRequest("qq"))'QQ'
 email=Trim(SafeRequest("email"))'email'
-insurance=Trim(SafeRequest("insurance"))'保险'
+insurance=Trim(SafeRequest("checked_insurance"))'保险'
 quanxian=Trim(SafeRequest("quanxian"))'权限'
 ifshow=Trim(SafeRequest("ifshow"))
 entry_date=Trim(SafeRequest("entry_date"))'入职时间
-inputdate=Trim(SafeRequest("inputdate"))
+'inputdate=Trim(SafeRequest("inputdate"))
 census_register=Trim(SafeRequest("census_register"))'户籍'
 add_gold=Trim(SafeRequest("add_gold"))'加金'
 id=Trim(SafeRequest("id"))'用户登陆名'
+add_meal=Trim(SafeRequest("add_meal"))'餐补'
 company_name=Trim(SafeRequest("companyVal"))
 if action="add" then
 	set rs=server.createobject("adodb.recordset")
 	rs.Open "select * from users where username='"&username&"'",conn,1,1
 	if not rs.eof then
-		response.write "1|username|用户名已存在"
+		response.write "1|username|用户名已存在"+"select * from users where username='"&username&"'"
 		response.end
 	end if
 	rs.close
@@ -73,10 +74,12 @@ if action="add" then
 	rs("quanxian")=quanxian
 	rs("entry_date")=entry_date
 	rs("inputdate")=now()
+	rs("add_meal")=add_meal
 	rs.update
 	rs.close
 	set rs=nothing
 elseif action="edit" then
+	'response.write add_meal&"--"&insurance
 	set rs=server.createobject("adodb.recordset")
 	rs.Open "select * from users where job_number='"&job_number&"' and uid<>"&id,conn,1,1
 	if not rs.eof then
@@ -85,7 +88,8 @@ elseif action="edit" then
 	end if
 	rs.close
 	if password<>"" then mpassword=",password='"&md5(password)&"'"
-	if company_code<>"" then mcompany_code=",company_code="&company_code&""
+	if company_code<>"" then mcompany_code=",company_code='"&company_code&"'"
+	if insurance<>"" then set_insurance=",add_insurance='"&insurance&"'"
 	'response.write "update users set job_number='"&job_number&"',lead_user="&lead_user&",full_name='"&full_name&"',company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&mpassword&", inputdate="&entry_date&", add_insurance="&insurance&" where uid="&id
  	for s=0 to splitlength 
          if splitvalue(s)="[29]" then 
@@ -95,11 +99,11 @@ elseif action="edit" then
          end if 
     next
     if qxBoolean then
-    	conn.execute "update users set job_number='"&job_number&"',lead_user='"&lead_user&"',full_name='"&full_name&"',user_code="&user_code&",company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&mpassword&""&mcompany_code&",entry_date="&entry_date&", inputdate="&now()&", add_insurance="&insurance&" where uid="&id
+    	conn.execute "update users set job_number='"&job_number&"',lead_user='"&lead_user&"',full_name='"&full_name&"',user_code="&user_code&",company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"',quanxian='"&quanxian&"'"&mpassword&""&mcompany_code&",entry_date='"&entry_date&"', inputdate='"&now()&"'"&set_insurance&",add_meal='"&add_meal&"' where uid="&id
     else 
-    	conn.execute "update users set job_number='"&job_number&"',lead_user='"&lead_user&"',full_name='"&full_name&"',user_code="&user_code&",company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"'"&mpassword&""&mcompany_code&", inputdate="&now()&",entry_date="&entry_date&", add_insurance="&insurance&" where uid="&id
+    	conn.execute "update users set job_number='"&job_number&"',lead_user='"&lead_user&"',full_name='"&full_name&"',user_code="&user_code&",company_id="&company_id&",job_id="&job_id&",tel='"&tel&"',qq='"&qq&"',email='"&email&"'"&mpassword&""&mcompany_code&", inputdate='"&now()&"',entry_date='"&entry_date&"'"&set_insurance&",add_meal='"&add_meal&"' where uid="&id
     end if 
- 
+
 
 elseif action="Invalid" then
 		conn.execute "update users set ifshow=1 where uid="&id

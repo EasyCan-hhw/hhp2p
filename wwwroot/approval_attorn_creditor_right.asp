@@ -152,7 +152,7 @@ else
                             </thead>
                             <tbody>
             <%
-if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
+if trim(request("full_name"))<>"" then full_name=" and c_name='"&trim(request("full_name"))&"'"
 if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
 if trim(request("repayment_date"))<>"" then date1=" and datediff(d,'"&trim(request("repayment_date"))&"',repayment_date)>=0"
 if trim(request("repayment_date2"))<>"" then date2=" and datediff(d,repayment_date,'"&trim(request("repayment_date2"))&"')>=0"
@@ -180,18 +180,18 @@ if trim(request("status"))<>"" then status=" and approval="&trim(request("status
       				end if
        				if currentPage=1 then
             			showContent
-            			showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
+            			showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&c_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
        				else
           				if (currentPage-1)*MaxPerPage<totalPut then
             				rs.move  (currentPage-1)*MaxPerPage
             				dim bookmark
             				bookmark=rs.bookmark
             				showContent
-             				showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
+             				showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&c_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
         				else
 	        				currentPage=1
            					showContent
-           					showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&full_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
+           					showpage1=showpage(totalput,MaxPerPage,"approval_attorn_creditor_right.asp","&c_name="&trim(request("full_name"))&"&passport="&trim(request("passport"))&"&repayment_date="&trim(request("repayment_date"))&"&repayment_date2="&trim(request("repayment_date2"))&"&status="&trim(request("status")))
 						end if
 	   				end if
 			end if
@@ -202,7 +202,7 @@ if trim(request("status"))<>"" then status=" and approval="&trim(request("status
                                                         <tr>
                                 <td><input type="checkbox" name="subBox" value="<%=rs("id")%>"/></td>
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("number"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
+                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("c_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>

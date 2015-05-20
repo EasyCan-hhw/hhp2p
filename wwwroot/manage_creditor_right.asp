@@ -1,8 +1,6 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-
-%>
+<!--#include file="getunderling_function.asp"-->
+<!--#include file="company_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
 <!--main-container-part-->
 
@@ -414,8 +412,12 @@ if trim(request("collateral_class"))<>"" then collateral_class_name=" and collat
 
 				err_txt="<tr><td colspan=""8"">没有债权</td></tr>"
 			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from creditor_right where id>0"&full_name&passportdate1&date2&status&collateral_class_name&" order by datediff(d,'"&now()&"',repayment_date),approval desc",conn,1,1
+            if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then 
 
+			     rs.Open "select * from creditor_right where id>0"&full_name&passportdate1&date2&status&collateral_class_name&" order by datediff(d,'"&now()&"',repayment_date),approval desc",conn,1,1
+            else 
+                 rs.Open "select * from creditor_right where id>0"&full_name&passportdate1&date2&status&collateral_class_name&" and add_uid in ("&requestUnderlingUid(request.cookies("hhp2p_cookies")("uid"))&""&request.cookies("hhp2p_cookies")("uid")&") order by datediff(d,'"&now()&"',repayment_date),approval desc",conn,1,1  ''
+            end if 
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if

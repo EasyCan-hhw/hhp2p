@@ -22,11 +22,11 @@
                 </div>
                 <div class="widget-content nopadding">
                   <form action="" method="post" class="form-horizontal" onSubmit="return false;">
-                  
                         <div class="control-group">
                             <label class="control-label"><font color="red">*</font>&nbsp;分公司代码:</label>
                             <div class="controls">
                                 <input type="text" id="company_code" class="half" name="company_code" onKeyUp="onlymoney(this,this.value)" onafterpaste="onlymoney(this,this.value)"/>
+                                <span class="help-inline">一级分公司必须以数字‘1’开头</span>
                                 <span id="company_code_err" class="err_text"></span>
                             </div>
                         </div>
@@ -134,10 +134,10 @@
                                                         <tr>
                                 <td style="vertical-align: middle;text-align:center"><input name="company_code<%=int(rs("id"))%>" id="company_code<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_code"))%>"></td>
                                 <td style="vertical-align: middle;text-align:center"><input name="company_name<%=int(rs("id"))%>" id="company_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_name"))%>"></td>
-                                <td style="vertical-align: middle;text-align:center"><input name="company_name<%=int(rs("id"))%>" id="company_name<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_count"))%>"></td>
+                                <td style="vertical-align: middle;text-align:center"><input name="company_count<%=int(rs("id"))%>" id="company_count<%=int(rs("id"))%>" class="half" type="text" value="<%=trim(rs("company_count"))%>"></td>
                                 <td style="vertical-align: middle; text-align:center">
                                     <a href="javascript:;" id="company_edit_<%=int(rs("id"))%>" class="company_edit">修改</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-                                    <a href="javascript:;" id="company_del_<%=int(rs("id"))%>" class="company_del">删除</a>
+                                    <!--<a href="javascript:;" id="company_del_<=int(rs(id))>" class="company_del">删除</a>-->
                                 </td>
                             </tr>
             <%

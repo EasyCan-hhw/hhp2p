@@ -23,6 +23,7 @@ jQuery(function($){
 				dataType:"text",
 				success:function(data)
 				{
+					
 				  if(parseInt(data.split("|")[0])>0)
 				  {
 						alert(data.split("|")[2]);

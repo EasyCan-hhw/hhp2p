@@ -1,9 +1,8 @@
 ﻿<!--#include file="head.asp" -->
-<%
-
-
-%>
+<!--#include file="tool_function.asp"-->
 <!--#include file="sidebar_menu.asp" -->
+<!--#include file="getunderling_function.asp"-->
+
 <!--main-container-part-->
 
 <div id="content">
@@ -269,6 +268,7 @@ else
                             <tr>
                             	 <th><input type="checkbox" id="check_all" name="title-table-checkbox"/></th>
                                 <th nowrap="nowrap">合同编号</th>
+                                <th>业务员</th>
                                 <th>客户姓名</th>
                                 <th>客户身份证</th>
                                 <th>理财产品</th>
@@ -288,20 +288,26 @@ else
           if trim(request("full_name"))<>"" then full_name=" and full_name='"&trim(request("full_name"))&"'"
           if trim(request("passport"))<>"" then passport=" and passport='"&trim(request("passport"))&"'"
           if trim(request("start_date"))<>"" then date1=" and datediff(d,'"&trim(request("start_date"))&"',start_date)>=0"
-          if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
+          'if trim(request("start_date2"))<>"" then date2=" and datediff(d,start_date,'"&trim(request("start_date2"))&"')>=0"
           if trim(request("product_name"))<>"" then product_name=" and product_name='"&trim(request("product_name"))&"'"
-          if trim(request("inputdate"))<>"" then inputdate1=" and datediff(d,'"&trim(request("inputdate"))&"',inputdate)>=0"
-          if trim(request("inputdate2"))<>"" then inputdate2=" and datediff(d,inputdate,'"&trim(request("inputdate2"))&"')>=0"
+          'if trim(request("inputdate"))<>"" then inputdate1=" and datediff(d,'"&trim(request("inputdate"))&"',inputdate)>=0"
+          'if trim(request("inputdate2"))<>"" then inputdate2=" and datediff(d,inputdate,'"&trim(request("inputdate2"))&"')>=0"
 
 				err_txt="<tr><td colspan=""12"">没有债权转让账单信息</td></tr>"
         '"&numbers&full_name&passport&product_name&date1&date2&inputdate1&inputdate2&" 
-			set rs=server.CreateObject("adodb.recordset")
-			rs.Open "select * from contracts where id>0 and approval=1 order by id desc",conn,1,1
+			   set rs=server.CreateObject("adodb.recordset")
+         if requestCompany(request.cookies("hhp2p_cookies")("uid")).parentCompany = 1 then 
+
+			       rs.Open "select * from contracts where id>0 "&numbers&full_name&passport&"and approval=1 order by id desc",conn,1,1
+          else 
+              rs.Open "select * from contracts inner join users on contracts.job_number = users.job_number and (users.company_code = '"&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&"' or users.company_id = "&requestCompanyjudge(request.cookies("hhp2p_cookies")("job_number"))&" ) and contracts.approval=1 order by id desc",conn,1,1
+              'rs.Open "select * from contracts where id>0 "&numbers&full_name&passport&"and approval=1 and  order by id desc",conn,1,1
+          end if 
+         
 		   	if err.number<>0 or rs.eof then
 				response.write err_txt
 			end if
 			if not rs.eof then
-				
 	  				totalPut=rs.recordcount
       				if currentpage<1 then
           				currentpage=1
@@ -338,7 +344,18 @@ else
                                                        
                                 <td><input type="checkbox" name="subBox" value="<%=rs("id")%>"/></td>
                                 <td style="vertical-align: middle;text-align:center" nowrap="nowrap"><%=trim(rs("number"))%></td>
-                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("full_name"))%></td>
+                                <td style="vertical-align: middle;text-align:center"><%
+                                   if not rs("job_number")="" then
+                                      set rsjob=server.CreateObject("adodb.recordset")
+                                     rsjob.Open "select * from users where job_number='"&rs("job_number")&"'",conn,1,1
+                                      response.write rsjob("full_name")
+                                     rsjob.close
+                                     set rsjob = nothing
+                                   else 
+                                      response.write "无"
+                                   end if 
+                                %></td>
+                                <td style="vertical-align: middle;text-align:center"><%=trim(rs("c_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("passport"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("product_name"))%></td>
                                 <td style="vertical-align: middle;text-align:center"><%=trim(rs("capital"))%></td>
@@ -346,26 +363,14 @@ else
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
 
-                                  if datediff("d",rs("start_date"),now())<30 then
-                                      periods=1
-                                      
-                                  else
-                                    if (datediff("d",rs("start_date"),now())/30)=int(datediff("d",rs("start_date"),now())/30) then
-                                      periods=datediff("d",rs("start_date"),now())/30
-                                    else
-                                      periods=int(datediff("d",rs("start_date"),now())/30)+1
-                                    end if
-                                  end if
-                                    response.write periods
+                                   response.write responseEndDate(rs("start_date"),rs("cycle")).dateNumber
                                   %></td>
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
-                                    if periods>1 then
-                                      periods_start_date=DateAdd("d",(periods-1)*30+1, rs("start_date"))
-                                    else
-                                      periods_start_date=rs("start_date")
-                                    end if
-                                    response.write periods_start_date&"&nbsp;至&nbsp;"&DateAdd("d",30, periods_start_date)
+
+                                  '账单周期'
+                                    
+                                    response.write rs("start_date")&"&nbsp;至&nbsp;"&responseEndDate(rs("start_date"),rs("cycle")).EndDate
                                   %>
                                 </td>
                                 
@@ -392,12 +397,9 @@ else
                                 <td style="vertical-align: middle;text-align:center">
                                   <%
 
-                                  set rs1=server.CreateObject("adodb.recordset")
-                                    rs1.Open "select profit from products where product_name='"&rs("product_name")&"'",conn,1,1
-                                    if not rs1.eof then
-                                      profit=cdbl(rs1("profit"))*cdbl(rs("capital"))
-                                    end if
-                                    rs1.close
+                                 
+                                      profit=cdbl(rs("profit"))*(cdbl(rs("capital"))/12)
+                                   
                                     'set rs1=nothing
                                     'accrual=round(cdbl(rs("capital"))*(cdbl(rs("profit"))/365)*datediff("d",periods_start_date,now())-cdbl(penalty),2)
                                     'Set db=Conn.execute("select sum(accrual) As db from monthly_bill where c_id="&rs("id"))
@@ -406,12 +408,10 @@ else
                                     'else
                                     ''  grand_total=cdbl(rs("capital"))+cdbl(accrual)
                                     'end if
-                                     grand_total = profit /12
-
-                                    response.write Round(profit/12, 2)
+                                    response.write Round(profit,2)'Round(profit/12, 2)
                                   %>
                               </td>
-                                <td style="vertical-align: middle;text-align:center"><%=ForMatDate(trim(rs("inputdate")),2)%></td>
+                                <td style="vertical-align: middle;text-align:center"><%=responseEndDate(rs("start_date"),rs("cycle")).EndDate%></td>
                                <td style="vertical-align: middle; text-align:center">
                                      <a href="monthly_bill.asp?id=<%=int(rs("id"))%>" target="_blank">打印账单</a>
                                 </td>

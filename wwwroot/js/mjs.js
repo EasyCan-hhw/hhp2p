@@ -3,66 +3,7 @@ $(document).ready( function() {
 
 
 
-	//失去焦点控制
-$("input").blur(function (){
-	var id=$(this).attr("id");//根据input的id获取对应input
-	if (id == "result_number") {
-		
-		var query = new Object();
-			query.myvalue = escape($("#"+id).val());
-			query.action="sele";
 
-			$.ajax({
-				url: "save_add_results.asp",
-				type:"post",
-				data:query,
-				async:false,
-				cache:false,
-				dataType:"text",
-				success:function(data)
-				{
-					//alert(data);
-				  if(parseInt(data.split("|")[0])==1)
-				  {
-						$("#job_number_err").html(data.split("|")[2]);
-				   }
-				   else if(parseInt(data.split("|")[0])==3)
-				   {
-					 $("#result_number_err").html(data.split("|")[1]);
-					 $("#result_name").val(""); 
-
-				   }
-				   else if(parseInt(data.split("|")[0])==4)
-				   {
-				   	$("#result_name").val(data.split("|")[1]);
-				   	$("#result_number_err").html(" ");
-				   }
-				   else if(parseInt(data.split("|")[0])==2)
-				   {
-						alert("登录超时！");
-						window.location.href="login.asp";
-				   }
-				   else if(parseInt(data.split("|")[0])==0)
-				   {
-							
-				   }
-				}
-			});
-	};
-
-	
-});
-
-$("select").blur(function (){
-	var id=$(this).attr("id");//根据select的id获取对应select
-	if (id == "company_porportion") {
-		//$("#company_porportion_err").html("过");
-		//var company_select = document.getElementsByName("company_porportion");
-		//company_select.length = 0
-
-	};
-
-});
 
 	//线上员工业绩添加  
 
@@ -92,7 +33,6 @@ $("select").blur(function (){
 			query.Cjob_number=escape($("#Cjob_number").val());
 			query.Cjob_number=escape($("#Cjob_number").val());
 			query.Cjob_number=escape($("#Cjob_number").val());
-
 			query.action="add";
 			$.ajax({
 				url: "save_manage_commission.asp",
@@ -104,7 +44,7 @@ $("select").blur(function (){
 				success:function(data)
 				{
 				  if(parseInt(data.split("|")[0])==1)
-				  {		
+				  {	
 				  		alert(data.split("|")[2])
 						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
 						$("#add_user_result_submit").attr("disabled",false);
@@ -289,7 +229,156 @@ $("select").blur(function (){
 		}
 
 	});
+	
+	//保险设置信息添加
+	$("#insert_insurance_submit").click(function(){
+		var tosubmit=true;
+		$(".err_text").html("");
+		if($.trim($("#company_number_insurance").val()).length == 0){
+			tosubmit=false;
+			$("#company_number_insurance_err").html("登陆账号没有公司信息");
+		}
+		if($.trim($("#name_insurance").val()).length == 0){
+			tosubmit=false;
+			$("#name_insurance_err").html("请填写名称");
+		}
+		if($.trim($("#money_insurance").val()).length == 0){
+			tosubmit=false;
+			$("#money_insurance_err").html("请填写金额");
+		}
+		
+		
+		if(tosubmit){
+			$("#insert_insurance_submit").attr("disabled",true);
+			var query = new Object();
+			query.insurance_name=escape($("#name_insurance").val());
+			query.insurance_money=escape($("#money_insurance").val());
+			query.insurance_company=escape($("#company_number_insurance").val());
+			query.action="add";
+			$.ajax({
+				url: "save_insurance_set.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{	
+				  if(parseInt(data.split("|")[0])==1)
+				  {		
+				  		alert(data.split("|")[2])
+						//$("#"+data.split("|")[1]+"_err").html(data.split("|")[2]);
+						$("#insert_insurance_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+						$("#insert_insurance_submit").attr("disabled",false);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+				   	$("#insert_insurance_submit").attr("disabled",true);
+						alert("添加成功！");
+						window.location.href="manage_Insurance_set.asp";
+				   }
+				}
+			});
+		}
+	});
+	
+	$(".insurance_edit").click(function(){
+	 	var id=this.id.split("_")[2];
+		var tosubmit=true;
+		if($.trim($("#company"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请输入信息");
+		}
+		if($.trim($("#name"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请输入信息");
+		}
+		if($.trim($("#money"+id).val()).length == 0){
+			tosubmit=false;
+			alert("请输入信息");
+		}
+		
+		if(tosubmit){
+			var query = new Object();
+			query.id=id;
+			query.insurance_name=escape($("#name"+id).val());
+			query.insurance_money=escape($("#money"+id).val());
+			query.insurance_company=escape($("#company"+id).val());
+			query.action="edit";
+			$.ajax({
+				url: "save_insurance_set.asp",
+				type:"post",
+				data:query,
+				async:false,
+				cache:false,
+				dataType:"text",
+				success:function(data)
+				{ 
+				  if(parseInt(data.split("|")[0])==1)
+				  {
+						alert(data.split("|")[2]);
+				   }
+				   else if(parseInt(data.split("|")[0])==3)
+				   {
+						alert(data.split("|")[1]);
+				   }
+				   else if(parseInt(data.split("|")[0])==2)
+				   {
+						alert("登录超时！");
+						window.location.href="login.asp";
+				   }
+				   else if(parseInt(data.split("|")[0])==0)
+				   {
+						alert("修改成功！");
+						window.location.href="manage_Insurance_set.asp";
+				   }
+				}
+			});
+		}
 
+	});
+	$(".insurance_del").click(function(){
+			if(confirm('是否确定删除？')){
+		 		var id=this.id.split("_")[2];
+				var query = new Object();
+				query.id=id;
+				query.action="del";
+				$.ajax({
+					url: "save_insurance_set.asp",
+					type:"post",
+					data:query,
+					async:false,
+					cache:false,
+					dataType:"text",
+					success:function(data)
+					{
+					  if(parseInt(data.split("|")[0])==1)
+					  {
+							alert(data.split("|")[2]);
+					   }
+					   else if(parseInt(data.split("|")[0])==2)
+					   {
+							alert("登录超时！");
+							window.location.href="login.asp";
+					   }
+					   else if(parseInt(data.split("|")[0])==0)
+					   {
+							alert("删除成功！");
+							window.location.href="manage_Insurance_set.asp";
+					   }
+					}
+				});
+			}
+		});
 
 
 	//作息时间添加
@@ -346,6 +435,7 @@ $("select").blur(function (){
 			}else{
 				query.setrest_year=escape($("#setrest_year").val()+"-"+$("#setrest_month").val());//年份拼写
 			}
+			query.company_number=escape($("#company_number").val());//公司代码
 			query.setrest_starttime=escape($("#start_work_hour").val()*60+parseInt($("#start_work_minute").val()));//时间换算成分钟
 			query.setrest_endtime=escape($("#end_work_hour").val()*60+parseInt($("#end_work_minute").val()));//时间换算成分钟
 			query.setrest_cause=escape($("#setrest_cause").val());
@@ -429,6 +519,7 @@ $("select").blur(function (){
 
 	//分公司传值给下属分公司
 	$("#company_id").change(function() {
+
 			$("#company_porportion ").get(0).selectedindex=1
 			//$("#company_porportion").empty();
 			//$("#company_porportion").find("option").remove()
@@ -438,6 +529,7 @@ $("select").blur(function (){
 		    
 		    var select1 = $("#company_porportion")
 		    select1.empty()
+		  	select1.append("<option value='    '></option>")
 		  
 		    for (var iv = 0; iv < varlength.length - 1 ; iv++) {
 		    	var smlength=companyVal.split(";")[iv];
